@@ -116,6 +116,19 @@ impl Manager {
         }
     }
 
+
+    /// The accessor method `as_texelmap` returns a reference on
+    /// the texel's dictionary.
+    pub fn as_texelmap(&self) -> &HashMap<(Position, Part, Emotion), Texel> {
+        &self.texel
+    }
+
+    /// The accessor method `as_texelmap` returns a reference on
+    /// the sprite's dictionary.
+    pub fn as_spritemap(&self) -> &HashMap<OsString, Sprite> {
+        &self.sprite
+    }
+
   /// The function `insert_texel` insert a texel.
   fn insert_texel(&mut self,
                   key: (Position, Part, Emotion),
@@ -228,7 +241,7 @@ impl Manager {
             }
           }
         }
-     }
+      }
     }
 }
 

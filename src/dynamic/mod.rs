@@ -7,14 +7,19 @@ use ::toml;
 pub use self::err::{CompositerError, Result};
 
 use self::library::Library;
-use std::collections::VecDeque;
 use std::env;
 use std::io::{self, Read};
+use std::ops::Not;
 use std::fs;
 use std::fs::File;
 use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 use std::process;
+
+use ::itertools::Itertools;
+use ::pty_proc::shell::ShellState;
+
+use ::SPEC_ROOT;
 
 /// The default capacity of heap.
 const SPEC_CAPACITY: usize = 10;
@@ -31,8 +36,6 @@ const SPEC_LIB_EXT: &'static str = "dylib";
 const SPEC_PRIORITY: i64 = 0i64;
 /// The name of priority label.
 const SPEC_PRIORITY_NAME: &'static str = "priority";
-/// The first directory.
-const SPEC_ROOT: &'static str = ".neko";
 /// The sub-directory git.
 const SPEC_SUBD_GIT: &'static str = "git";
 /// The sub-directory lib.
@@ -43,37 +46,29 @@ const SPEC_MANIFEST: &'static str = "Neko.toml";
 /// The struct `Compositer` is a heap of a double tuple
 /// of a dynamic libraries and a priority order.
 #[derive(Debug)]
-pub struct Compositer(VecDeque<Library>);
+pub struct Compositer(Vec<Library>);
 
 impl Compositer {
 
-    /// The constructor `default` returns a Compositer prepared with
-    /// the libraries from the root directory.
+    /// The constructor `new` returns a Compositer prepared with
+    /// the library root.
     pub fn new() -> Result<Self> {
-        let mut compositer: Compositer =
-        Compositer(VecDeque::with_capacity(SPEC_CAPACITY));
+        let mut compositer: Compositer = Compositer::default();
 
-        match compositer.get_git() {
-            Err(why) => Err(why),
-            Ok(rep) => {
-                match fs::read_dir(rep) {
-                    Err(why) => Err(CompositerError::ReadDirGit(why)),
-                    Ok(entries) => {
-                        entries.filter_map(|repository|
-                            repository.ok()
-                        ).all(|entry|
-                            compositer.mount(&entry.path(), None).is_ok()
-                        );
-                        Ok(compositer)
-                    },
-                }
-            },
-        }
-    }
-
-    /// The accessor method `into_inner` returning the Library Vector.
-    pub fn into_inner(self) -> VecDeque<Library> {
-        self.0
+        compositer.get_lib().and_then(|lib|
+            match fs::read_dir(lib) {
+                Err(why) => Err(CompositerError::ReadDirGit(why)),
+                Ok(entries) => {
+                    entries.filter_map(|library| library.ok()).all(|entry| {
+                        compositer.mount(
+                            &entry.path().file_stem().unwrap_or_default(),
+                            None
+                        ).is_ok()
+                    });
+                    Ok(compositer)
+                },
+            }
+        )
     }
 
     /// The accessor method `get_git` returns the git sub-directory.
@@ -174,7 +169,9 @@ impl Compositer {
                                 Err(why) => Err(CompositerError::Mount(why)),
                                 Ok(dy) => {
                                     dy.start();
-                                    Ok(self.0.push_back(dy))
+                                    self.0.push(dy);
+                                    self.0.sort();
+                                    Ok(())
                                 },
                             }
                         } else {
@@ -191,15 +188,13 @@ impl Compositer {
     /// @ libraryname: `arukana@libnya`.
     pub fn unmount<S: AsRef<OsStr>>(
         &mut self, libraryname: S
-    ) -> Result<Library> {
+    ) -> Result<()> {
         if let Some(index) = self.0.iter().position(|ref s|
             s.as_path_buf().file_stem().eq(&Some(libraryname.as_ref()))
         ) {
-            if let Some(removed) = self.0.remove(index) {
-                Ok(removed)
-            } else {
-                Err(CompositerError::UnmountRemove)
-            }
+            self.0.remove(index);
+            self.0.sort();
+            Ok(())
         } else {
             Err(CompositerError::UnmountPosition)
         }
@@ -236,6 +231,28 @@ impl Compositer {
         }
     }
 
+    fn dependency_from_git(
+        &mut self,
+        table: &toml::Table,
+    ) -> Option<CompositerError> {
+        table.get("git").and_then(|git|
+           git.as_str().and_then(|repo|
+               match self.install(&repo) {
+                  Err(CompositerError::InstallExists) => {
+                      account_at_rep!(repo).and_then(|sub|
+                         match self.update(&sub) {
+                            Ok(()) => None,
+                            Err(why) => Some(why),
+                         }
+                      )
+                  },
+                  Ok(()) => None,
+                  Err(why) => Some(why),
+               }
+           )
+        )
+    }
+
     /// The method `dependency` lists the dependencies from
     /// repository dynamic library and install.
     /// @ source: `$HOME/.neko/git/Arukana@libnya`.
@@ -246,24 +263,9 @@ impl Compositer {
             if let Some(why) = table.get("dependencies").and_then(|deps|
                 deps.as_table().and_then(|table|
                     table.into_iter().filter_map(|dep|
-                        dep.1.as_table().and_then(|table|
-                           table.get("git").and_then(|git|
-                                git.as_str().and_then(|repo|
-                                    match self.install(&repo) {
-                                        Err(CompositerError::InstallExists) => {
-                                            account_at_rep!(repo).and_then(|sub|
-                                                match self.update(&sub) {
-                                                    Ok(()) => None,
-                                                    Err(why) => Some(why),
-                                                }
-                                            )
-                                        },
-                                        Ok(()) => None,
-                                        Err(why) => Some(why),
-                                    }
-                                )
-                           )
-                        )
+                       dep.1.as_table().and_then(|table|
+                          self.dependency_from_git(table)
+                       )
                     ).next()
                 )
             ) {
@@ -381,5 +383,28 @@ impl Compositer {
             },
             Err(why) => Err(why),
         }
+    }
+
+    /// The general method `call` according to the state will run
+    /// the evenement functions by library group.
+    pub fn call(&self, event: &ShellState) {
+        self.0.iter().group_by(|lib| *lib).into_iter().foreach(|(ref group, _)| {
+            let priority: i64 = group.get_priority();
+            self.0.iter().skip_while(|lib| lib.get_priority().eq(&priority).not())
+                .take_while(|lib| lib.get_priority().eq(&priority))
+                .foreach(|lib| {
+                    if event.is_idle().is_some() {
+                        lib.idle();
+                    }
+                })
+        })
+    }
+}
+
+/// A trait for giving a type a useful default value.
+impl Default for Compositer {
+    /// The constructor `default` returns a empty Compositer.
+    fn default() -> Compositer {
+        Compositer(Vec::with_capacity(SPEC_CAPACITY))
     }
 }

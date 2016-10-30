@@ -40,6 +40,9 @@ travis           = ["lints", "nightly"] # for building with travis-cargo
 version          = "*"
 optional         = true
 
+[dependencies.itertools]
+version          = "0.5"
+
 [dependencies.dylib]
 version          = "*"
 
@@ -48,3 +51,6 @@ version          = "0.3"
 
 [dependencies.toml]
 version          = "0.2"
+
+[dependencies.pty-proc]
+git              = "https://github.com/adjivas/pty-proc.git"

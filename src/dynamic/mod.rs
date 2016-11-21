@@ -189,7 +189,7 @@ impl Compositer {
     pub fn unmount<S: AsRef<OsStr>>(
         &mut self, libraryname: S
     ) -> Result<()> {
-        if let Some(index) = self.0.iter().position(|ref s|
+        if let Some(index) = self.0.iter().position(|s|
             s.as_path_buf().file_stem().eq(&Some(libraryname.as_ref()))
         ) {
             self.0.remove(index);
@@ -237,7 +237,7 @@ impl Compositer {
     ) -> Option<CompositerError> {
         table.get("git").and_then(|git|
            git.as_str().and_then(|repo|
-               match self.install(&repo) {
+               match self.install(repo) {
                   Err(CompositerError::InstallExists) => {
                       account_at_rep!(repo).and_then(|sub|
                          match self.update(&sub) {
@@ -286,7 +286,7 @@ impl Compositer {
                 if dest.exists() {
                     Err(CompositerError::InstallExists)
                 } else {
-                    match git2::Repository::clone(&repo, &dest) {
+                    match git2::Repository::clone(repo, &dest) {
                         Err(why) => Err(CompositerError::InstallClone(why)),
                         Ok(_) => self.build(&dest, &sub),
                     }
@@ -370,12 +370,10 @@ impl Compositer {
                             lib.join(&path).with_extension(SPEC_LIB_EXT)
                         ) {
                             Err(CompositerError::RmFile(why))
+                        } else if let Err(why) = fs::remove_dir_all(git.join(&path)) {
+                            Err(CompositerError::RmDir(why))
                         } else {
-                            if let Err(why) = fs::remove_dir_all(git.join(&path)) {
-                                Err(CompositerError::RmDir(why))
-                            } else {
-                                Ok(())
-                            }
+                            Ok(())
                         }
                     },
                     (Err(why), _) | (_, Err(why)) => Err(why),
@@ -388,7 +386,7 @@ impl Compositer {
     /// The general method `call` according to the state will run
     /// the evenement functions by library group.
     pub fn call(&self, event: &ShellState) {
-        self.0.iter().group_by(|lib| *lib).into_iter().foreach(|(ref group, _)| {
+        self.0.iter().group_by(|lib| *lib).into_iter().foreach(|(group, _)| {
             let priority: i64 = group.get_priority();
             self.0.iter().skip_while(|lib| lib.get_priority().eq(&priority).not())
                 .take_while(|lib| lib.get_priority().eq(&priority))

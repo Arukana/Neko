@@ -14,6 +14,10 @@
 
 #![crate_type= "lib"]
 #![cfg_attr(feature = "nightly", feature(plugin))]
+
+#![feature(plugin)]
+#![cfg_attr(feature = "clippy", plugin(clippy(conf_file="clippy.toml")))]
+
 #![cfg_attr(feature = "lints", plugin(clippy))]
 #![cfg_attr(feature = "lints", deny(warnings))]
 #![cfg_attr(not(any(feature = "lints", feature = "nightly")), deny())]
@@ -31,6 +35,7 @@
 #[macro_use]
 extern crate itertools;
 extern crate pty_proc;
+extern crate editeur;
 extern crate dylib;
 extern crate git2;
 extern crate toml;
@@ -42,8 +47,6 @@ mod macros;
 pub mod prelude;
 /// The module `dynamic` is the compositer of extern libraries.
 pub mod dynamic;
-/// The module `graphic` is the manager of neko's sprites
-pub mod graphic;
 
 mod err;
 
@@ -53,7 +56,7 @@ pub use self::err::{NekoError, Result};
 use pty_proc::shell::{Shell, ShellState};
 
 use dynamic::Compositer;
-use graphic::Manager;
+use editeur::Graphic;
 
 /// The first directory.
 const SPEC_ROOT: &'static str = ".neko";
@@ -61,7 +64,7 @@ const SPEC_ROOT: &'static str = ".neko";
 /// The module `neko` is the first interface level.
 pub struct Neko {
     dynamic: Compositer,
-    graphic: Manager,
+    graphic: Graphic,
     shell: Shell,
 }
 
@@ -71,13 +74,13 @@ impl Neko {
         interval: Option<i64>,
     ) -> Result<Self> {
         match (
-            Shell::from_mode(repeat, interval, None, pty_proc::shell::mode::Mode::Character),
+            Shell::new(repeat, interval, None),
             Compositer::new(),
-            Manager::new()
+            Graphic::new()
         ) {
-            (Err(why), _, _) => Err(NekoError::ShellFail(why)),
-            (_, Err(why), _) => Err(NekoError::DynamicFail(why)),
-            (_, _, Err(why)) => Err(NekoError::GraphicFail(why)),
+            (Err(why), _, _) => Err(NekoError::Shell(why)),
+            (_, Err(why), _) => Err(NekoError::Dynamic(why)),
+            (_, _, Err(why)) => Err(NekoError::Graphic(why)),
             (Ok(shell), Ok(dynamic), Ok(graphic)) => Ok(Neko {
                 dynamic: dynamic,
                 graphic: graphic,
@@ -97,6 +100,14 @@ impl Iterator for Neko {
         } else {
             None
         }
+    }
+}
+
+impl fmt::Display for Neko {
+  /// The function `fmt` formats the value using
+  /// the given formatter.
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.shell)
     }
 }
 

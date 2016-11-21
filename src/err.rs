@@ -2,7 +2,7 @@ use std::error::Error;
 use std::fmt;
 
 use ::dynamic::CompositerError;
-use ::graphic::ManagerError;
+use ::editeur::GraphicError;
 use ::pty_proc::shell::ShellError;
 
 pub type Result<T> = ::std::result::Result<T, NekoError>;
@@ -12,11 +12,11 @@ pub type Result<T> = ::std::result::Result<T, NekoError>;
 #[derive(Debug)]
 pub enum NekoError {
     /// The dynamic library interface has occured an error.
-    DynamicFail(CompositerError),
+    Dynamic(CompositerError),
     /// The graphic interface has occured an error.
-    GraphicFail(ManagerError),
+    Graphic(GraphicError),
     /// The shell interface has occured an error.
-    ShellFail(ShellError),
+    Shell(ShellError),
 }
 
 impl fmt::Display for NekoError {
@@ -32,11 +32,11 @@ impl Error for NekoError {
   /// the error.
   fn description(&self) -> &str {
       match *self {
-          NekoError::DynamicFail(_) => "The dynamic library interface has\
+          NekoError::Dynamic(_) => "The dynamic library interface has\
                                         occured an error.",
-          NekoError::GraphicFail(_) => "The graphic interface has\
+          NekoError::Graphic(_) => "The graphic interface has\
                                         occured an error.",
-          NekoError::ShellFail(_) => "The shell interface has occured an error",
+          NekoError::Shell(_) => "The shell interface has occured an error",
     }
   }
 
@@ -44,9 +44,9 @@ impl Error for NekoError {
   /// this error if any.
   fn cause(&self) -> Option<&Error> {
       match *self {
-          NekoError::DynamicFail(ref why) => Some(why),
-          NekoError::GraphicFail(ref why) => Some(why),
-          NekoError::ShellFail(ref why) => Some(why),
+          NekoError::Dynamic(ref why) => Some(why),
+          NekoError::Graphic(ref why) => Some(why),
+          NekoError::Shell(ref why) => Some(why),
       }
   }
 }

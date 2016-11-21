@@ -29,10 +29,10 @@ pub enum CompositerError {
     ReadDirLib(io::Error),
     /// Can't open the `lib` sub-directory.
     OpenDirLib(io::Error),
+    /// Can't run the command.
+    BuildCommand(io::Error),
     /// Can't read the `manifest` Neko.toml file.
     ReadManifest(io::Error),
-    /// Can't mount the dynamic library.
-    Mount(LibraryError),
     /// Can't clone the repository.
     InstallClone(git2::Error),
     /// Can't update the repository.
@@ -43,16 +43,16 @@ pub enum CompositerError {
     UpdateRepFetch(git2::Error),
     /// Can't found the branch from repository.
     UpdateRepBranch(git2::Error),
-    /// Can't get the target identifiant from branch.
-    UpdateRepBranchId,
     /// Can't found the object from target identifiant.
     UpdateRepObject(git2::Error),
     /// Can't reset the repository.
     UpdateRepReset(git2::Error),
-    /// Can't run the command.
-    BuildCommand(io::Error),
+    /// Can't mount the dynamic library.
+    Mount(LibraryError),
     /// The build haven't exited with success.
     BuildExit(process::ExitStatus),
+    /// Can't get the target identifiant from branch.
+    UpdateRepBranchId,
     /// Can't found the $HOME environement variable.
     Home,
     /// Can't found the position.
@@ -123,18 +123,24 @@ impl Error for CompositerError {
   /// this error if any.
   fn cause(&self) -> Option<&Error> {
       match *self {
-        CompositerError::MvFail(ref why) => Some(why),
-        CompositerError::RmFile(ref why) => Some(why),
-        CompositerError::RmDir(ref why) => Some(why),
-        CompositerError::MkDirGit(ref why) => Some(why),
-        CompositerError::MkDirLib(ref why) => Some(why),
-        CompositerError::ReadDirGit(ref why) => Some(why),
-        CompositerError::ReadDirLib(ref why) => Some(why),
-        CompositerError::OpenDirLib(ref why) => Some(why),
+        CompositerError::MvFail(ref why) |
+        CompositerError::RmFile(ref why) |
+        CompositerError::RmDir(ref why) |
+        CompositerError::MkDirGit(ref why) |
+        CompositerError::MkDirLib(ref why) |
+        CompositerError::ReadDirGit(ref why) |
+        CompositerError::ReadDirLib(ref why) |
+        CompositerError::OpenDirLib(ref why) |
+        CompositerError::BuildCommand(ref why) |
         CompositerError::ReadManifest(ref why) => Some(why),
+        CompositerError::InstallClone(ref why) |
+        CompositerError::UpdateRepOpen(ref why) |
+        CompositerError::UpdateRepOrigin(ref why) |
+        CompositerError::UpdateRepFetch(ref why) |
+        CompositerError::UpdateRepBranch(ref why) |
+        CompositerError::UpdateRepObject(ref why) |
+        CompositerError::UpdateRepReset(ref why) => Some(why),
         CompositerError::Mount(ref why) => Some(why),
-        CompositerError::InstallClone(ref why) => Some(why),
-        CompositerError::BuildCommand(ref why) => Some(why),
         _ => None,
     }
   }

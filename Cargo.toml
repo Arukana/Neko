@@ -46,11 +46,14 @@ version          = "0.5"
 [dependencies.dylib]
 version          = "*"
 
-[dependencies.git2]
-version          = "0.3"
-
 [dependencies.toml]
 version          = "0.2"
 
+[dependencies.git2]
+version          = "0.6"
+
 [dependencies.pty-proc]
 git              = "https://github.com/adjivas/pty-proc.git"
+
+[dependencies.editeur]
+git              = "https://github.com/Arukana/Editor.git"

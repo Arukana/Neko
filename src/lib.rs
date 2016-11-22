@@ -50,14 +50,14 @@ pub mod dynamic;
 
 mod err;
 
-use std::fmt;
-use std::slice;
-
-pub use self::err::{NekoError, Result};
-use pty_proc::prelude::*;
 
 use dynamic::Compositer;
 use editeur::Graphic;
+use pty_proc::prelude::*;
+
+pub use self::err::{NekoError, Result};
+use std::fmt;
+use std::slice;
 
 /// The first directory.
 const SPEC_ROOT: &'static str = ".neko";
@@ -71,19 +71,19 @@ pub struct Neko {
 
 impl Neko {
     pub fn new(repeat: Option<i64>, interval: Option<i64>) -> Result<Self> {
-        match (
-            Shell::new(repeat, interval, None),
-            Compositer::new(),
-            Graphic::new()
-        ) {
+        match (Shell::new(repeat, interval, None),
+               Compositer::new(),
+               Graphic::new()) {
             (Err(why), _, _) => Err(NekoError::Shell(why)),
             (_, Err(why), _) => Err(NekoError::Dynamic(why)),
             (_, _, Err(why)) => Err(NekoError::Graphic(why)),
-            (Ok(shell), Ok(dynamic), Ok(graphic)) => Ok(Neko {
-                dynamic: dynamic,
-                graphic: graphic,
-                shell: shell,
-            }),
+            (Ok(shell), Ok(dynamic), Ok(graphic)) => {
+                Ok(Neko {
+                    dynamic: dynamic,
+                    graphic: graphic,
+                    shell: shell,
+                })
+            }
         }
     }
 
@@ -111,8 +111,8 @@ impl Iterator for Neko {
 }
 
 impl fmt::Display for Neko {
-  /// The function `fmt` formats the value using
-  /// the given formatter.
+    /// The function `fmt` formats the value using
+    /// the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.shell)
     }

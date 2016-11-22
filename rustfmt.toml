@@ -2,4 +2,4 @@ format_strings = false
 reorder_imports = true
 normalise_comments = false
 max_width = 78
-tab_spaces = 2
+tab_spaces = 4

@@ -1,9 +1,10 @@
+
+
+use ::git2;
 use std::error::Error;
 use std::fmt;
 use std::io;
 use std::process;
-
-use ::git2;
 
 use super::library::LibraryError;
 
@@ -70,78 +71,92 @@ pub enum CompositerError {
 }
 
 impl fmt::Display for CompositerError {
-  /// The function `fmt` formats the value using
-  /// the given formatter.
+    /// The function `fmt` formats the value using
+    /// the given formatter.
     fn fmt(&self, _: &mut fmt::Formatter) -> fmt::Result {
-       Ok(())
+        Ok(())
     }
 }
 
 impl Error for CompositerError {
-  /// The function `description` returns a short description of
-  /// the error.
-  fn description(&self) -> &str {
-      match *self {
-        CompositerError::MvFail(_) => "The directory can't be moved.",
-        CompositerError::RmFile(_) => "Can't remove the file.",
-        CompositerError::RmDir(_) => "Can't remove the directory.",
-        CompositerError::MkDirGit(_) => "Can't create the `git` sub-directory.",
-        CompositerError::MkDirLib(_) => "Can't create the `Lib` sub-directory.",
-        CompositerError::ReadDirGit(_) => "Can't read the `git` sub-directory.",
-        CompositerError::ReadDirLib(_) => "Can't read the `Lib` sub-directory.",
-        CompositerError::OpenDirLib(_) => "Can't open the `lib` sub-directory.",
-        CompositerError::ReadManifest(_) => "Can't read the `manifest` Neko.toml\
-                                             file.",
-        CompositerError::Mount(_) => "Can't mount the dynamic library.",
-        CompositerError::InstallClone(_) => "Can't clone the repository",
-        CompositerError::UpdateRepOpen(_) =>"Can't update the repository.",
-        CompositerError::UpdateRepOrigin(_) =>"Can't found the origin from\
-                                                repository.",
-        CompositerError::UpdateRepFetch(_) => "Can't fetch them repository.",
-        CompositerError::UpdateRepBranch(_) =>"Can't found the branch from\
-                                               repository.",
-        CompositerError::UpdateRepBranchId => "Can't get the target\
-                                                  identifiant from branch.",
-        CompositerError::UpdateRepObject(_) => "Can't found the object from\
-                                                target identifiant.",
-        CompositerError::UpdateRepReset(_) => "Can't reset the repository.",
-        CompositerError::BuildCommand(_) => "Can't run the command.",
-        CompositerError::BuildExit(_) => "The build haven't exited with success.",
-        CompositerError::Home => "Can't found the $HOME environement variable.",
-        CompositerError::ParseManifest => "Can't parse the `manifest` Neko.toml\
-                                           file.",
-        CompositerError::ParseInteger => "Can't parse a integer from the table.",
-        CompositerError::UnmountPosition => "Can't found the position.",
-        CompositerError::UnmountRemove => "Can't remove the index.",
-        CompositerError::InstallFormat => "The git link haven't a valid format",
-        CompositerError::InstallExists => "The dynamic library as already a\
-                                           repository.",
+    /// The function `description` returns a short description of
+    /// the error.
+    fn description(&self) -> &str {
+        match *self {
+            CompositerError::MvFail(_) => "The directory can't be moved.",
+            CompositerError::RmFile(_) => "Can't remove the file.",
+            CompositerError::RmDir(_) => "Can't remove the directory.",
+            CompositerError::MkDirGit(_) => "Can't create the `git` sub-directory.",
+            CompositerError::MkDirLib(_) => "Can't create the `Lib` sub-directory.",
+            CompositerError::ReadDirGit(_) => "Can't read the `git` sub-directory.",
+            CompositerError::ReadDirLib(_) => "Can't read the `Lib` sub-directory.",
+            CompositerError::OpenDirLib(_) => "Can't open the `lib` sub-directory.",
+            CompositerError::ReadManifest(_) => {
+                "Can't read the `manifest` Neko.toml\
+                                             file."
+            }
+            CompositerError::Mount(_) => "Can't mount the dynamic library.",
+            CompositerError::InstallClone(_) => "Can't clone the repository",
+            CompositerError::UpdateRepOpen(_) => "Can't update the repository.",
+            CompositerError::UpdateRepOrigin(_) => {
+                "Can't found the origin from\
+                                                repository."
+            }
+            CompositerError::UpdateRepFetch(_) => "Can't fetch them repository.",
+            CompositerError::UpdateRepBranch(_) => {
+                "Can't found the branch from\
+                                               repository."
+            }
+            CompositerError::UpdateRepBranchId => {
+                "Can't get the target\
+                                                  identifiant from branch."
+            }
+            CompositerError::UpdateRepObject(_) => {
+                "Can't found the object from\
+                                                target identifiant."
+            }
+            CompositerError::UpdateRepReset(_) => "Can't reset the repository.",
+            CompositerError::BuildCommand(_) => "Can't run the command.",
+            CompositerError::BuildExit(_) => "The build haven't exited with success.",
+            CompositerError::Home => "Can't found the $HOME environement variable.",
+            CompositerError::ParseManifest => {
+                "Can't parse the `manifest` Neko.toml\
+                                           file."
+            }
+            CompositerError::ParseInteger => "Can't parse a integer from the table.",
+            CompositerError::UnmountPosition => "Can't found the position.",
+            CompositerError::UnmountRemove => "Can't remove the index.",
+            CompositerError::InstallFormat => "The git link haven't a valid format",
+            CompositerError::InstallExists => {
+                "The dynamic library as already a\
+                                           repository."
+            }
+        }
     }
-  }
 
-  /// The function `cause` returns the lower-level cause of
-  /// this error if any.
-  fn cause(&self) -> Option<&Error> {
-      match *self {
-        CompositerError::MvFail(ref why) |
-        CompositerError::RmFile(ref why) |
-        CompositerError::RmDir(ref why) |
-        CompositerError::MkDirGit(ref why) |
-        CompositerError::MkDirLib(ref why) |
-        CompositerError::ReadDirGit(ref why) |
-        CompositerError::ReadDirLib(ref why) |
-        CompositerError::OpenDirLib(ref why) |
-        CompositerError::BuildCommand(ref why) |
-        CompositerError::ReadManifest(ref why) => Some(why),
-        CompositerError::InstallClone(ref why) |
-        CompositerError::UpdateRepOpen(ref why) |
-        CompositerError::UpdateRepOrigin(ref why) |
-        CompositerError::UpdateRepFetch(ref why) |
-        CompositerError::UpdateRepBranch(ref why) |
-        CompositerError::UpdateRepObject(ref why) |
-        CompositerError::UpdateRepReset(ref why) => Some(why),
-        CompositerError::Mount(ref why) => Some(why),
-        _ => None,
+    /// The function `cause` returns the lower-level cause of
+    /// this error if any.
+    fn cause(&self) -> Option<&Error> {
+        match *self {
+            CompositerError::MvFail(ref why) |
+            CompositerError::RmFile(ref why) |
+            CompositerError::RmDir(ref why) |
+            CompositerError::MkDirGit(ref why) |
+            CompositerError::MkDirLib(ref why) |
+            CompositerError::ReadDirGit(ref why) |
+            CompositerError::ReadDirLib(ref why) |
+            CompositerError::OpenDirLib(ref why) |
+            CompositerError::BuildCommand(ref why) |
+            CompositerError::ReadManifest(ref why) => Some(why),
+            CompositerError::InstallClone(ref why) |
+            CompositerError::UpdateRepOpen(ref why) |
+            CompositerError::UpdateRepOrigin(ref why) |
+            CompositerError::UpdateRepFetch(ref why) |
+            CompositerError::UpdateRepBranch(ref why) |
+            CompositerError::UpdateRepObject(ref why) |
+            CompositerError::UpdateRepReset(ref why) => Some(why),
+            CompositerError::Mount(ref why) => Some(why),
+            _ => None,
+        }
     }
-  }
 }

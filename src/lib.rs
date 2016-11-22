@@ -51,9 +51,10 @@ pub mod dynamic;
 mod err;
 
 use std::fmt;
+use std::slice;
 
 pub use self::err::{NekoError, Result};
-use pty_proc::shell::{Shell, ShellState};
+use pty_proc::prelude::*;
 
 use dynamic::Compositer;
 use editeur::Graphic;
@@ -69,10 +70,7 @@ pub struct Neko {
 }
 
 impl Neko {
-    pub fn new(
-        repeat: Option<i64>,
-        interval: Option<i64>,
-    ) -> Result<Self> {
+    pub fn new(repeat: Option<i64>, interval: Option<i64>) -> Result<Self> {
         match (
             Shell::new(repeat, interval, None),
             Compositer::new(),
@@ -87,6 +85,15 @@ impl Neko {
                 shell: shell,
             }),
         }
+    }
+
+    pub fn get_screen(&self) -> slice::Chunks<Character> {
+        let display: &Display = self.shell.get_screen();
+        let col: usize = display.get_window_size().get_col();
+
+        display.into_iter()
+            .as_slice()
+            .chunks(col)
     }
 }
 

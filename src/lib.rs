@@ -59,15 +59,35 @@ pub use self::err::{NekoError, Result};
 use std::fmt;
 use std::slice;
 
+use std::ops::{BitOr, BitAnd, Not};
+
 /// The first directory.
 const SPEC_ROOT: &'static str = ".neko";
+
+/// Neko' size
+const SPEC_NEKO_X_LEN: u8 = 10;
+const SPEC_NEKO_Y_LEN: u8 = 5;
+//const SPEC_NEKO_SIZE: u16 = (SPEC_NEKO_X_LEN as u16) * (SPEC_NEKO_Y_LEN as u16);
 
 /// The module `neko` is the first interface level.
 pub struct Neko {
     dynamic: Compositer,
     graphic: Graphic,
     shell: Shell,
-}
+   /* 
+   /// `coord` les coordonnées de la Neko dans la matrice
+   coord: (libc::size_t, libc::size_t),
+   /// `neko_content` contenant les texels du sprite courant transmutés en u8
+       // Transmute Exemple =>
+       //   let c: char = 'a';
+       //   let d: [u8; 4] = unsafe {
+       //     std::mem::transmute::<char, [u8; 4]>(c)
+       //   };
+       //   println!("{} -> {:?}", c, d);
+   neko_content: &[u8; SPEC_NEKO_X_LEN * SPEC_NEKO_Y_LEN * 4],
+   /// `dessous_neko` la parcelle de matrice se trouvant sous la Neko lors de l'impression
+   dessous_neko: &[Character; SPEC_NEKO_X_LEN * SPEC_NEKO_Y_LEN],
+*/}
 
 impl Neko {
     pub fn new(repeat: Option<i64>, interval: Option<i64>) -> Result<Self> {
@@ -82,7 +102,10 @@ impl Neko {
                     dynamic: dynamic,
                     graphic: graphic,
                     shell: shell,
-                })
+                  /*  coord(0, 0),
+                    neko_content: [0; SPEC_NEKO_X_LEN * SPEC_NEKO_Y_LEN * 4],
+                    dessous_neko: [0; SPEC_NEKO_SIZE],
+               */ })
             }
         }
     }
@@ -95,6 +118,33 @@ impl Neko {
             .as_slice()
             .chunks(col)
     }
+
+/*
+    pub fn display(&mut self) -> Result<>
+    { let display: &mut Display = self.shell.get_mut_screen();
+      let col: usize = display.get_window_size().get_col();
+      let row: usize = display.get_window_size().get_row();
+      if col.ge(&SPEC_NEKO_X_LEN).bitand(row.ge(&SPEC_NEKO_Y_LEN)).bitand()
+      { let stock_cursor_coords: (libc::size_t, libc::size_t) = display.oob;
+        self.neko_content = self.get_current_sprite().unwrap().1.get_current_draw().unwrap().into_iter().all(|&elem|
+        { elem.get_glyph();
+          true });
+
+        // INSERT NEKO IN DISPLAY
+        for i in SPEC_NEKO_Y_LEN
+        { display.goto_coord(self.coord.0, self.coord.1 + i);
+          // Stock ce qu'il y a à l'endroit de la Neko
+          self.dessous_neko.write(&display.screen[self.coord.0 + ((self.coord.1 + i) * col) .. self.coord.0 + ((self.coord.1 + i) * col) + SPEC_NEKO_X_LEN])
+          // Remplit screen avec la Neko
+          display.write(&neko_content[i * SPEC_NEKO_X_LEN .. (i + 1) * SPEC_NEKO_X_LEN]) }
+        display.oob = stock_cursor_coords;
+        Ok() }
+      else
+      /// Terminal plus petit que la Neko ou
+      /// la Neko est en dehors du Terminal
+      { Err() }}
+*/
+
 }
 
 impl Iterator for Neko {

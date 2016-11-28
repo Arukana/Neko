@@ -57,3 +57,6 @@ git              = "https://github.com/adjivas/pty-proc.git"
 
 [dependencies.editeur]
 git              = "https://github.com/Arukana/Editor.git"
+
+[dependencies.libc]
+version          = "0.2"

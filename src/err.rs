@@ -18,6 +18,8 @@ pub enum NekoError {
     Graphic(GraphicError),
     /// The shell interface has occured an error.
     Shell(ShellError),
+//    /// The terminal size is smaller than the size of the Neko
+//    Size,
 }
 
 impl fmt::Display for NekoError {
@@ -42,6 +44,7 @@ impl Error for NekoError {
                                         occured an error."
             }
             NekoError::Shell(_) => "The shell interface has occured an error",
+//            NekoError::Size => "Terminal too small",
         }
     }
 
@@ -52,6 +55,7 @@ impl Error for NekoError {
             NekoError::Dynamic(ref why) => Some(why),
             NekoError::Graphic(ref why) => Some(why),
             NekoError::Shell(ref why) => Some(why),
+          //  NekoError::Size => Some(()),
         }
     }
 }

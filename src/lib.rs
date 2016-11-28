@@ -148,32 +148,31 @@ impl Neko {
         print!("CONTENT::");
         for i in {0..SPEC_NEKO_SIZE}
         { print!("{} ", content[i]); }
-*/
-
         println!("");
-
+*/
         let display: &mut Display = self.shell.get_mut_screen();
-
-        // INSERT NEKO IN DISPLAY
+//        let mut buffer: &mut [Character] = &mut self.dessous_neko[..];
         let (x, y) = self.coord;
         {0..SPEC_NEKO_Y_LEN}.all(|i|
         { display.goto_coord(x, y + i);
-
 /*
-          self.dessous_neko.write(&display.into_bytes[self.coord.0 + ((self.coord.1 + i) * col) .. self.coord.0 + ((self.coord.1 + i) * col) + SPEC_NEKO_X_LEN]);
+            let mut j = 0;
+            display.g[].all(|&elem|
+            { buffer[j + (i * SPEC_NEKO_X_LEN)] = ;
+              j += 1;
+              true });
 */
-      println!("TO::({}, {}) | GET::{:?} | AT::{}", x, y + i, &content[(i * 4) * SPEC_NEKO_X_LEN .. ((i + 1) * 4) * SPEC_NEKO_X_LEN], ((i + 1) * 4) * SPEC_NEKO_X_LEN);
-        
+        // INSERT NEKO IN DISPLAY
           display.write(&content[(i * 4) * SPEC_NEKO_X_LEN .. ((i + 1) * 4) * SPEC_NEKO_X_LEN]);
           true });
-        
-
         display.goto_coord(x_stock, y_stock);
         Ok(()) }
       else
       { //Err(NekoError::Size)
         Ok(()) }}
 
+
+//println!("TO::({}, {}) | GET::{:?} | AT::{}", x, y + i, &content[(i * 4) * SPEC_NEKO_X_LEN .. ((i + 1) * 4) * SPEC_NEKO_X_LEN], ((i + 1) * 4) * SPEC_NEKO_X_LEN);
 
 }
 

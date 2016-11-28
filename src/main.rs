@@ -10,8 +10,8 @@ fn main() {
       if let Some(()) = shell.is_output_screen() {
         neko.display_at((10, 10));
         let the = neko.get_mut_shell();
-       // print!("\x1B[H{}", format!("{}", the)
-        print!("{}", format!("{}", the)
+        print!("\x1B[H{}", format!("{}", the)
+       // print!("{}", format!("{}", the)
             .chars()
             .take(the.get_screen()
               .get_window_size()

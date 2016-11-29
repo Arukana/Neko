@@ -121,17 +121,21 @@ impl Neko {
     { let col: usize = self.shell.get_screen().get_window_size().get_col();
       let row: usize = self.shell.get_screen().get_window_size().get_row();
       self.coord = coord;
-      if col.ge(&SPEC_NEKO_X_LEN).bitand(row.ge(&SPEC_NEKO_Y_LEN))
+      if col.ge(&SPEC_NEKO_X_LEN).bitand(row.ge(&SPEC_NEKO_Y_LEN)).bitand(coord.0.lt(&col)).bitand(coord.1.lt(&row))
       { let (x_stock, y_stock) = self.shell.get_screen().get_cursor_coords();
-
-       // Transmute Exemple =>
-       //   let c: char = 'a';
-       //   let d: [u8; 4] = unsafe {
-       //     std::mem::transmute::<char, [u8; 4]>(c)
-       //   };
-       //   println!("{} -> {:?}", c, d);
-
         let mut content = self.neko_content;
+        let mut dessous: [Character; SPEC_NEKO_SIZE] = [Character::new(&[b' ']); SPEC_NEKO_SIZE];
+        let (x_neko, y_neko) = self.coord;
+        let size_x = 
+        if x_neko + SPEC_NEKO_X_LEN < col
+        { SPEC_NEKO_X_LEN }
+        else
+        { col - x_neko };
+        let size_y = 
+        if y_neko + SPEC_NEKO_Y_LEN < row
+        { SPEC_NEKO_Y_LEN }
+        else
+        { row - y_neko };
         match self.graphic.get_current_sprite()
         { Some(sprite) =>
             { match sprite.1.get_current_draw()
@@ -144,35 +148,46 @@ impl Neko {
                       true }); },
                 None => {}, }},
           None => {}, }
+
+        {0..size_y}.all(|i|
+        { self.shell.write_screen((format!("\x1B[{};{}H", y_neko + i + 1, x_neko + 1)).as_bytes());
+
+        /*
+          let coucou = self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x)
+          .map(|elem: (&Character)| *elem).collect::<Vec<Character>>();
+*/
+          let mut j = 0;
+          print!("ELEM::");
+          println!("ALL");
+          self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x)
+          .map(|&elem|
+          { dessous[j + (i * size_x)] = elem;
+            print!("({}, {})::{:?} | ", i, j, elem);
+            j += 1; }
+            );
+        println!("");
+          self.shell.write_screen(&content[(i * 4) * size_x .. ((i + 1) * 4) * size_x]);
+          true });
+        self.shell.write_screen((format!("\x1B[{};{}H", y_stock + 1, x_stock + 1)).as_bytes());
+        Ok(()) }
+      else
+      { //Err(NekoError::Size)
+        Ok(()) }}
+
 /*
         print!("CONTENT::");
         for i in {0..SPEC_NEKO_SIZE}
         { print!("{} ", content[i]); }
         println!("");
 */
-        let display: &mut Display = self.shell.get_mut_screen();
-//        let mut buffer: &mut [Character] = &mut self.dessous_neko[..];
-        let (x, y) = self.coord;
-        {0..SPEC_NEKO_Y_LEN}.all(|i|
-        { display.goto_coord(x, y + i);
-/*
-            let mut j = 0;
-            display.g[].all(|&elem|
-            { buffer[j + (i * SPEC_NEKO_X_LEN)] = ;
-              j += 1;
-              true });
-*/
-        // INSERT NEKO IN DISPLAY
-          display.write(&content[(i * 4) * SPEC_NEKO_X_LEN .. ((i + 1) * 4) * SPEC_NEKO_X_LEN]);
-          true });
-        display.goto_coord(x_stock, y_stock);
-        Ok(()) }
-      else
-      { //Err(NekoError::Size)
-        Ok(()) }}
-
-
+// println!("FROM::{} | TO::{} | AT::({} ,{})", (i * 4) * SPEC_NEKO_X_LEN, ((i + 1) * 4) * SPEC_NEKO_X_LEN, x, y + i);
 //println!("TO::({}, {}) | GET::{:?} | AT::{}", x, y + i, &content[(i * 4) * SPEC_NEKO_X_LEN .. ((i + 1) * 4) * SPEC_NEKO_X_LEN], ((i + 1) * 4) * SPEC_NEKO_X_LEN);
+       // Transmute Exemple =>
+       //   let c: char = 'a';
+       //   let d: [u8; 4] = unsafe {
+       //     std::mem::transmute::<char, [u8; 4]>(c)
+       //   };
+       //   println!("{} -> {:?}", c, d);
 
 }
 

@@ -8,7 +8,7 @@ fn main() {
 
     while let Some(shell) = neko.next() {
       if let Some(()) = shell.is_output_screen() {
-        neko.display_at((10, 10));
+        neko.display_at((0, 0));
         let the = neko.get_mut_shell();
         print!("\x1B[H{}", format!("{}", the)
        // print!("{}", format!("{}", the)
@@ -21,9 +21,6 @@ fn main() {
         if let Some(ref text) = shell.is_input_slice() {
           neko.get_mut_shell().write(text).unwrap();
           neko.get_mut_shell().flush().unwrap();
-
-          if (*text)[0] == b'q'
-          { return ;}
         }
     }
 }

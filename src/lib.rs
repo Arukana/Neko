@@ -143,30 +143,23 @@ impl Neko {
                   { let mut i = 0;
                     draw.into_iter().all(|&(_, mut elem)|
                     { let mut buffer: &mut [u8] = &mut content[i..];
-                      unsafe { buffer.write(&(std::mem::transmute::<char, [u8; 4]>(elem.get_glyph()))).unwrap(); }
+                      unsafe
+                      { let mut hey = std::mem::transmute::<char, [u8; 4]>(elem.get_glyph());
+                        hey.reverse();
+                        buffer.write(&hey).unwrap();
+                      println!("ELEM::{:?} | AT::{}", hey, i); }
                       i += 4;
                       true }); },
                 None => {}, }},
           None => {}, }
-
         {0..size_y}.all(|i|
         { self.shell.write_screen((format!("\x1B[{};{}H", y_neko + i + 1, x_neko + 1)).as_bytes());
-
-        /*
-          let coucou = self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x)
-          .map(|elem: (&Character)| *elem).collect::<Vec<Character>>();
-*/
           let mut j = 0;
-          print!("ELEM::");
-          println!("ALL");
-          self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x)
-          .map(|&elem|
+          self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x).all(|&elem|
           { dessous[j + (i * size_x)] = elem;
-            print!("({}, {})::{:?} | ", i, j, elem);
-            j += 1; }
-            );
-        println!("");
-          self.shell.write_screen(&content[(i * 4) * size_x .. ((i + 1) * 4) * size_x]);
+            j += 1;
+            true });
+          self.shell.write_screen(&(content[(i * 4) * size_x .. ((i + 1) * 4) * size_x]));
           true });
         self.shell.write_screen((format!("\x1B[{};{}H", y_stock + 1, x_stock + 1)).as_bytes());
         Ok(()) }
@@ -174,6 +167,21 @@ impl Neko {
       { //Err(NekoError::Size)
         Ok(()) }}
 
+/*
+        print!("ELEM! ");
+        println!("LEN::{} | SKIP::{} | TAKE::{}", self.shell.get_screen().get_window_size().row_by_col(), ((y_neko + i) * col) + x_neko, size_x);
+*/
+/*
+        println!("");
+        print!("DESSOUS::");
+        for i in {0..SPEC_NEKO_SIZE}
+        { print!("{:?} ", dessous[i]); }
+        println!("");
+*/
+/*
+        let coucou = self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x)
+        .map(|elem: (&Character)| *elem).collect::<Vec<Character>>();
+*/
 /*
         print!("CONTENT::");
         for i in {0..SPEC_NEKO_SIZE}

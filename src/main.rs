@@ -8,12 +8,11 @@ fn main() {
 
     while let Some(shell) = neko.next() {
       if let Some(()) = shell.is_output_screen() {
-        neko.display_at((0, 0));
-        let the = neko.get_mut_shell();
-        print!("\x1B[H{}", format!("{}", the)
-       // print!("{}", format!("{}", the)
+        neko.display_at((10, 10));
+       // print!("\x1B[H{}", format!("{}", neko.get_screen())
+        print!("{}", format!("{}", neko.get_screen())
             .chars()
-            .take(the.get_screen()
+            .take(neko.get_screen()
               .get_window_size()
               .row_by_col())
             .collect::<String>());

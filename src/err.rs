@@ -1,7 +1,5 @@
-
-
 use ::dynamic::CompositerError;
-use ::editeur::GraphicError;
+use ::graphic::GraphicError;
 use ::pty_proc::shell::ShellError;
 use std::error::Error;
 use std::fmt;

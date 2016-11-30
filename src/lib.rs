@@ -35,7 +35,7 @@
 #[macro_use]
 extern crate itertools;
 extern crate pty_proc;
-extern crate editeur;
+extern crate graphic;
 extern crate dylib;
 extern crate git2;
 extern crate toml;
@@ -53,7 +53,7 @@ mod err;
 
 
 use dynamic::Compositer;
-use editeur::Graphic;
+use graphic::Graphic;
 use pty_proc::prelude::*;
 use std::io::Write;
 

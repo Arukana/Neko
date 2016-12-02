@@ -3,12 +3,12 @@
 // https://github.com/adjivas/Neko
 //
 // This file may not be copied, modified, or distributed
-// except according to those terms.
 
 //! # neko
 //!
 //! This library contains the module `graphic` and `dynamic`.
 
+#![feature(range_contains)]
 #![feature(slice_patterns)]
 #![feature(advanced_slice_patterns)]
 
@@ -44,6 +44,8 @@ extern crate libc;
 #[macro_use]
 /// The macros of crate.
 mod macros;
+/// The module `display` is a extension of pty-proc's display module.
+pub mod display;
 /// The module `prelude` is for public.
 pub mod prelude;
 /// The module `dynamic` is the compositer of extern libraries.
@@ -51,164 +53,88 @@ pub mod dynamic;
 
 mod err;
 
+use std::io::{self, Write};
+use std::fmt;
 
 use dynamic::Compositer;
-use graphic::Graphic;
-use pty_proc::prelude::*;
-use std::io::Write;
+use display::Display;
+
+pub use graphic::prelude as editeur;
+pub use pty_proc::prelude as pty;
 
 pub use self::err::{NekoError, Result};
-use std::fmt;
-use std::slice;
-
-use std::ops::{BitOr, BitAnd, Not};
 
 /// The first directory.
 const SPEC_ROOT: &'static str = ".neko";
 
-/// Neko' size
-const SPEC_NEKO_X_LEN: usize = 10;
-const SPEC_NEKO_Y_LEN: usize = 5;
-const SPEC_NEKO_SIZE: usize = SPEC_NEKO_X_LEN * SPEC_NEKO_Y_LEN;
 
 /// The module `neko` is the first interface level.
 pub struct Neko {
     dynamic: Compositer,
-    graphic: Graphic,
-    shell: Shell,
-   /// `coord` les coordonnees de la Neko dans la matrice
-   coord: (libc::size_t, libc::size_t),
-   /// `neko_content` contenant les texels du sprite courant transmutes en u8
-   neko_content: [u8; SPEC_NEKO_SIZE * 4],
-   /// `dessous_neko` la parcelle de matrice se trouvant sous la Neko lors de l'impression
-   dessous_neko: [Character; SPEC_NEKO_SIZE],
+    /// Overload of Display interface from Pty.
+    screen: Display,
+    /// Interface of Pseudo terminal.
+    shell: pty::Shell,
+    /// Interface on a Sprite partition.
+    graphic: editeur::Graphic,
 }
 
 impl Neko {
     pub fn new(repeat: Option<i64>, interval: Option<i64>) -> Result<Self> {
-        match (Shell::new(repeat, interval, None),
+        match (pty::Shell::new(repeat, interval, None),
                Compositer::new(),
-               Graphic::new()) {
+               editeur::Graphic::new()) {
             (Err(why), _, _) => Err(NekoError::Shell(why)),
             (_, Err(why), _) => Err(NekoError::Dynamic(why)),
             (_, _, Err(why)) => Err(NekoError::Graphic(why)),
             (Ok(shell), Ok(dynamic), Ok(graphic)) => {
+                let mut screen: Display = Display::default();
+
+                screen.set_window_size(shell.get_screen().get_window_size());
                 Ok(Neko {
+                    screen: screen,
                     dynamic: dynamic,
                     graphic: graphic,
                     shell: shell,
-                    coord: (0, 0),
-                    neko_content: [0; SPEC_NEKO_SIZE * 4],
-                    dessous_neko: [Character::new(&[b' ']); SPEC_NEKO_SIZE],
                 })
-            }
+            },
         }
     }
 
-    pub fn get_mut_shell(&mut self) -> &mut Shell
-    { &mut self.shell }
-
-    pub fn get_screen(&self) -> slice::Chunks<Character> {
-        let display: &Display = self.shell.get_screen();
-        let col: usize = display.get_window_size().get_col();
-
-        display.into_iter()
-            .as_slice()
-            .chunks(col)
+    /// The accessor method `get_screen` returns a reference on the Display interface.
+    pub fn get_screen(&self) -> &Display {
+        &self.screen
     }
-
-    pub fn display_at(&mut self, coord: (usize, usize)) -> Result<()>
-    { let col: usize = self.shell.get_screen().get_window_size().get_col();
-      let row: usize = self.shell.get_screen().get_window_size().get_row();
-      self.coord = coord;
-      if col.ge(&SPEC_NEKO_X_LEN).bitand(row.ge(&SPEC_NEKO_Y_LEN)).bitand(coord.0.lt(&col)).bitand(coord.1.lt(&row))
-      { let (x_stock, y_stock) = self.shell.get_screen().get_cursor_coords();
-        let mut content = self.neko_content;
-        let mut dessous: [Character; SPEC_NEKO_SIZE] = [Character::new(&[b' ']); SPEC_NEKO_SIZE];
-        let (x_neko, y_neko) = self.coord;
-        let size_x = 
-        if x_neko + SPEC_NEKO_X_LEN < col
-        { SPEC_NEKO_X_LEN }
-        else
-        { col - x_neko };
-        let size_y = 
-        if y_neko + SPEC_NEKO_Y_LEN < row
-        { SPEC_NEKO_Y_LEN }
-        else
-        { row - y_neko };
-        match self.graphic.get_current_sprite()
-        { Some(sprite) =>
-            { match sprite.1.get_current_draw()
-              { Some(draw) =>
-                  { let mut i = 0;
-                    draw.into_iter().all(|&(_, mut elem)|
-                    { let mut buffer: &mut [u8] = &mut content[i..];
-                      unsafe
-                      { let mut hey = std::mem::transmute::<char, [u8; 4]>(elem.get_glyph());
-                        hey.reverse();
-                        buffer.write(&hey).unwrap();
-                      println!("ELEM::{:?} | AT::{}", hey, i); }
-                      i += 4;
-                      true }); },
-                None => {}, }},
-          None => {}, }
-        {0..size_y}.all(|i|
-        { self.shell.write_screen((format!("\x1B[{};{}H", y_neko + i + 1, x_neko + 1)).as_bytes());
-          let mut j = 0;
-          self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x).all(|&elem|
-          { dessous[j + (i * size_x)] = elem;
-            j += 1;
-            true });
-          self.shell.write_screen(&(content[(i * 4) * size_x .. ((i + 1) * 4) * size_x]));
-          true });
-        self.shell.write_screen((format!("\x1B[{};{}H", y_stock + 1, x_stock + 1)).as_bytes());
-        Ok(()) }
-      else
-      { //Err(NekoError::Size)
-        Ok(()) }}
-
-/*
-        print!("ELEM! ");
-        println!("LEN::{} | SKIP::{} | TAKE::{}", self.shell.get_screen().get_window_size().row_by_col(), ((y_neko + i) * col) + x_neko, size_x);
-*/
-/*
-        println!("");
-        print!("DESSOUS::");
-        for i in {0..SPEC_NEKO_SIZE}
-        { print!("{:?} ", dessous[i]); }
-        println!("");
-*/
-/*
-        let coucou = self.shell.get_screen().into_iter().skip(((y_neko + i) * col) + x_neko).take(size_x)
-        .map(|elem: (&Character)| *elem).collect::<Vec<Character>>();
-*/
-/*
-        print!("CONTENT::");
-        for i in {0..SPEC_NEKO_SIZE}
-        { print!("{} ", content[i]); }
-        println!("");
-*/
-// println!("FROM::{} | TO::{} | AT::({} ,{})", (i * 4) * SPEC_NEKO_X_LEN, ((i + 1) * 4) * SPEC_NEKO_X_LEN, x, y + i);
-//println!("TO::({}, {}) | GET::{:?} | AT::{}", x, y + i, &content[(i * 4) * SPEC_NEKO_X_LEN .. ((i + 1) * 4) * SPEC_NEKO_X_LEN], ((i + 1) * 4) * SPEC_NEKO_X_LEN);
-       // Transmute Exemple =>
-       //   let c: char = 'a';
-       //   let d: [u8; 4] = unsafe {
-       //     std::mem::transmute::<char, [u8; 4]>(c)
-       //   };
-       //   println!("{} -> {:?}", c, d);
-
 }
 
 impl Iterator for Neko {
-    type Item = ShellState;
+    type Item = pty::ShellState;
 
-    fn next(&mut self) -> Option<ShellState> {
-        if let Some(next) = self.shell.next() {
-            self.dynamic.call(&next);
-            Some(next)
+    fn next(&mut self) -> Option<pty::ShellState> {
+        if let Some(event) = self.shell.next() {
+            if let Some(()) = event.is_signal_resized() {
+                self.screen.set_window_size(self.shell.get_screen().get_window_size());
+            }
+            self.screen.set_start(5, 5);
+            self.screen.with_draw(
+                self.shell.get_screen(),
+                self.graphic.get_sprite("bust").unwrap().into_iter().next().unwrap()
+            );
+            self.dynamic.call(&event);
+            Some(event)
         } else {
             None
         }
+    }
+}
+
+impl Write for Neko {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        self.shell.write(buf)
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        self.shell.flush()
     }
 }
 
@@ -216,12 +142,19 @@ impl fmt::Display for Neko {
     /// The function `fmt` formats the value using
     /// the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.shell)
+        write!(f, "{}", self.get_screen()
+                            .into_iter()
+                            .map(|character: (&pty::Character)|
+                                    character.get_unicode())
+                            .collect::<String>())
     }
 }
 
 impl fmt::Debug for Neko {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?} {:?}", self.dynamic, self.graphic)
+        write!(f, "Neko {{ dynamic: {:?}, graphic: {:?}, screen: {:?} }}",
+               self.dynamic,
+               self.graphic,
+               self.screen)
     }
 }

@@ -11,6 +11,7 @@
 #![feature(range_contains)]
 #![feature(slice_patterns)]
 #![feature(advanced_slice_patterns)]
+#![feature(result_unwrap_or_default)]
 
 #![crate_type= "lib"]
 #![cfg_attr(feature = "nightly", feature(plugin))]
@@ -36,7 +37,6 @@
 extern crate itertools;
 extern crate pty_proc;
 extern crate graphic;
-extern crate dylib;
 extern crate git2;
 extern crate toml;
 extern crate libc;

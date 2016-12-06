@@ -1,23 +1,29 @@
+#[macro_use]
+mod macros;
 mod err;
 
-use ::dylib;
 pub use self::err::{LibraryError, Result};
-use std::cmp::{Eq, Ordering};
+
 use std::fmt;
 use std::mem;
+use std::ptr;
+use std::os::unix::ffi::OsStrExt;
+use std::cmp::{Eq, Ordering};
 use std::path::PathBuf;
+use std::ffi::CString;
+
+use ::libc;
 
 /// The struct `Library` is a table of callback.
 pub struct Library {
     /// `start` interface.
-    start: Option<fn()>,
+    start: Option<extern fn()>,
     /// `idle` interface.
-    idle: Option<fn()>,
+    idle: Option<extern fn()>,
     /// Address of the library.
     path: PathBuf,
     /// dynamic library interface.
-    #[allow(dead_code)]
-    dylib: dylib::DynamicLibrary,
+    handle: *mut libc::c_void,
     /// priority queue.
     index: i64,
 }
@@ -25,27 +31,23 @@ pub struct Library {
 impl Library {
     /// The constructor method `new` returns a interface for a extern library.
     pub fn new(path: PathBuf, index: i64) -> Result<Self> {
-        match dylib::DynamicLibrary::open(Some(&path)) {
-            Err(why) => Err(LibraryError::BadDyLib(why)),
-            Ok(lib) => unsafe {
+        unsafe {
+            let handle: *mut libc::c_void = libc::dlopen(
+                path.as_os_str().as_bytes().as_ptr() as *const libc::c_char,
+                libc::RTLD_LAZY
+            );
+
+            if handle.eq(&ptr::null_mut()) {
+                Err(LibraryError::BadDyLib(CString::from_raw(libc::dlerror()).into_string().unwrap_or_default()))
+            } else {
                 Ok(Library {
-                    start: if let Some(start) = lib.symbol::<*mut u8>("start")
-                        .ok() {
-                        Some(mem::transmute::<*mut *mut u8, fn()>(start))
-                    } else {
-                        None
-                    },
-                    idle: if let Some(idle) = lib.symbol::<*mut u8>("idle")
-                        .ok() {
-                        Some(mem::transmute::<*mut *mut u8, fn()>(idle))
-                    } else {
-                        None
-                    },
+                    start: symbol!(handle, b"start\0".as_ptr() as *const libc::c_char),
+                    idle: symbol!(handle, b"idle\0".as_ptr() as *const libc::c_char),
                     path: path,
-                    dylib: lib,
+                    handle: handle,
                     index: index,
                 })
-            },
+            }
         }
     }
 
@@ -107,10 +109,17 @@ impl Ord for Library {
 impl fmt::Debug for Library {
     /// Formats the value using the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f,
-               "library({}): start:{} path:({:?})",
+        write!(f, "library({}): start:{} path:({:?})",
                self.index,
                self.start.is_some(),
                self.path)
+    }
+}
+
+impl Drop for Library {
+    fn drop(&mut self) {
+        unsafe {
+            assert_ne!(libc::dlclose(self.handle), -1);
+        }
     }
 }

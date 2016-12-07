@@ -1,16 +1,6 @@
 pub mod library;
 mod err;
 
-
-use ::SPEC_ROOT;
-use ::git2;
-
-use ::itertools::Itertools;
-use ::pty_proc::shell::ShellState;
-
-pub use self::err::{CompositerError, Result};
-
-use self::library::Library;
 use std::env;
 use std::ffi::OsStr;
 use std::fs;
@@ -19,7 +9,17 @@ use std::io::{self, Read};
 use std::ops::Not;
 use std::path::{Path, PathBuf};
 use std::process;
+
+pub use self::err::{CompositerError, Result};
+pub use self::library::LibraryState;
+use self::library::Library;
+
 use ::toml;
+use ::SPEC_ROOT;
+use ::git2;
+use ::itertools::Itertools;
+use ::pty_proc::shell::ShellState;
+
 
 /// The default capacity of heap.
 const SPEC_CAPACITY: usize = 10;
@@ -387,7 +387,7 @@ impl Compositer {
                 .take_while(|lib| lib.get_priority().eq(&priority))
                 .foreach(|lib| {
                     if event.is_idle().is_some() {
-                        lib.idle();
+                        lib.call(event);
                     }
                 })
         })

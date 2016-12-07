@@ -1,8 +1,7 @@
 #[macro_use]
 mod macros;
+pub mod state;
 mod err;
-
-pub use self::err::{LibraryError, Result};
 
 use std::fmt;
 use std::mem;
@@ -12,20 +11,30 @@ use std::cmp::{Eq, Ordering};
 use std::path::PathBuf;
 use std::ffi::CString;
 
+pub use self::err::{LibraryError, Result};
+pub use self::state::LibraryState;
+
 use ::libc;
+use ::pty;
 
 /// The struct `Library` is a table of callback.
 pub struct Library {
     /// `start` interface.
-    start: Option<extern fn()>,
+    start: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
     /// `idle` interface.
-    idle: Option<extern fn()>,
-    /// Address of the library.
-    path: PathBuf,
+    idle: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
+    /// `idle` interface.
+    end: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
+    /// `state` interface to update the neko or unmount the current librairy.
+    state: LibraryState,
+    /// `save` pointer to share a segment of librairy memory.
+    save: *mut libc::c_void,
     /// dynamic library interface.
     handle: *mut libc::c_void,
     /// priority queue.
     index: i64,
+    /// Address of the library.
+    path: PathBuf,
 }
 
 impl Library {
@@ -43,9 +52,12 @@ impl Library {
                 Ok(Library {
                     start: symbol!(handle, b"start\0".as_ptr() as *const libc::c_char),
                     idle: symbol!(handle, b"idle\0".as_ptr() as *const libc::c_char),
-                    path: path,
+                    end: symbol!(handle, b"end\0".as_ptr() as *const libc::c_char),
+                    state: LibraryState::default(),
+                    save: ptr::null_mut(),
                     handle: handle,
                     index: index,
+                    path: path,
                 })
             }
         }
@@ -64,14 +76,21 @@ impl Library {
     /// The method `start` call the extern function if defined.
     pub fn start(&self) {
         if let Some(start) = self.start {
-            start();
+            start(&self.state, self.save);
+        }
+    }
+
+    /// The method `end` call the extern function if defined.
+    pub fn end(&self) {
+        if let Some(end) = self.end {
+            end(&self.state, self.save);
         }
     }
 
     /// The method `idle` call the extern function if defined.
-    pub fn idle(&self) {
+    pub fn call(&self, event: &pty::ShellState) {
         if let Some(idle) = self.idle {
-            idle();
+            idle(&self.state, self.save);
         }
     }
 }
@@ -118,6 +137,7 @@ impl fmt::Debug for Library {
 
 impl Drop for Library {
     fn drop(&mut self) {
+        self.end();
         unsafe {
             assert_ne!(libc::dlclose(self.handle), -1);
         }

@@ -40,9 +40,6 @@ travis           = ["lints", "nightly"] # for building with travis-cargo
 version          = "*"
 optional         = true
 
-[dependencies.itertools]
-version          = "0.5"
-
 [dependencies.toml]
 version          = "0.2"
 

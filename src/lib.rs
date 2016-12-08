@@ -33,8 +33,6 @@
 
 #![doc(html_logo_url = "https://arukana.github.io/Neko/images/neko.png")]
 
-#[macro_use]
-extern crate itertools;
 extern crate pty_proc;
 extern crate graphic;
 extern crate git2;

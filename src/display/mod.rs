@@ -1,8 +1,4 @@
-pub mod movement;
-
 use std::ops::{BitAnd, Rem};
-
-use self::movement::Movement;
 
 use ::pty;
 use ::editeur;
@@ -40,7 +36,7 @@ impl Display {
                     if (self.start_x..end_x).contains(index.rem(with)).bitand(
                        (self.start_y..end_y).contains(y)) {
                        it.next().and_then(|&(_, texel)|
-                           Some(pty::Character::new(texel.get_glyph())))
+                           Some(pty::Character::from(texel.get_glyph())))
                     } else {
                         None
                     }

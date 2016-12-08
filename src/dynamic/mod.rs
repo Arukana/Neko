@@ -3,10 +3,10 @@ mod err;
 
 use std::env;
 use std::ffi::OsStr;
+use std::ops::Not;
 use std::fs;
 use std::fs::File;
 use std::io::{self, Read};
-use std::ops::Not;
 use std::path::{Path, PathBuf};
 use std::process;
 
@@ -17,7 +17,6 @@ use self::library::Library;
 use ::toml;
 use ::SPEC_ROOT;
 use ::git2;
-use ::itertools::Itertools;
 use ::pty_proc::shell::ShellState;
 
 
@@ -46,7 +45,10 @@ const SPEC_MANIFEST: &'static str = "Neko.toml";
 /// The struct `Compositer` is a heap of a double tuple
 /// of a dynamic libraries and a priority order.
 #[derive(Debug)]
-pub struct Compositer(Vec<Library>);
+pub struct Compositer {
+    state: LibraryState,
+    list: Vec<Library>,
+}
 
 impl Compositer {
     /// The constructor `new` returns a Compositer prepared with
@@ -152,17 +154,19 @@ impl Compositer {
                     self.get_manifest(&git.join(&source))
                         .and_then(|table| if let Some(priority) =
                             priority.or(parse_number!(table)) {
-                            match Library::new(lib.join(&source)
-                                   .with_extension(SPEC_LIB_EXT),
-                                 priority) {
-                Err(why) => Err(CompositerError::Mount(why)),
-                Ok(dy) => {
-                  dy.start();
-                  self.0.push(dy);
-                  self.0.sort();
-                  Ok(())
-                }
-              }
+                            match Library::new(
+                                lib.join(&source).with_extension(SPEC_LIB_EXT),
+                                priority,
+                                &self.state
+                            ) {
+                                Err(why) => Err(CompositerError::Mount(why)),
+                                Ok(dy) => {
+                                    dy.start(&self.state);
+                                    self.list.push(dy);
+                                    self.list.sort();
+                                    Ok(())
+                                },
+                            }
                         } else {
                             Err(CompositerError::ParseInteger)
                         })
@@ -174,11 +178,11 @@ impl Compositer {
     /// The method `unmount` removes library from the queue.
     /// @ libraryname: `arukana@libnya`.
     pub fn unmount<S: AsRef<OsStr>>(&mut self, libraryname: S) -> Result<()> {
-        if let Some(index) = self.0.iter().position(|s| {
+        if let Some(index) = self.list.iter().position(|s| {
             s.as_path_buf().file_stem().eq(&Some(libraryname.as_ref()))
         }) {
-            self.0.remove(index);
-            self.0.sort();
+            self.list.remove(index);
+            self.list.sort();
             Ok(())
         } else {
             Err(CompositerError::UnmountPosition)
@@ -376,21 +380,28 @@ impl Compositer {
         }
     }
 
+    pub fn get_state(&self) -> &LibraryState {
+        &self.state
+    }
+
     /// The general method `call` according to the state will run
     /// the evenement functions by library group.
-    pub fn call(&self, event: &ShellState) {
-        self.0.iter().group_by(|lib| *lib).into_iter().foreach(|(group, _)| {
-            let priority: i64 = group.get_priority();
-            self.0
-                .iter()
-                .skip_while(|lib| lib.get_priority().eq(&priority).not())
-                .take_while(|lib| lib.get_priority().eq(&priority))
-                .foreach(|lib| {
-                    if event.is_idle().is_some() {
-                        lib.call(event);
-                    }
-                })
-        })
+    pub fn call(&mut self, event: &ShellState) -> Option<&LibraryState> {
+        self.list.iter()
+            .map(|lib: &Library|
+                 lib.call(&self.state, event));
+        self.list.retain(|lib: &Library|
+             lib.is_unmounted().not());
+        Some(&self.state)
+    }
+}
+
+impl<'a> IntoIterator for &'a Compositer {
+    type Item = &'a Library;
+    type IntoIter = ::std::slice::Iter<'a, Library>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.list.as_slice().into_iter()
     }
 }
 
@@ -398,6 +409,9 @@ impl Compositer {
 impl Default for Compositer {
     /// The constructor `default` returns a empty Compositer.
     fn default() -> Compositer {
-        Compositer(Vec::with_capacity(SPEC_CAPACITY))
+        Compositer {
+            list: Vec::with_capacity(SPEC_CAPACITY),
+            state: LibraryState::default(),
+        }
     }
 }

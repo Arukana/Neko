@@ -5,12 +5,23 @@ use std::str;
 use ::editeur;
 use ::libc;
 
+use super::Position;
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default)]
+pub struct Tuple {
+    part: editeur::Part,
+    emotion: editeur::Emotion,
+}
+
 #[repr(C)]
 #[derive(Copy)]
 pub struct LibraryState {
     sheet: editeur::Sheet,
-    emotions: [libc::c_uchar; editeur::SPEC_MAX_DRAW],
-    draws: [[libc::c_uchar; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+    emotions: [editeur::Emotion; editeur::SPEC_MAX_DRAW],
+    draws: [[Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+    position: Position,
+    cartesian: [libc::c_ushort; 2],
     message: [libc::c_uchar; 1024],
     unmount: libc::c_uchar,
 }
@@ -24,8 +35,8 @@ impl LibraryState {
 impl Clone for LibraryState {
     fn clone(&self) -> Self {
         unsafe {
-            let mut draws: [[libc::c_uchar; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
-            let mut emotions: [libc::c_uchar; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
+            let mut draws: [[Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
+            let mut emotions: [editeur::Emotion; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
             let mut message: [libc::c_uchar; 1024] = mem::uninitialized();
 
             draws.copy_from_slice(&self.draws);
@@ -36,6 +47,8 @@ impl Clone for LibraryState {
                 emotions: emotions,
                 draws: draws,
                 message: message,
+                position: self.position,
+                cartesian: self.cartesian,
                 unmount: self.unmount,
             }
         }
@@ -45,14 +58,18 @@ impl Clone for LibraryState {
 impl fmt::Debug for LibraryState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         unsafe {
-            write!(f, "LibraryState {{ sheet: {}, emotion: {}, draws: [{}, {}, {}, {}, ...], message: {:?}, unmount: {} }}",
+            write!(f, "LibraryState {{ sheet: {}, emotion: {:?}, draws: [{:?}, {:?}, {:?}, {:?}, ...],\
+                                       message: {:?}, position: {:?}, cartesian: [{}; {}], unmount: {} }}",
                    self.sheet,
-                   str::from_utf8_unchecked(&self.emotions),
-                   str::from_utf8_unchecked(&self.draws[0]),
-                   str::from_utf8_unchecked(&self.draws[1]), 
-                   str::from_utf8_unchecked(&self.draws[2]), 
-                   str::from_utf8_unchecked(&self.draws[3]),
+                   &self.emotions[..8],
+                   &self.draws[0][..8],
+                   &self.draws[1][..8], 
+                   &self.draws[2][..8], 
+                   &self.draws[3][..8],
                    str::from_utf8_unchecked(&self.message),
+                   self.position,
+                   self.cartesian[0],
+                   self.cartesian[1],
                    self.unmount)
         }
     }
@@ -62,8 +79,10 @@ impl Default for LibraryState {
     fn default() -> Self {
         LibraryState {
             sheet: editeur::Sheet::default(),
-            emotions: [b'\0'; editeur::SPEC_MAX_DRAW],
-            draws: [[b'\0'; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+            emotions: [editeur::Emotion::default(); editeur::SPEC_MAX_DRAW],
+            draws: [[Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+            position: Position::default(),
+            cartesian: [0; 2],
             message: [b'\0'; 1024],
             unmount: b'\0',
         }

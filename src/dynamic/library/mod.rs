@@ -1,5 +1,6 @@
 #[macro_use]
 mod macros;
+pub mod position;
 pub mod state;
 mod err;
 
@@ -13,6 +14,7 @@ use std::ffi::CString;
 
 pub use self::err::{LibraryError, Result};
 pub use self::state::LibraryState;
+pub use self::position::Position;
 
 use ::libc;
 use ::pty;
@@ -25,8 +27,6 @@ pub struct Library {
     idle: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
     /// `idle` interface.
     end: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
-    /// `state` interface to update the neko or unmount the current librairy.
-    state: LibraryState,
     /// `save` pointer to share a segment of librairy memory.
     save: *mut libc::c_void,
     /// dynamic library interface.
@@ -35,11 +35,13 @@ pub struct Library {
     index: i64,
     /// Address of the library.
     path: PathBuf,
+    /// .
+    unmounted: bool,
 }
 
 impl Library {
     /// The constructor method `new` returns a interface for a extern library.
-    pub fn new(path: PathBuf, index: i64) -> Result<Self> {
+    pub fn new(path: PathBuf, index: i64, state: &LibraryState) -> Result<Self> {
         unsafe {
             let handle: *mut libc::c_void = libc::dlopen(
                 path.as_os_str().as_bytes().as_ptr() as *const libc::c_char,
@@ -49,16 +51,19 @@ impl Library {
             if handle.eq(&ptr::null_mut()) {
                 Err(LibraryError::BadDyLib(CString::from_raw(libc::dlerror()).into_string().unwrap_or_default()))
             } else {
-                Ok(Library {
+                let lib: Library = Library {
                     start: symbol!(handle, b"start\0".as_ptr() as *const libc::c_char),
                     idle: symbol!(handle, b"idle\0".as_ptr() as *const libc::c_char),
                     end: symbol!(handle, b"end\0".as_ptr() as *const libc::c_char),
-                    state: LibraryState::default(),
                     save: ptr::null_mut(),
                     handle: handle,
                     index: index,
                     path: path,
-                })
+                    unmounted: false,
+                };
+
+                lib.start(state);
+                Ok(lib)
             }
         }
     }
@@ -73,24 +78,27 @@ impl Library {
         self.index
     }
 
+    pub fn is_unmounted(&self) -> bool {
+        self.unmounted
+    }
+
     /// The method `start` call the extern function if defined.
-    pub fn start(&self) {
+    pub fn start(&self, state: &LibraryState) {
         if let Some(start) = self.start {
-            start(&self.state, self.save);
+            start(state, self.save);
         }
     }
 
-    /// The method `end` call the extern function if defined.
-    pub fn end(&self) {
+    /// The method `start` call the extern function if defined.
+    pub fn end(&self, state: &LibraryState) {
         if let Some(end) = self.end {
-            end(&self.state, self.save);
+            end(state, self.save);
         }
     }
-
     /// The method `idle` call the extern function if defined.
-    pub fn call(&self, event: &pty::ShellState) {
+    pub fn call(&self, state: &LibraryState, event: &pty::ShellState) {
         if let Some(idle) = self.idle {
-            idle(&self.state, self.save);
+            idle(state, self.save);
         }
     }
 }
@@ -137,7 +145,6 @@ impl fmt::Debug for Library {
 
 impl Drop for Library {
     fn drop(&mut self) {
-        self.end();
         unsafe {
             assert_ne!(libc::dlclose(self.handle), -1);
         }

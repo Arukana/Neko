@@ -2,7 +2,7 @@ use ::editeur;
 
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq)]
-pub enum Movement {
+pub enum Position {
     UpperLeft = 0,
     UpperMiddle = 1,
     UpperRight = 2,
@@ -14,13 +14,19 @@ pub enum Movement {
     LowerRight = 8,
 }
 
-impl Movement {
+impl Position {
     pub fn get_cartesian(&self, with: usize) -> (usize, usize) {
         match *self {
-            Movement::UpperLeft => (0, 0),
-            Movement::UpperMiddle => (with/2-editeur::SPEC_MAX_X/2, 0),
-            Movement::UpperRight => (with-editeur::SPEC_MAX_X, 0),
+            Position::UpperLeft => (0, 0),
+            Position::UpperMiddle => (with/2-editeur::SPEC_MAX_X/2, 0),
+            Position::UpperRight => (with-editeur::SPEC_MAX_X, 0),
             _ => unimplemented!(),
         }
+    }
+}
+
+impl Default for Position {
+    fn default() -> Position {
+        Position::LowerRight
     }
 }

@@ -19,6 +19,10 @@ Cargo.lock
 # Temp files
 .*~
 
+# Vim
+*.swn
+*.swo
+
 # Backup files
 *.bak
 *.bk

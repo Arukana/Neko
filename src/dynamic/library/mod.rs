@@ -97,8 +97,10 @@ impl Library {
     }
     /// The method `idle` call the extern function if defined.
     pub fn call(&self, state: &LibraryState, event: &pty::ShellState) {
-        if let Some(idle) = self.idle {
-            idle(state, self.save);
+        if let Some(()) = event.is_idle() {
+            if let Some(idle) = self.idle {
+                idle(state, self.save);
+            }
         }
     }
 }

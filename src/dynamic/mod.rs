@@ -210,13 +210,11 @@ impl Compositer {
                                            .with_extension(SPEC_LIB_EXT),
                                        dest.join(&sub)
                                            .with_extension(SPEC_LIB_EXT))
-                                .or_else(|why: io::Error| {
-                                    Err(CompositerError::MvFail(why))
-                                })
-                                .and_then(|_: ()| {
+                                .or_else(|why: io::Error|
+                                    Err(CompositerError::MvFail(why)))
+                                .and_then(|_: ()|
                                     self.mount(&sub, None)
-                                        .and(self.dependency(source))
-                                })
+                                        .and(self.dependency(source)))
                         } else {
                             Err(CompositerError::BuildExit(status))
                         }
@@ -237,7 +235,7 @@ impl Compositer {
                             Ok(()) => None,
                             Err(why) => Some(why),
                         })
-                }
+                },
                 Ok(()) => None,
                 Err(why) => Some(why),
             })
@@ -248,26 +246,21 @@ impl Compositer {
     /// repository dynamic library and install.
     /// @ source: `$HOME/.neko/git/Arukana@libnya`.
     pub fn dependency(&mut self, source: &PathBuf) -> Result<()> {
-        self.get_manifest(source).and_then(|table| {
+        self.get_manifest(source).and_then(|table|
             if let Some(why) = table.get("dependencies")
-                .and_then(|deps| {
-                    deps.as_table().and_then(|table| {
+                .and_then(|deps|
+                    deps.as_table().and_then(|table|
                         table.into_iter()
-                            .filter_map(|dep| {
-                                dep.1
-                                    .as_table()
-                                    .and_then(|table| {
-                                        self.dependency_from_git(table)
-                                    })
-                            })
-                            .next()
-                    })
-                }) {
+                            .filter_map(|dep|
+                                dep.1.as_table()
+                                    .and_then(|table|
+                                        self.dependency_from_git(table)))
+                            .next())) {
                 Err(why)
             } else {
                 Ok(())
             }
-        })
+        )
     }
 
     /// The methodd `install` clones and makes a dynamic library from repository
@@ -275,19 +268,20 @@ impl Compositer {
     /// @ repo: `https://github.com/Arukana/libnya.git`.
     pub fn install(&mut self, repo: &str) -> Result<()> {
         self.get_git()
-            .and_then(|git| if let Some(sub) = account_at_rep!(repo) {
-                let dest: PathBuf = git.join(&sub);
-                if dest.exists() {
-                    Err(CompositerError::InstallExists)
-                } else {
-                    match git2::Repository::clone(repo, &dest) {
-                        Err(why) => Err(CompositerError::InstallClone(why)),
-                        Ok(_) => self.build(&dest, &sub),
-                    }
-                }
-            } else {
-                Err(CompositerError::InstallFormat)
-            })
+            .and_then(|git|
+                account_at_rep!(repo)
+                    .and_then(|sub| Some({
+                        let dest: PathBuf = git.join(&sub);
+                        if dest.exists() {
+                            Err(CompositerError::InstallExists)
+                        } else {
+                            match git2::Repository::clone(repo, &dest) {
+                                Err(why) => Err(CompositerError::InstallClone(why)),
+                                Ok(_) => self.build(&dest, &sub),
+                            }
+                        }
+                    }))
+                    .unwrap_or_else(|| Err(CompositerError::InstallFormat)))
     }
 
     fn reset(&self,
@@ -386,13 +380,13 @@ impl Compositer {
 
     /// The general method `call` according to the state will run
     /// the evenement functions by library group.
-    pub fn call(&mut self, event: &ShellState) -> Option<&LibraryState> {
+    pub fn call(&mut self, event: &ShellState) -> &LibraryState {
         self.list.iter()
             .map(|lib: &Library|
                  lib.call(&self.state, event));
         self.list.retain(|lib: &Library|
              lib.is_unmounted().not());
-        Some(&self.state)
+        &self.state
     }
 }
 

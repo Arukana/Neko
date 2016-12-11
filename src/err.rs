@@ -57,3 +57,21 @@ impl Error for NekoError {
         }
     }
 }
+
+impl From<CompositerError> for NekoError {
+    fn from(err: CompositerError) -> NekoError {
+        NekoError::Dynamic(err)
+    }
+}
+
+impl From<GraphicError> for NekoError {
+    fn from(err: GraphicError) -> NekoError {
+        NekoError::Graphic(err)
+    }
+}
+
+impl From<ShellError> for NekoError {
+    fn from(err: ShellError) -> NekoError {
+        NekoError::Shell(err)
+    }
+}

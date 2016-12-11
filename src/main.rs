@@ -11,8 +11,8 @@ fn main() {
             print!("\x1B[H{}", format!("{}", neko));
         }
         if let Some(ref text) = shell.is_input_slice() {
-          neko.write(text).unwrap();
-          neko.flush().unwrap();
+            neko.write(text).unwrap();
+            neko.flush().unwrap();
         }
     }
 }

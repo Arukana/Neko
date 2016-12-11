@@ -382,8 +382,10 @@ impl Compositer {
     /// the evenement functions by library group.
     pub fn call(&mut self, event: &ShellState) -> &LibraryState {
         self.list.iter()
-            .map(|lib: &Library|
-                 lib.call(&self.state, event));
+            .all(|lib: &Library| {
+                lib.call(&self.state, event);
+                true
+            });
         self.list.retain(|lib: &Library|
              lib.is_unmounted().not());
         &self.state

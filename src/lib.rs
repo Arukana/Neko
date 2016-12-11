@@ -113,12 +113,18 @@ impl Iterator for Neko {
             if let Some(()) = event.is_signal_resized() {
                 self.screen.set_window_size(self.shell.get_screen().get_window_size());
             }
+            let draw = self.graphic.get_sprite(&editeur::Sheet::Bust).unwrap().into_iter().next().unwrap();
             self.screen.set_start(5, 5);
+            self.screen.with_draw(
+                self.shell.get_screen(),
+                draw
+            );
+            /*
             let lib = self.dynamic.call(&event);
             let draw = self.graphic.explicite_emotion(
                 lib.get_sheet(),
                 lib.get_explicite()
-            ).unwrap().into_iter().next().unwrap();
+            ).unwrap().into_iter().next().unwrap();*/
             self.screen.with_draw(&self.shell.get_screen(), &draw);
             Some(event)
         } else {

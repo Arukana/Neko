@@ -72,40 +72,36 @@ impl Compositer {
 
     /// The accessor method `get_git` returns the git sub-directory.
     pub fn get_git(&self) -> Result<PathBuf> {
-        if let Some(mut path) = env::home_dir() {
-            path.push(SPEC_ROOT);
-            path.push(SPEC_SUBD_GIT);
-            if let Some(why) = fs::create_dir_all(&path).err() {
-                if why.kind() == io::ErrorKind::AlreadyExists {
+        let repertory: String = try!(env::var(SPEC_ROOT));
+        let path: PathBuf = PathBuf::from(repertory).join(SPEC_SUBD_GIT);
+
+        match fs::create_dir_all(&path) {
+            Ok(_) => Ok(path),
+            Err(why) => {
+                if why.kind().eq(&io::ErrorKind::AlreadyExists) {
                     Ok(path)
                 } else {
                     Err(CompositerError::MkDirGit(why))
                 }
-            } else {
-                Ok(path)
-            }
-        } else {
-            Err(CompositerError::Home)
-        }
+            },
+	    }
     }
 
     /// The accessor method `get_lib` returns the lib sub-directory.
     pub fn get_lib(&self) -> Result<PathBuf> {
-        if let Some(mut path) = env::home_dir() {
-            path.push(SPEC_ROOT);
-            path.push(SPEC_SUBD_LIB);
-            if let Some(why) = fs::create_dir_all(&path).err() {
-                if why.kind() == io::ErrorKind::AlreadyExists {
+        let repertory: String = try!(env::var(SPEC_ROOT));
+        let path: PathBuf = PathBuf::from(repertory).join(SPEC_SUBD_LIB);
+
+        match fs::create_dir_all(&path) {
+            Ok(_) => Ok(path),
+            Err(why) => {
+                if why.kind().eq(&io::ErrorKind::AlreadyExists) {
                     Ok(path)
                 } else {
                     Err(CompositerError::MkDirLib(why))
                 }
-            } else {
-                Ok(path)
-            }
-        } else {
-            Err(CompositerError::Home)
-        }
+            },
+	    }
     }
 
     /// The accessor method `git_with_lib` returns a couple

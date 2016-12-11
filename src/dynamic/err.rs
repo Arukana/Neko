@@ -1,10 +1,10 @@
-
-
-use ::git2;
 use std::error::Error;
 use std::fmt;
 use std::io;
+use std::env;
 use std::process;
+
+use ::git2;
 
 use super::library::LibraryError;
 
@@ -54,8 +54,8 @@ pub enum CompositerError {
     BuildExit(process::ExitStatus),
     /// Can't get the target identifiant from branch.
     UpdateRepBranchId,
-    /// Can't found the $HOME environement variable.
-    Home,
+    /// Can't found the NEKO_PATH environement variable.
+    NekoPath,
     /// Can't found the position.
     UnmountPosition,
     /// Can't remove the index.
@@ -118,7 +118,7 @@ impl Error for CompositerError {
             CompositerError::UpdateRepReset(_) => "Can't reset the repository.",
             CompositerError::BuildCommand(_) => "Can't run the command.",
             CompositerError::BuildExit(_) => "The build haven't exited with success.",
-            CompositerError::Home => "Can't found the $HOME environement variable.",
+            CompositerError::NekoPath => "Can't found the $NEKO_PATH environement variable.",
             CompositerError::ParseManifest => {
                 "Can't parse the `manifest` Neko.toml\
                                            file."
@@ -158,5 +158,11 @@ impl Error for CompositerError {
             CompositerError::Mount(ref why) => Some(why),
             _ => None,
         }
+    }
+}
+
+impl From<env::VarError> for CompositerError {
+    fn from(_: env::VarError) -> CompositerError {
+        CompositerError::NekoPath
     }
 }

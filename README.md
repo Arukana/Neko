@@ -4,8 +4,13 @@
 [![Build Status](https://travis-ci.org/Arukana/Neko.svg?branch=master)](https://travis-ci.org/Arukana/Neko)
 
 
-
-##### How to build
+Set your *Neko Path* environment variable.
 ```shell
-cargo build --features lints
+export NEKO_PATH="$HOME/.neko"
+```
+
+How to build:
+```shell
+git clone https://github.com/Arukana/Neko.git
+cargo build
 ```

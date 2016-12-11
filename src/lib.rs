@@ -63,7 +63,7 @@ pub use pty_proc::prelude as pty;
 pub use self::err::{NekoError, Result};
 
 /// The first directory.
-const SPEC_ROOT: &'static str = ".neko";
+pub const SPEC_ROOT: &'static str = editeur::SPEC_ROOT;
 
 
 /// The module `neko` is the first interface level.

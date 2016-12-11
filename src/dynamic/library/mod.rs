@@ -49,7 +49,9 @@ impl Library {
             );
 
             if handle.eq(&ptr::null_mut()) {
-                Err(LibraryError::BadDyLib(CString::from_raw(libc::dlerror()).into_string().unwrap_or_default()))
+                Err(LibraryError::BadDyLib(CString::from_raw(libc::dlerror())
+                                                   .into_string()
+                                                   .unwrap_or_default()))
             } else {
                 let lib: Library = Library {
                     start: symbol!(handle, b"start\0".as_ptr() as *const libc::c_char),

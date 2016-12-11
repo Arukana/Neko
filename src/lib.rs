@@ -79,24 +79,18 @@ pub struct Neko {
 
 impl Neko {
     pub fn new(repeat: Option<i64>, interval: Option<i64>) -> Result<Self> {
-        match (pty::Shell::new(repeat, interval, None),
-               Compositer::new(),
-               editeur::Graphic::new()) {
-            (Err(why), _, _) => Err(NekoError::Shell(why)),
-            (_, Err(why), _) => Err(NekoError::Dynamic(why)),
-            (_, _, Err(why)) => Err(NekoError::Graphic(why)),
-            (Ok(shell), Ok(dynamic), Ok(graphic)) => {
-                let mut screen: Display = Display::default();
+        let dynamic: Compositer = try!(Compositer::new());
+        let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, None));
+        let graphic: editeur::Graphic = try!(editeur::Graphic::new());
+        let mut screen: Display = Display::default();
 
-                screen.set_window_size(shell.get_screen().get_window_size());
-                Ok(Neko {
-                    screen: screen,
-                    dynamic: dynamic,
-                    graphic: graphic,
-                    shell: shell,
-                })
-            },
-        }
+        screen.set_window_size(shell.get_screen().get_window_size());
+        Ok(Neko {
+            screen: screen,
+            dynamic: dynamic,
+            shell: shell,
+            graphic: graphic,
+        })
     }
 
     /// The accessor method `get_screen` returns a reference on the Display interface.
@@ -109,27 +103,22 @@ impl Iterator for Neko {
     type Item = pty::ShellState;
 
     fn next(&mut self) -> Option<pty::ShellState> {
-        if let Some(event) = self.shell.next() {
+        self.shell.next().and_then(|event| {
             if let Some(()) = event.is_signal_resized() {
                 self.screen.set_window_size(self.shell.get_screen().get_window_size());
             }
-            let draw = self.graphic.get_sprite(&editeur::Sheet::Bust).unwrap().into_iter().next().unwrap();
-            self.screen.set_start(5, 5);
-            self.screen.with_draw(
-                self.shell.get_screen(),
-                draw
-            );
-            /*
             let lib = self.dynamic.call(&event);
-            let draw = self.graphic.explicite_emotion(
-                lib.get_sheet(),
-                lib.get_explicite()
-            ).unwrap().into_iter().next().unwrap();*/
-            self.screen.with_draw(&self.shell.get_screen(), &draw);
+            if let Some(sprite) = self.graphic.explicite_emotion(
+                            lib.get_sheet(),
+                            lib.get_explicite()) {
+                self.screen.with_draw(
+                    self.shell.get_screen(),
+                    sprite.into_iter().next().unwrap()
+                );
+            }
+            self.screen.set_start(5, 5);
             Some(event)
-        } else {
-            None
-        }
+        })
     }
 }
 

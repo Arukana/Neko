@@ -8,22 +8,30 @@ use ::editeur;
 #[derive(Clone, Debug, Default)]
 pub struct Display {
     screen: Vec<pty::Character>,
+    size: pty::Winszed,
 }
 
 impl Display {
+
+    /// The accessor `get_window_size` returns the window size interface.
+    pub fn get_window_size(&self) -> &pty::Winszed {
+        &self.size
+    }
+
     pub fn with_draw(&mut self,
-                     display: &pty::Display,
+                     screen: &pty::Display,
                      draw: &editeur::Draw,
                      message: &[libc::c_uchar; 1024],
                      (start_x, start_y): (usize, usize),
     ) {
         let (end_x, end_y): (usize, usize) =
             (start_x + editeur::SPEC_MAX_X, start_y + editeur::SPEC_MAX_Y);
-        let with: usize = display.get_window_size().get_col();
+        let with: usize = screen.get_window_size().get_col();
         let mut draw_it = draw.into_iter();
         let mut text_it = message.into_iter();
 
-        self.screen = display.into_iter()
+        self.size = *screen.get_window_size();
+        self.screen = screen.into_iter()
             .enumerate()
             .map(|(index, character): (usize, &pty::Character)|
                  index.checked_div(with).and_then(|y|

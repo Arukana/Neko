@@ -10,6 +10,7 @@
 
 #![feature(range_contains)]
 #![feature(slice_patterns)]
+#![feature(untagged_unions)]
 #![feature(advanced_slice_patterns)]
 #![feature(result_unwrap_or_default)]
 
@@ -55,6 +56,7 @@ use std::io::{self, Write};
 use std::fmt;
 
 use dynamic::Compositer;
+use dynamic::library::state::LibraryState;
 use display::Display;
 
 pub use graphic::prelude as editeur;
@@ -70,7 +72,7 @@ pub const SPEC_ROOT: &'static str = editeur::SPEC_ROOT;
 pub struct Neko {
     dynamic: Compositer,
     /// Overload of Display interface from Pty.
-    screen: Display,
+    display: Display,
     /// Interface of Pseudo terminal.
     shell: pty::Shell,
     /// Interface on a Sprite partition.
@@ -82,20 +84,37 @@ impl Neko {
         let dynamic: Compositer = try!(Compositer::new());
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, None));
         let graphic: editeur::Graphic = try!(editeur::Graphic::new());
-        let mut screen: Display = Display::default();
 
-        screen.set_window_size(shell.get_screen().get_window_size());
-        Ok(Neko {
-            screen: screen,
+        let mut neko = Neko {
+            display: Display::default(),
             dynamic: dynamic,
             shell: shell,
             graphic: graphic,
-        })
+        };
+        neko.call();
+        Ok(neko)
+    }
+
+    fn call(&mut self) {
+        let lib: &LibraryState = self.dynamic.get_state();
+ 
+        let screen: &pty::Display = self.shell.get_screen();
+        if let Some(sprite) = self.graphic.explicite_emotion(
+                        lib.get_sheet(),
+                        lib.get_explicite()) {
+
+            self.display.with_draw(
+                screen,
+                sprite.into_iter().next().unwrap(),
+                lib.get_message(),
+                lib.get_position().get_coordinate(screen.get_window_size()),
+            );
+        }
     }
 
     /// The accessor method `get_screen` returns a reference on the Display interface.
     pub fn get_screen(&self) -> &Display {
-        &self.screen
+        &self.display
     }
 }
 
@@ -104,19 +123,8 @@ impl Iterator for Neko {
 
     fn next(&mut self) -> Option<pty::ShellState> {
         self.shell.next().and_then(|event| {
-            if let Some(()) = event.is_signal_resized() {
-                self.screen.set_window_size(self.shell.get_screen().get_window_size());
-            }
-            let lib = self.dynamic.call(&event);
-            if let Some(sprite) = self.graphic.explicite_emotion(
-                            lib.get_sheet(),
-                            lib.get_explicite()) {
-                self.screen.with_draw(
-                    self.shell.get_screen(),
-                    sprite.into_iter().next().unwrap()
-                );
-            }
-            self.screen.set_start(5, 5);
+            self.dynamic.call(&event);
+            self.call();
             Some(event)
         })
     }
@@ -146,9 +154,9 @@ impl fmt::Display for Neko {
 
 impl fmt::Debug for Neko {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Neko {{ dynamic: {:?}, graphic: {:?}, screen: {:?} }}",
+        write!(f, "Neko {{ dynamic: {:?}, graphic: {:?}, display: {:?} }}",
                self.dynamic,
                self.graphic,
-               self.screen)
+               self.display)
     }
 }

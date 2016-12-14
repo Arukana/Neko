@@ -1,60 +1,58 @@
 use std::ops::{BitAnd, Rem};
 
 use ::pty;
+use ::libc;
 use ::editeur;
 
 #[repr(C)]
 #[derive(Clone, Debug, Default)]
 pub struct Display {
     screen: Vec<pty::Character>,
-    /// Col, in characters.
-    size: pty::Winszed,
-    /// Start at Row Point.
-    start_x: usize,
-    /// Start at Col Point.
-    start_y: usize,
 }
 
 impl Display {
-
-    pub fn get_window_size(&self) -> &pty::Winszed {
-        &self.size
-    }
-
-    pub fn with_draw(
-        &mut self, screen: &pty::Display, draw: &editeur::Draw,
+    pub fn with_draw(&mut self,
+                     display: &pty::Display,
+                     draw: &editeur::Draw,
+                     message: &[libc::c_uchar; 1024],
+                     (start_x, start_y): (usize, usize),
     ) {
         let (end_x, end_y): (usize, usize) =
-            (self.start_x + editeur::SPEC_MAX_X, self.start_y + editeur::SPEC_MAX_Y);
-        let with: usize = self.size.get_col();
-        let mut it = draw.into_iter();
+            (start_x + editeur::SPEC_MAX_X, start_y + editeur::SPEC_MAX_Y);
+        let with: usize = display.get_window_size().get_col();
+        let mut draw_it = draw.into_iter();
+        let mut text_it = message.into_iter();
 
-        self.screen = screen.into_iter()
+        self.screen = display.into_iter()
             .enumerate()
             .map(|(index, character): (usize, &pty::Character)|
                  index.checked_div(with).and_then(|y|
-                    if (self.start_x..end_x).contains(index.rem(with)).bitand(
-                       (self.start_y..end_y).contains(y)) {
-                       it.next().and_then(|&(_, texel)|
-                           Some(pty::Character::from(texel.get_glyph())))
+                    if (start_x..end_x).contains(index.rem(with)).bitand(
+                       (start_y..end_y).contains(y)) {
+                       draw_it.next().and_then(|&(_, texel)|
+                           Some((index, pty::Character::from(texel.get_glyph()))))
                     } else {
                         None
                     }
-                 ).unwrap_or_else(|| *character))
+                 ).unwrap_or_else(|| (index, *character)))
+            .map(|(index, character): (usize, pty::Character)|
+                   if index > 40 {
+                       text_it.next()
+                           .and_then(|text: &u8|
+                                     if text.ne(&b'\0') {
+                                         Some(pty::Character::from(*text as char))
+                                     } else {
+                                         None
+                                     })
+                           .unwrap_or_else(|| character)
+
+                   } else {
+                       character
+                   }
+                )
             .collect::<Vec<pty::Character>>();
     }
-
-    pub fn set_window_size(&mut self, size: &pty::Winszed) {
-        self.size = *size;
-    }
-
-    pub fn set_start(&mut self, x: usize, y: usize) {
-        self.start_x = x;
-        self.start_y = y;
-    }
 }
-
-
 
 impl<'a> IntoIterator for &'a Display {
     type Item = &'a pty::Character;

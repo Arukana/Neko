@@ -14,7 +14,6 @@ pub struct LibraryState {
     implicite: [editeur::Emotion; editeur::SPEC_MAX_DRAW],
     explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
     position: Position,
-    cartesian: [libc::c_ushort; 2],
     message: [libc::c_uchar; 1024],
     unmount: libc::c_uchar,
 }
@@ -26,6 +25,14 @@ impl LibraryState {
  
     pub fn get_sheet(&self) -> &editeur::Sheet {
         &self.sheet
+    }
+
+    pub fn get_message(&self) -> &[libc::c_uchar; 1024] {
+        &self.message
+    }
+
+    pub fn get_position(&self) -> &Position {
+        &self.position
     }
 
     /// The function `get_implicite` returns a reference on a ffi argument
@@ -60,8 +67,7 @@ impl Clone for LibraryState {
                 implicite: implicite,
                 explicite: explicite,
                 message: message,
-                position: self.position,
-                cartesian: self.cartesian,
+                position: Position::default(),
                 unmount: self.unmount,
             }
         }
@@ -72,7 +78,7 @@ impl fmt::Debug for LibraryState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         unsafe {
             write!(f, "LibraryState {{ sheet: {}, emotion: {:?}, draws: [{:?}, {:?}, {:?}, {:?}, ...],\
-                                       message: {:?}, position: {:?}, cartesian: [{}; {}], unmount: {} }}",
+                                       message: {:?}, position: {:?}, unmount: {} }}",
                    self.sheet,
                    &self.implicite[..8],
                    &self.explicite[0][..8],
@@ -81,8 +87,6 @@ impl fmt::Debug for LibraryState {
                    &self.explicite[3][..8],
                    str::from_utf8_unchecked(&self.message),
                    self.position,
-                   self.cartesian[0],
-                   self.cartesian[1],
                    self.unmount)
         }
     }
@@ -95,7 +99,6 @@ impl Default for LibraryState {
             implicite: [editeur::Emotion::default(); editeur::SPEC_MAX_DRAW],
             explicite: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),
-            cartesian: [0; 2],
             message: [b'\0'; 1024],
             unmount: b'\0',
         }

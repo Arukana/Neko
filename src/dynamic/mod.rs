@@ -148,7 +148,8 @@ impl Compositer {
                 Err(CompositerError::UnmountPosition) => {
                     let source: PathBuf = PathBuf::from(libraryname);
                     self.get_manifest(&git.join(&source))
-                        .and_then(|table| if let Some(priority) =
+                        .and_then(|table| {
+                         if let Some(priority) =
                             priority.or(parse_number!(table)) {
                             match Library::new(
                                 lib.join(&source).with_extension(SPEC_LIB_EXT),
@@ -157,6 +158,7 @@ impl Compositer {
                             ) {
                                 Err(why) => Err(CompositerError::Mount(why)),
                                 Ok(dy) => {
+
                                     dy.start(&self.state);
                                     self.list.push(dy);
                                     self.list.sort();
@@ -165,7 +167,7 @@ impl Compositer {
                             }
                         } else {
                             Err(CompositerError::ParseInteger)
-                        })
+                        }})
                 }
                 Err(why) => Err(why),
             })
@@ -376,7 +378,7 @@ impl Compositer {
 
     /// The general method `call` according to the state will run
     /// the evenement functions by library group.
-    pub fn call(&mut self, event: &ShellState) -> &LibraryState {
+    pub fn call(&mut self, event: &ShellState) {
         self.list.iter()
             .all(|lib: &Library| {
                 lib.call(&self.state, event);
@@ -384,7 +386,6 @@ impl Compositer {
             });
         self.list.retain(|lib: &Library|
              lib.is_unmounted().not());
-        &self.state
     }
 }
 

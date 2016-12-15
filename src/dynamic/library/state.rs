@@ -95,7 +95,7 @@ impl fmt::Debug for LibraryState {
 impl Default for LibraryState {
     fn default() -> Self {
         LibraryState {
-            sheet: editeur::Sheet::default(),
+            sheet: editeur::Sheet::Bust,
             implicite: [editeur::Emotion::default(); editeur::SPEC_MAX_DRAW],
             explicite: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),

@@ -98,6 +98,7 @@ impl Neko {
     fn call(&mut self) {
         let lib: &LibraryState = self.dynamic.get_state();
  
+            println!("ss {:?}",  lib.get_sheet());
         let screen: &pty::Display = self.shell.get_screen();
         if let Some(sprite) = self.graphic.explicite_emotion(
                         lib.get_sheet(),

@@ -21,6 +21,7 @@ Cargo.lock
 
 # Vim
 *.swn
+*.swm
 *.swo
 
 # Backup files

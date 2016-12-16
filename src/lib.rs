@@ -77,6 +77,9 @@ pub struct Neko {
     shell: pty::Shell,
     /// Interface on a Sprite partition.
     graphic: editeur::Graphic,
+    /// Command
+    command: io::Cursor<Vec<char>>,
+    pid: libc::pid_t,
 }
 
 impl Neko {
@@ -84,15 +87,66 @@ impl Neko {
         let dynamic: Compositer = try!(Compositer::new());
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, None));
         let graphic: editeur::Graphic = try!(editeur::Graphic::new());
+        let pid = shell.get_pid();
 
         let mut neko = Neko {
             display: Display::default(),
             dynamic: dynamic,
             shell: shell,
             graphic: graphic,
+            command: io::Cursor::new(Vec::new()),
+            pid: pid,
         };
         neko.call();
         Ok(neko)
+    }
+
+    #[allow(unused_must_use)]
+    fn command(&mut self, key: pty::Key) {
+        let position: u64 = self.command.position();
+        match key {
+            pty::Key::Utf8(glyph) => {
+                self.command.get_mut().insert(position as usize,  glyph);
+                self.command.set_position(position.checked_add(1).unwrap_or_default());
+            },
+            pty::Key::Left => {
+                self.command.set_position(position.checked_sub(1).unwrap_or_default());
+            },
+            pty::Key::Right => {
+                self.command.set_position(position.checked_add(1).unwrap_or_default());
+            },
+            pty::Key::Enter => {
+                match &self.command.get_ref().iter().cloned().collect::<String>()
+                                   .to_string().split_whitespace().collect::<Vec<&str>>()
+                                   .as_slice()[..] {
+                    &["neko", "install", ref repository] => {
+                        self.dynamic.install(repository)
+                    },
+                    &["neko", "mount", ref libraryname, ref priority] => {
+                        self.dynamic.mount(libraryname, priority.parse::<i64>().ok())
+                    },
+                    &["neko", "mount", ref libraryname] => {
+                        self.dynamic.mount(libraryname, None)
+                    },
+                    &["neko", "unmount", ref libraryname] => {
+                        self.dynamic.unmount(libraryname)
+                    },
+                    &["neko", "uninstall", ref libraryname] => {
+                        self.dynamic.uninstall(libraryname)
+                    },
+                    &["neko", "update", ref libraryname] => {
+                        self.dynamic.update(libraryname)
+                    },
+                    _ => Ok(()),
+                };
+                self.command.get_mut().clear();
+                self.command.set_position(0);
+            },
+            _ => {
+                self.command.get_mut().clear();
+                self.command.set_position(0);
+            },
+        };
     }
 
     fn call(&mut self) {
@@ -100,9 +154,9 @@ impl Neko {
  
         let screen: &pty::Display = self.shell.get_screen();
         if let Some(sprite) = self.graphic.explicite_emotion(
-                        lib.get_sheet(),
-                        lib.get_explicite()) {
-
+            lib.get_sheet(),
+            lib.get_explicite(),
+        ) {
             self.display.with_draw(
                 screen,
                 sprite.into_iter().next().unwrap(),
@@ -123,6 +177,14 @@ impl Iterator for Neko {
 
     fn next(&mut self) -> Option<pty::ShellState> {
         self.shell.next().and_then(|event| {
+            if let Some(&(pid, _)) = event.is_task() {
+                self.pid = pid;
+            }
+            if let Some(key) = event.is_input_keydown() {
+                if self.pid.eq(&self.shell.get_pid()) {
+                    self.command(key);
+                }
+            }
             self.dynamic.call(&event);
             self.call();
             Some(event)
@@ -147,7 +209,7 @@ impl fmt::Display for Neko {
         write!(f, "{}", self.get_screen()
                             .into_iter()
                             .map(|character: (&pty::Character)|
-                                    character.get_unicode())
+                                    character.get_glyph())
                             .collect::<String>())
     }
 }

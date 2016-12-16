@@ -51,6 +51,7 @@ version          = "0.2"
 
 [dependencies.pty-proc]
 git              = "https://github.com/adjivas/pty-proc.git"
+features         = ["task"]
 
 [dependencies.editeur]
 git              = "https://github.com/Arukana/Editor.git"

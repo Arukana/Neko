@@ -1,7 +1,6 @@
 use std::ops::{BitAnd, Rem};
 
 use ::pty;
-use ::libc;
 use ::editeur;
 
 #[repr(C)]
@@ -21,7 +20,7 @@ impl Display {
     pub fn with_draw(&mut self,
                      screen: &pty::Display,
                      draw: &editeur::Draw,
-                     message: &[libc::c_uchar; 1024],
+                     message: &[pty::Character; 1024],
                      (start_x, start_y): (usize, usize),
     ) {
         let (end_x, end_y): (usize, usize) =
@@ -46,12 +45,13 @@ impl Display {
             .map(|(index, character): (usize, pty::Character)|
                    if index > 40 {
                        text_it.next()
-                           .and_then(|text: &u8|
-                                     if text.ne(&b'\0') {
-                                         Some(pty::Character::from(*text as char))
+                           .and_then(|text: &pty::Character| {
+                                     let glyph: char = text.get_glyph();
+                                     if glyph.ne(&'\0') {
+                                         Some(pty::Character::from(glyph))
                                      } else {
                                          None
-                                     })
+                                     }})
                            .unwrap_or_else(|| character)
 
                    } else {

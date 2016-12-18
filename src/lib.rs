@@ -66,6 +66,8 @@ pub use self::err::{NekoError, Result};
 
 /// The first directory.
 pub const SPEC_ROOT: &'static str = editeur::SPEC_ROOT;
+/// The default first directory.
+pub const SPEC_ROOT_DEFAULT: &'static str = editeur::SPEC_ROOT_DEFAULT;
 
 
 /// The module `neko` is the first interface level.

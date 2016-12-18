@@ -16,6 +16,7 @@ use self::library::Library;
 
 use ::toml;
 use ::SPEC_ROOT;
+use ::SPEC_ROOT_DEFAULT;
 use ::git2;
 use ::pty_proc::shell::ShellState;
 
@@ -72,9 +73,14 @@ impl Compositer {
 
     /// The accessor method `get_git` returns the git sub-directory.
     pub fn get_git(&self) -> Result<PathBuf> {
-        let repertory: String = try!(env::var(SPEC_ROOT));
-        let path: PathBuf = PathBuf::from(repertory).join(SPEC_SUBD_GIT);
-
+        let path: PathBuf =
+            env::var(SPEC_ROOT).ok()
+                .and_then(|repertory: String|
+                          Some(PathBuf::from(repertory)))
+                .unwrap_or_else(||
+                          PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                                            .join(SPEC_ROOT_DEFAULT))
+	        	.join(SPEC_SUBD_GIT);
         match fs::create_dir_all(&path) {
             Ok(_) => Ok(path),
             Err(why) => {
@@ -89,9 +95,14 @@ impl Compositer {
 
     /// The accessor method `get_lib` returns the lib sub-directory.
     pub fn get_lib(&self) -> Result<PathBuf> {
-        let repertory: String = try!(env::var(SPEC_ROOT));
-        let path: PathBuf = PathBuf::from(repertory).join(SPEC_SUBD_LIB);
-
+        let path: PathBuf =
+            env::var(SPEC_ROOT).ok()
+                .and_then(|repertory: String|
+                          Some(PathBuf::from(repertory)))
+                .unwrap_or_else(||
+                          PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                                            .join(SPEC_ROOT_DEFAULT))
+		.join(SPEC_SUBD_LIB);
         match fs::create_dir_all(&path) {
             Ok(_) => Ok(path),
             Err(why) => {

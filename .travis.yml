@@ -2,12 +2,9 @@
 sudo: false
 language: rust
 rust:
-  - stable
   - nightly
-  - beta
 
 os:
-  - linux
   - osx
 
 branches:
@@ -18,10 +15,6 @@ env:
   - ARCH=x86_64
   - ARCH=i686
 
-matrix:
-  allow_failures:
-    - rust: stable
-    - rust: beta
-
 script:
   - cargo build
+  - cargo test

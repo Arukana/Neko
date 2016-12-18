@@ -5,6 +5,8 @@ use std::str;
 use ::editeur;
 use ::libc;
 
+pub const MESSAGE_WIDTH: usize = 16; // 16 + slide
+
 use super::Position;
 
 #[repr(C)]
@@ -14,7 +16,7 @@ pub struct LibraryState {
     implicite: [editeur::Emotion; editeur::SPEC_MAX_DRAW],
     explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
     position: Position,
-    message: [libc::c_uchar; 1024],
+    message: [libc::c_uchar; editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
     unmount: libc::c_uchar,
 }
 
@@ -27,7 +29,7 @@ impl LibraryState {
         &self.sheet
     }
 
-    pub fn get_message(&self) -> &[libc::c_uchar; 1024] {
+    pub fn get_message(&self) -> &[libc::c_uchar; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] {
         &self.message
     }
 
@@ -57,7 +59,7 @@ impl Clone for LibraryState {
         unsafe {
             let mut implicite: [editeur::Emotion; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
             let mut explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
-            let mut message: [libc::c_uchar; 1024] = mem::uninitialized();
+            let mut message: [libc::c_uchar; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] = mem::uninitialized();
 
             implicite.copy_from_slice(&self.implicite);
             explicite.copy_from_slice(&self.explicite);
@@ -94,12 +96,27 @@ impl fmt::Debug for LibraryState {
 
 impl Default for LibraryState {
     fn default() -> Self {
+      let mut message = [b'\0'; editeur::SPEC_MAX_Y * MESSAGE_WIDTH];
+      message[0] = b'B';
+      message[1] = b'o';
+      message[2] = b'n';
+      message[3] = b'o';
+      message[4] = b'b';
+      message[5] = b'o';
+      message[6] = b' ';
+      message[7] = b'B';
+      message[8] = b'o';
+      message[9] = b'n';
+      message[10] = b'j';
+      message[11] = b'o';
+      message[12] = b'u';
+      message[13] = b'r';
         LibraryState {
             sheet: editeur::Sheet::Bust,
             implicite: [editeur::Emotion::default(); editeur::SPEC_MAX_DRAW],
             explicite: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),
-            message: [b'\0'; 1024],
+            message: message,
             unmount: b'\0',
         }
     }

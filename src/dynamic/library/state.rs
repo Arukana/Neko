@@ -6,6 +6,8 @@ use ::editeur;
 use ::pty;
 use ::libc;
 
+pub const MESSAGE_WIDTH: usize = 16; // 16 + slide
+
 use super::Position;
 
 #[repr(C)]
@@ -14,7 +16,7 @@ pub struct LibraryState {
     sheet: editeur::Sheet,
     explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
     position: Position,
-    message: [pty::Character; 1024],
+    message: [pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
     unmount: libc::c_uchar,
 }
 
@@ -27,7 +29,7 @@ impl LibraryState {
         &self.sheet
     }
 
-    pub fn get_message(&self) -> &[pty::Character; 1024] {
+    pub fn get_message(&self) -> &[pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] {
         &self.message
     }
 
@@ -50,7 +52,7 @@ impl Clone for LibraryState {
     fn clone(&self) -> Self {
         unsafe {
             let mut explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
-            let mut message: [pty::Character; 1024] = mem::uninitialized();
+            let mut message: [pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] = mem::uninitialized();
 
             explicite.copy_from_slice(&self.explicite);
             message.copy_from_slice(&self.message);
@@ -82,11 +84,20 @@ impl fmt::Debug for LibraryState {
 
 impl Default for LibraryState {
     fn default() -> Self {
+        let mut message = [pty::Character::default(); editeur::SPEC_MAX_Y * MESSAGE_WIDTH];
+        message[0] = pty::Character::from('b');
+        message[1] = pty::Character::from('o');
+        message[2] = pty::Character::from('n');
+        message[3] = pty::Character::from('j');
+        message[4] = pty::Character::from('o');
+        message[5] = pty::Character::from('u');
+        message[6] = pty::Character::from('r');
+        message[7] = pty::Character::from('d');
         LibraryState {
             sheet: editeur::Sheet::Bust,
             explicite: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),
-            message: [pty::Character::default(); 1024],
+            message: message,
             unmount: b'\0',
         }
     }

@@ -3,6 +3,7 @@ use std::fmt;
 use std::str;
 
 use ::editeur;
+use ::pty;
 use ::libc;
 
 pub const MESSAGE_WIDTH: usize = 16; // 16 + slide
@@ -13,10 +14,9 @@ use super::Position;
 #[derive(Copy)]
 pub struct LibraryState {
     sheet: editeur::Sheet,
-    implicite: [editeur::Emotion; editeur::SPEC_MAX_DRAW],
     explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
     position: Position,
-    message: [libc::c_uchar; editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
+    message: [pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
     unmount: libc::c_uchar,
 }
 
@@ -29,18 +29,12 @@ impl LibraryState {
         &self.sheet
     }
 
-    pub fn get_message(&self) -> &[libc::c_uchar; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] {
+    pub fn get_message(&self) -> &[pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] {
         &self.message
     }
 
     pub fn get_position(&self) -> &Position {
         &self.position
-    }
-
-    /// The function `get_implicite` returns a reference on a ffi argument
-    /// of generic emotion by draw.
-    pub fn get_implicite(&self) -> &[editeur::Emotion; editeur::SPEC_MAX_DRAW] {
-        &self.implicite
     }
 
     /// The function `get_explicite` returns a reference on a ffi argument
@@ -57,16 +51,13 @@ impl LibraryState {
 impl Clone for LibraryState {
     fn clone(&self) -> Self {
         unsafe {
-            let mut implicite: [editeur::Emotion; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
             let mut explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
-            let mut message: [libc::c_uchar; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] = mem::uninitialized();
+            let mut message: [pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] = mem::uninitialized();
 
-            implicite.copy_from_slice(&self.implicite);
             explicite.copy_from_slice(&self.explicite);
             message.copy_from_slice(&self.message);
             LibraryState {
                 sheet: self.sheet,
-                implicite: implicite,
                 explicite: explicite,
                 message: message,
                 position: Position::default(),
@@ -78,19 +69,16 @@ impl Clone for LibraryState {
 
 impl fmt::Debug for LibraryState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        unsafe {
-            write!(f, "LibraryState {{ sheet: {}, emotion: {:?}, draws: [{:?}, {:?}, {:?}, {:?}, ...],\
-                                       message: {:?}, position: {:?}, unmount: {} }}",
-                   self.sheet,
-                   &self.implicite[..8],
-                   &self.explicite[0][..8],
-                   &self.explicite[1][..8], 
-                   &self.explicite[2][..8], 
-                   &self.explicite[3][..8],
-                   str::from_utf8_unchecked(&self.message),
-                   self.position,
-                   self.unmount)
-        }
+        write!(f, "LibraryState {{ sheet: {}, emotion: [{:?}, {:?}, {:?}, {:?}, ...],\
+                                   message: {:?}, position: {:?}, unmount: {} }}",
+               self.sheet,
+               &self.explicite[0][..8],
+               &self.explicite[1][..8], 
+               &self.explicite[2][..8], 
+               &self.explicite[3][..8],
+               self.message.iter().take(30).map(|character| character.get_glyph()).collect::<String>(),
+               self.position,
+               self.unmount)
     }
 }
 
@@ -101,9 +89,8 @@ impl Default for LibraryState {
       coucou.iter().enumerate().all(|(i, &mes)|
       { message[i] = mes;
         true });
-        LibraryState {
+      LibraryState {
             sheet: editeur::Sheet::Bust,
-            implicite: [editeur::Emotion::default(); editeur::SPEC_MAX_DRAW],
             explicite: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),
             message: message,

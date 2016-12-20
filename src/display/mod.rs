@@ -1,8 +1,8 @@
-use std::ops::{BitAnd, Rem};
+
+use ::editeur;
 
 use ::pty;
-use ::libc;
-use ::editeur;
+use std::ops::{BitAnd, Rem};
 
 pub const MESSAGE_WIDTH: usize = 16; // 16 + slide
 pub const MESSAGE_HEIGHT: usize = editeur::SPEC_MAX_Y;
@@ -15,7 +15,6 @@ pub struct Display {
 }
 
 impl Display {
-
     /// The accessor `get_window_size` returns the window size interface.
     pub fn get_window_size(&self) -> &pty::Winszed {
         &self.size
@@ -24,11 +23,11 @@ impl Display {
     pub fn with_draw(&mut self,
                      screen: &pty::Display,
                      draw: &editeur::Draw,
-                     message: &[libc::c_uchar; editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
-                     (start_x, start_y): (usize, usize),
-    ) {
-        let (end_x, end_y): (usize, usize) =
-            (start_x + editeur::SPEC_MAX_X, start_y + editeur::SPEC_MAX_Y);
+                     message: &[pty::Character; editeur::SPEC_MAX_Y *
+                                               MESSAGE_WIDTH],
+                     (start_x, start_y): (usize, usize)) {
+        let (end_x, end_y): (usize, usize) = (start_x + editeur::SPEC_MAX_X,
+                                              start_y + editeur::SPEC_MAX_Y);
         let width_term: usize = screen.get_window_size().get_col();
         let height_term: usize = screen.get_window_size().get_row();
         let mut draw_it = draw.into_iter();

@@ -387,6 +387,13 @@ impl Compositer {
         &self.state
     }
 
+    pub fn set_message(&mut self,
+        message: String,
+    ) {
+        self.state.set_message(message);
+    }
+
+
     /// The general method `call` according to the state will run
     /// the evenement functions by library group.
     pub fn call(&mut self, event: &ShellState) {

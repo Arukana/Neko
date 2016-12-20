@@ -53,6 +53,7 @@ impl Display {
                         .contains(index.rem(width_term))
                         .bitand((start_y..end_y).contains(y)) {
                         draw_it.next().and_then(|&(_, texel)| {
+                //            println!("{}-{:?}: {}", index, (start_y..end_y), texel.get_glyph());
                             Some((index,
                                   pty::Character::from(texel.get_glyph())))
                         })
@@ -61,6 +62,8 @@ impl Display {
                     })
                     .unwrap_or_else(|| (index, *character))
             })
+            .map(|(_, c)| c)
+            /*
             .map(|(index, character): (usize, pty::Character)| {
                 if mes_x > 0 {
                     index.checked_div(width_term)
@@ -77,7 +80,7 @@ impl Display {
                 } else {
                     character
                 }
-            })
+            })*/
             .collect::<Vec<pty::Character>>();
     }
 }

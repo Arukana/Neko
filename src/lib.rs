@@ -53,6 +53,7 @@ pub mod dynamic;
 mod err;
 
 use std::io::{self, Write};
+use std::ops::BitAnd;
 use std::fmt;
 
 use dynamic::Compositer;
@@ -79,9 +80,10 @@ pub struct Neko {
     shell: pty::Shell,
     /// Interface on a Sprite partition.
     graphic: editeur::Graphic,
-    /// Command
-    command: io::Cursor<Vec<char>>,
+    /// The current pid.
     pid: libc::pid_t,
+    /// The current Command.
+    line: io::Cursor<Vec<char>>,
 }
 
 impl Neko {
@@ -96,57 +98,88 @@ impl Neko {
             dynamic: dynamic,
             shell: shell,
             graphic: graphic,
-            command: io::Cursor::new(Vec::new()),
+            line: io::Cursor::new(Vec::new()),
             pid: pid,
         };
         neko.call();
         Ok(neko)
     }
 
-    #[allow(unused_must_use)]
-    fn command(&mut self, key: pty::Key) {
-        let position: u64 = self.command.position();
+    /// The method `neko` runs a neko command for first level of shell.
+    fn neko(&mut self, key: pty::Key, state: &mut pty::ShellState) {
+        if key.eq(&pty::Key::Enter).bitand(
+            self.pid.eq(&self.shell.get_pid())
+        ) {
+            let message: Option<String> =
+                match &self.line.get_ref()
+                            .iter()
+                            .cloned()
+                            .collect::<String>()
+                            .to_string()
+                            .split_whitespace()
+                            .collect::<Vec<&str>>()
+                            .as_slice()[..] {
+                &["neko", ref arguments..] => {
+                    match arguments {
+                        &["install", ref repository] => Some(
+                            format!("{:?}", self.dynamic.install(repository))
+                        ),
+                        &["mount", ref libraryname, ref priority] => Some(
+                            format!("{:?}",
+                                    self.dynamic.mount(
+                                        libraryname,
+                                        priority.parse::<i64>().ok()))
+                        ),
+                        &["mount", ref libraryname] => Some(
+                            format!("{:?}", self.dynamic.mount(libraryname, None))
+                        ),
+                        &["unmount", ref libraryname] => Some(
+                            format!("{:?}", self.dynamic.unmount(libraryname))
+                        ),
+                        &["uninstall", ref libraryname] => Some(
+                            format!("{:?}", self.dynamic.uninstall(libraryname))
+                        ),
+                        &["update", ref libraryname] => Some(
+                            format!("{:?}", self.dynamic.update(libraryname))
+                        ),
+                        _ => None,
+                    }
+                },
+                _ => None,
+            };
+            if let Some(message) = message {
+                self.dynamic.set_message(message)
+            }
+            state.set_input_keyown('\u{3}');
+            self.line.get_mut().clear();
+            self.line.set_position(0);
+        }
+    }
+
+    /// The method `line` updates the current command line of proccess.
+    fn line(&mut self, key: pty::Key) {
+        let position: u64 = self.line.position();
         match key {
             pty::Key::Utf8(glyph) => {
-                self.command.get_mut().insert(position as usize,  glyph);
-                self.command.set_position(position.checked_add(1).unwrap_or_default());
+                self.line.get_mut().insert(position as usize,  glyph);
+                self.line.set_position(position.checked_add(1).unwrap_or_default());
             },
             pty::Key::Left => {
-                self.command.set_position(position.checked_sub(1).unwrap_or_default());
+                self.line.set_position(position.checked_sub(1).unwrap_or_default());
             },
             pty::Key::Right => {
-                self.command.set_position(position.checked_add(1).unwrap_or_default());
+                self.line.set_position(position.checked_add(1).unwrap_or_default());
             },
-            pty::Key::Enter => {
-                match &self.command.get_ref().iter().cloned().collect::<String>()
-                                   .to_string().split_whitespace().collect::<Vec<&str>>()
-                                   .as_slice()[..] {
-                    &["neko", "install", ref repository] => {
-                        self.dynamic.install(repository)
-                    },
-                    &["neko", "mount", ref libraryname, ref priority] => {
-                        self.dynamic.mount(libraryname, priority.parse::<i64>().ok())
-                    },
-                    &["neko", "mount", ref libraryname] => {
-                        self.dynamic.mount(libraryname, None)
-                    },
-                    &["neko", "unmount", ref libraryname] => {
-                        self.dynamic.unmount(libraryname)
-                    },
-                    &["neko", "uninstall", ref libraryname] => {
-                        self.dynamic.uninstall(libraryname)
-                    },
-                    &["neko", "update", ref libraryname] => {
-                        self.dynamic.update(libraryname)
-                    },
-                    _ => Ok(()),
-                };
-                self.command.get_mut().clear();
-                self.command.set_position(0);
+            key if key.is_start_heading() => {
+                self.line.set_position(0);
             },
-            _ => {
-                self.command.get_mut().clear();
-                self.command.set_position(0);
+            key if key.is_enquiry() => {
+                let position: usize = self.line.get_ref().len().checked_sub(1).unwrap_or_default();
+                self.line.set_position(position as u64);
+            },
+            pty::Key::Enter | _ => {
+                self.line.get_mut().clear();
+                self.line.set_position(0);
             },
         };
     }
@@ -157,7 +190,7 @@ impl Neko {
         let screen: &pty::Display = self.shell.get_screen();
         if let Some(sprite) = self.graphic.explicite_emotion(
             lib.get_sheet(),
-            lib.get_explicite(),
+            lib.get_emotion(),
         ) {
             self.display.with_draw(
                 screen,
@@ -178,18 +211,18 @@ impl Iterator for Neko {
     type Item = pty::ShellState;
 
     fn next(&mut self) -> Option<pty::ShellState> {
-        self.shell.next().and_then(|event| {
-            if let Some(&(pid, _)) = event.is_task() {
+        self.shell.next().and_then(|mut shell| {
+            if let Some(&(pid, _)) = shell.is_task() {
                 self.pid = pid;
             }
-            if let Some(key) = event.is_input_keydown() {
-                if self.pid.eq(&self.shell.get_pid()) {
-                    self.command(key);
-                }
+            if let Some(key) = shell.is_input_keydown() {
+                self.neko(key, &mut shell);
+            } else if let Some(key) = shell.is_input_keydown() {
+                self.line(key);
             }
-            self.dynamic.call(&event);
+            self.dynamic.call(&shell);
             self.call();
-            Some(event)
+            Some(shell)
         })
     }
 }

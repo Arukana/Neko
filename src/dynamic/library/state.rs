@@ -14,7 +14,7 @@ use super::Position;
 #[derive(Copy)]
 pub struct LibraryState {
     sheet: editeur::Sheet,
-    explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+    emotion: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
     position: Position,
     message: [pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
     unmount: libc::c_uchar,
@@ -29,7 +29,8 @@ impl LibraryState {
         &self.sheet
     }
 
-    pub fn get_message(&self) -> &[pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] {
+    pub fn get_message(&self)
+        -> &[pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] {
         &self.message
     }
 
@@ -37,28 +38,38 @@ impl LibraryState {
         &self.position
     }
 
-    /// The function `get_explicite` returns a reference on a ffi argument
+    /// The function `get_emotion` returns a reference on a ffi argument
     /// of detailed emotion by draw.
-    pub fn get_explicite(&self)
+    pub fn get_emotion(&self)
         -> &[[editeur::Tuple; editeur::SPEC_MAX_XY];
     editeur::SPEC_MAX_DRAW] {
-        &self.explicite
+        &self.emotion
     }
 
-
+    pub fn set_message(&mut self,
+        message: String,
+    ) {
+       self.message.iter_mut().zip(message.chars())
+                   .all(|(mut_character,
+                          character): (&mut pty::Character,
+                                       char)| {
+                        *mut_character = pty::Character::from(character);
+                        true
+                    });
+    }
 }
 
 impl Clone for LibraryState {
     fn clone(&self) -> Self {
         unsafe {
-            let mut explicite: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
+            let mut emotion: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = mem::uninitialized();
             let mut message: [pty::Character; editeur::SPEC_MAX_Y * MESSAGE_WIDTH] = mem::uninitialized();
 
-            explicite.copy_from_slice(&self.explicite);
+            emotion.copy_from_slice(&self.emotion);
             message.copy_from_slice(&self.message);
             LibraryState {
                 sheet: self.sheet,
-                explicite: explicite,
+                emotion: emotion,
                 message: message,
                 position: Position::default(),
                 unmount: self.unmount,
@@ -72,10 +83,10 @@ impl fmt::Debug for LibraryState {
         write!(f, "LibraryState {{ sheet: {}, emotion: [{:?}, {:?}, {:?}, {:?}, ...],\
                                    message: {:?}, position: {:?}, unmount: {} }}",
                self.sheet,
-               &self.explicite[0][..8],
-               &self.explicite[1][..8], 
-               &self.explicite[2][..8], 
-               &self.explicite[3][..8],
+               &self.emotion[0][..8],
+               &self.emotion[1][..8], 
+               &self.emotion[2][..8], 
+               &self.emotion[3][..8],
                self.message.iter().take(30).map(|character| character.get_glyph()).collect::<String>(),
                self.position,
                self.unmount)
@@ -95,7 +106,7 @@ impl Default for LibraryState {
         message[7] = pty::Character::from('d');
         LibraryState {
             sheet: editeur::Sheet::Bust,
-            explicite: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+            emotion: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),
             message: message,
             unmount: b'\0',

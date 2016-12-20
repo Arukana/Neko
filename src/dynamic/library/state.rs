@@ -95,20 +95,11 @@ impl fmt::Debug for LibraryState {
 
 impl Default for LibraryState {
     fn default() -> Self {
-        let mut message = [pty::Character::default(); editeur::SPEC_MAX_Y * MESSAGE_WIDTH];
-        message[0] = pty::Character::from('b');
-        message[1] = pty::Character::from('o');
-        message[2] = pty::Character::from('n');
-        message[3] = pty::Character::from('j');
-        message[4] = pty::Character::from('o');
-        message[5] = pty::Character::from('u');
-        message[6] = pty::Character::from('r');
-        message[7] = pty::Character::from('d');
-        LibraryState {
+      LibraryState {
             sheet: editeur::Sheet::Bust,
             emotion: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),
-            message: message,
+            message: [pty::Character::default(); editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
             unmount: b'\0',
         }
     }

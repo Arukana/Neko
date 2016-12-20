@@ -97,20 +97,10 @@ impl fmt::Debug for LibraryState {
 impl Default for LibraryState {
     fn default() -> Self {
       let mut message = [b'\0'; editeur::SPEC_MAX_Y * MESSAGE_WIDTH];
-      message[0] = b'B';
-      message[1] = b'o';
-      message[2] = b'n';
-      message[3] = b'o';
-      message[4] = b'b';
-      message[5] = b'o';
-      message[6] = b' ';
-      message[7] = b'B';
-      message[8] = b'o';
-      message[9] = b'n';
-      message[10] = b'j';
-      message[11] = b'o';
-      message[12] = b'u';
-      message[13] = b'r';
+      let coucou = "Ca fait 10heuresque tu bosses!  Tu devrais push et arreter pour aujourd'hui!!".as_bytes();
+      coucou.iter().enumerate().all(|(i, &mes)|
+      { message[i] = mes;
+        true });
         LibraryState {
             sheet: editeur::Sheet::Bust,
             implicite: [editeur::Emotion::default(); editeur::SPEC_MAX_DRAW],

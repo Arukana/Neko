@@ -16,12 +16,13 @@ use self::library::Library;
 
 use ::toml;
 use ::SPEC_ROOT;
-use ::SPEC_ROOT_DEFAULT;
 use ::git2;
 use ::pty_proc::shell::ShellState;
 
 /// The default capacity of heap.
 const SPEC_CAPACITY: usize = 10;
+/// The default root.
+pub const SPEC_ROOT_DEFAULT: &'static str = ".neko";
 
 /// The shared library extention.
 #[cfg(any(target_os = "linux", target_os = "android"))]

@@ -20,7 +20,6 @@ use ::SPEC_ROOT_DEFAULT;
 use ::git2;
 use ::pty_proc::shell::ShellState;
 
-
 /// The default capacity of heap.
 const SPEC_CAPACITY: usize = 10;
 
@@ -169,7 +168,6 @@ impl Compositer {
                             ) {
                                 Err(why) => Err(CompositerError::Mount(why)),
                                 Ok(dy) => {
-
                                     dy.start(&self.state);
                                     self.list.push(dy);
                                     self.list.sort();

@@ -166,3 +166,38 @@ impl From<env::VarError> for CompositerError {
         CompositerError::NekoPath
     }
 }
+
+impl PartialEq for CompositerError {
+    fn eq(&self, other: &CompositerError) -> bool {
+        match (self, other) {
+            (&CompositerError::MvFail(_), &CompositerError::MvFail(_)) => true,
+            (&CompositerError::RmFile(_), &CompositerError::RmFile(_)) => true,
+            (&CompositerError::RmDir(_), &CompositerError::RmDir(_)) => true,
+            (&CompositerError::MkDirGit(_), &CompositerError::MkDirGit(_)) => true,
+            (&CompositerError::MkDirLib(_), &CompositerError::MkDirLib(_)) => true,
+            (&CompositerError::ReadDirGit(_), &CompositerError::ReadDirGit(_)) => true,
+            (&CompositerError::ReadDirLib(_), &CompositerError::ReadDirLib(_)) => true,
+            (&CompositerError::OpenDirLib(_), &CompositerError::OpenDirLib(_)) => true,
+            (&CompositerError::BuildCommand(_), &CompositerError::BuildCommand(_)) => true,
+            (&CompositerError::ReadManifest(_), &CompositerError::ReadManifest(_)) => true,
+            (&CompositerError::InstallClone(_), &CompositerError::InstallClone(_)) => true,
+            (&CompositerError::UpdateRepOpen(_), &CompositerError::UpdateRepOpen(_)) => true,
+            (&CompositerError::UpdateRepOrigin(_), &CompositerError::UpdateRepOrigin(_)) => true,
+            (&CompositerError::UpdateRepFetch(_), &CompositerError::UpdateRepFetch(_)) => true,
+            (&CompositerError::UpdateRepBranch(_), &CompositerError::UpdateRepBranch(_)) => true,
+            (&CompositerError::UpdateRepObject(_), &CompositerError::UpdateRepObject(_)) => true,
+            (&CompositerError::UpdateRepReset(_), &CompositerError::UpdateRepReset(_)) => true,
+            (&CompositerError::Mount(_), &CompositerError::Mount(_)) => true,
+            (&CompositerError::BuildExit(_), &CompositerError::BuildExit(_)) => true,
+            (&CompositerError::UpdateRepBranchId, &CompositerError::UpdateRepBranchId) => true,
+            (&CompositerError::NekoPath, &CompositerError::NekoPath) => true,
+            (&CompositerError::UnmountPosition, &CompositerError::UnmountPosition) => true,
+            (&CompositerError::UnmountRemove, &CompositerError::UnmountRemove) => true,
+            (&CompositerError::ParseManifest, &CompositerError::ParseManifest) => true,
+            (&CompositerError::ParseInteger, &CompositerError::ParseInteger) => true,
+            (&CompositerError::InstallFormat, &CompositerError::InstallFormat) => true,
+            (&CompositerError::InstallExists, &CompositerError::InstallExists) => true,
+            _ => false,
+        }
+    }
+}

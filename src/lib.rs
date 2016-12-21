@@ -161,7 +161,7 @@ impl Neko {
         let position: u64 = self.line.position();
         match key {
             pty::Key::Utf8(glyph) => {
-                self.line.get_mut().insert(position as usize,  glyph);
+                self.line.get_mut().insert(position as usize, glyph);
                 self.line.set_position(position.checked_add(1).unwrap_or_default());
             },
             pty::Key::Left => {
@@ -177,7 +177,8 @@ impl Neko {
                 let position: usize = self.line.get_ref().len().checked_sub(1).unwrap_or_default();
                 self.line.set_position(position as u64);
             },
-            pty::Key::Enter | _ => {
+            pty::Key::Enter => {},
+            _ => {
                 self.line.get_mut().clear();
                 self.line.set_position(0);
             },
@@ -216,9 +217,8 @@ impl Iterator for Neko {
                 self.pid = pid;
             }
             if let Some(key) = shell.is_input_keydown() {
-                self.neko(key, &mut shell);
-            } else if let Some(key) = shell.is_input_keydown() {
                 self.line(key);
+                self.neko(key, &mut shell);
             }
             self.dynamic.call(&shell);
             self.call();

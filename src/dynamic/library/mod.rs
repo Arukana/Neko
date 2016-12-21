@@ -43,8 +43,12 @@ impl Library {
     /// The constructor method `new` returns a interface for a extern library.
     pub fn new(path: PathBuf, index: i64, state: &LibraryState) -> Result<Self> {
         unsafe {
+            let mut libname: Vec<libc::c_uchar> = Vec::with_capacity(4096);
+            
+            libname.extend_from_slice(&path.as_os_str().as_bytes()[..]);
+            libname.push(b'\0');
             let handle: *mut libc::c_void = libc::dlopen(
-                path.as_os_str().as_bytes().as_ptr() as *const libc::c_char,
+                libname.as_ptr() as *const libc::c_char,
                 libc::RTLD_LAZY
             );
 

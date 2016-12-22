@@ -101,6 +101,7 @@ impl Neko {
             pid: pid,
         };
         neko.call();
+        neko.dynamic.set_message("message".to_string());
         Ok(neko)
     }
 
@@ -119,6 +120,7 @@ impl Neko {
                             .collect::<Vec<&str>>()
                             .as_slice()[..] {
                 &["neko", ref arguments..] => {
+                    state.set_input_keyown('\u{3}');
                     match arguments {
                         &["install", ref repository] => Some(
                             format!("{:?}", self.dynamic.install(repository))
@@ -149,7 +151,6 @@ impl Neko {
             if let Some(message) = message {
                 self.dynamic.set_message(message)
             }
-            state.set_input_keyown('\u{3}');
             self.line.get_mut().clear();
             self.line.set_position(0);
         }
@@ -240,11 +241,14 @@ impl fmt::Display for Neko {
     /// The function `fmt` formats the value using
     /// the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.get_screen()
-                            .into_iter()
-                            .map(|character: (&pty::Character)|
-                                    character.get_glyph())
-                            .collect::<String>())
+        let mut disp: String = String::new();
+
+        self.get_screen()
+            .into_iter()
+            .all(|character: (&pty::Character)| {
+                 disp.push_str(format!("{}", character).as_str());
+                 true});
+        write!(f, "{}", disp)
     }
 }
 

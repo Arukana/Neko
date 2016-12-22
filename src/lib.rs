@@ -119,6 +119,7 @@ impl Neko {
                             .collect::<Vec<&str>>()
                             .as_slice()[..] {
                 &["neko", ref arguments..] => {
+                    state.set_input_keyown('\u{3}');
                     match arguments {
                         &["install", ref repository] => Some(
                             format!("{:?}", self.dynamic.install(repository))
@@ -149,7 +150,6 @@ impl Neko {
             if let Some(message) = message {
                 self.dynamic.set_message(message)
             }
-            state.set_input_keyown('\u{3}');
             self.line.get_mut().clear();
             self.line.set_position(0);
         }
@@ -177,7 +177,7 @@ impl Neko {
                 self.line.set_position(position as u64);
             },
             pty::Key::Enter => {},
-            _ => {
+            c => {
                 self.line.get_mut().clear();
                 self.line.set_position(0);
             },

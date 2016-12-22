@@ -101,6 +101,7 @@ impl Neko {
             pid: pid,
         };
         neko.call();
+        neko.dynamic.set_message("message".to_string());
         Ok(neko)
     }
 
@@ -177,7 +178,7 @@ impl Neko {
                 self.line.set_position(position as u64);
             },
             pty::Key::Enter => {},
-            c => {
+            _ => {
                 self.line.get_mut().clear();
                 self.line.set_position(0);
             },
@@ -240,11 +241,14 @@ impl fmt::Display for Neko {
     /// The function `fmt` formats the value using
     /// the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.get_screen()
-                            .into_iter()
-                            .map(|character: (&pty::Character)|
-                                    character.get_glyph())
-                            .collect::<String>())
+        let mut disp: String = String::new();
+
+        self.get_screen()
+            .into_iter()
+            .all(|character: (&pty::Character)| {
+                 disp.push_str(format!("{}", character).as_str());
+                 true});
+        write!(f, "{}", disp)
     }
 }
 

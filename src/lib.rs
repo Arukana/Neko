@@ -101,7 +101,6 @@ impl Neko {
             pid: pid,
         };
         neko.call();
-        neko.dynamic.set_message("message".to_string());
         Ok(neko)
     }
 

@@ -49,11 +49,16 @@ impl LibraryState {
     pub fn set_message(&mut self,
         message: String,
     ) {
-       self.message.iter_mut().zip(message.chars())
-                   .all(|(mut_character,
+        self.message.iter_mut().zip(message.chars())
+                    .all(|(mut_character,
                           character): (&mut pty::Character,
                                        char)| {
                         *mut_character = pty::Character::from(character);
+                        true
+                    });
+        self.message.iter_mut().skip(message.len())
+                    .all(|mut_character: &mut pty::Character| {
+                        mut_character.clear();
                         true
                     });
     }

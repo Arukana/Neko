@@ -95,11 +95,16 @@ impl fmt::Debug for LibraryState {
 
 impl Default for LibraryState {
     fn default() -> Self {
+      let mut message = [pty::Character::from('\0'); editeur::SPEC_MAX_Y * MESSAGE_WIDTH];
+      let coucou = "Ca fait 10heuresque tu bosses!  Tu devrais push et arreter pour aujourd'hui!!";
+      coucou.chars().enumerate().all(|(i, mes)|
+      { message[i] = pty::Character::from(mes);
+        true });
       LibraryState {
             sheet: editeur::Sheet::Bust,
             emotion: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
             position: Position::default(),
-            message: [pty::Character::default(); editeur::SPEC_MAX_Y * MESSAGE_WIDTH],
+            message: message,
             unmount: b'\0',
         }
     }

@@ -1,7 +1,7 @@
 use ::editeur;
 
 use ::pty;
-use std::ops::{BitAnd, Rem};
+use std::ops::{BitAnd, Rem, Not};
 
 pub const MESSAGE_WIDTH: usize = 16; // 16 + slide
 pub const MESSAGE_HEIGHT: usize = editeur::SPEC_MAX_Y;
@@ -62,18 +62,18 @@ impl Display {
               { index.checked_div(width_term).and_then(|y|
                 { if mes_x > start_x as i64
                   { if {end_x + 1..(mes_x as usize)}.contains(index.rem(width_term)).bitand((start_y..end_y).contains(y))
-                    { text_it.next().and_then(|letter: &pty::Character|
-                      { if letter.is_null()
-                        { Some(*letter) }
+                    { text_it.next().and_then(|&letter: &pty::Character|
+                      { if letter.is_null().not()
+                        { Some(letter) }
                         else
                         { None }}) }
                     else
                     { Some(character) }}
                   else
                   { if {(mes_x as usize)..start_x - 1}.contains(index.rem(width_term)).bitand((start_y..end_y).contains(y))
-                    { text_it.next().and_then(|letter: &pty::Character|
-                      { if letter.is_null()
-                        { Some(*letter) }
+                    { text_it.next().and_then(|&letter: &pty::Character|
+                      { if letter.is_null().not()
+                        { Some(letter) }
                         else
                         { None }}) }
                     else

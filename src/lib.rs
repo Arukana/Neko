@@ -53,8 +53,9 @@ pub mod dynamic;
 mod err;
 
 use std::io::{self, Write};
-use std::ops::BitAnd;
+use std::ops::{Not, BitAnd};
 use std::fmt;
+use std::char;
 
 use dynamic::Compositer;
 use dynamic::library::state::LibraryState;
@@ -106,7 +107,7 @@ impl Neko {
 
     /// The method `neko` runs a neko command for first level of shell.
     fn neko(&mut self, key: pty::Key, state: &mut pty::ShellState) {
-        if key.eq(&pty::Key::Enter).bitand(
+        if key.is_enter().bitand(
             self.pid.eq(&self.shell.get_pid())
         ) {
             let message: Option<String> =
@@ -159,14 +160,10 @@ impl Neko {
     fn line(&mut self, key: pty::Key) {
         let position: u64 = self.line.position();
         match key {
-            pty::Key::Utf8(glyph) => {
-                self.line.get_mut().insert(position as usize, glyph);
-                self.line.set_position(position.checked_add(1).unwrap_or_default());
-            },
-            pty::Key::Left => {
+            key if key.is_left() => {
                 self.line.set_position(position.checked_sub(1).unwrap_or_default());
             },
-            pty::Key::Right => {
+            key if key.is_right() => {
                 self.line.set_position(position.checked_add(1).unwrap_or_default());
             },
             key if key.is_start_heading() => {
@@ -176,10 +173,38 @@ impl Neko {
                 let position: usize = self.line.get_ref().len().checked_sub(1).unwrap_or_default();
                 self.line.set_position(position as u64);
             },
-            pty::Key::Enter => {},
-            _ => {
+            key if key.is_backspace() => {
+                let position: usize = self.line.position() as usize;
+                if position != 0 {
+                    let position: usize = position-1;
+                    if position < self.line.get_ref().len() {
+                        self.line.get_mut().remove(position);
+                        self.line.set_position(position as u64);
+                    }
+                }
+            },
+            key if key.is_enter() => {},
+            key if key.is_c0()  => {
                 self.line.get_mut().clear();
                 self.line.set_position(0);
+            },
+            pty::Key::Char(glyph) => unsafe {
+                self.line.get_mut().insert(position as usize, char::from_u32_unchecked(glyph));
+                self.line.set_position(position.checked_add(1).unwrap_or_default());
+            },
+            pty::Key::Str(line) => unsafe {
+                let position: usize = self.line.position() as usize;
+                let glyphs: String = String::from_utf8_unchecked(
+                    line.iter()
+                          .filter(|c: &&u8| c.eq(&&b'\0').not())
+                          .map(|c: &u8| *c)
+                          .collect::<Vec<u8>>()
+                );
+
+                if let Some(count) = glyphs.len().checked_add(position) {
+                    self.line.get_mut().extend(glyphs.chars());
+                    self.line.set_position(count as u64);
+                }
             },
         };
     }
@@ -246,7 +271,8 @@ impl fmt::Display for Neko {
             .into_iter()
             .all(|character: (&pty::Character)| {
                  disp.push_str(format!("{}", character).as_str());
-                 true});
+                 true
+            });
         write!(f, "{}", disp)
     }
 }

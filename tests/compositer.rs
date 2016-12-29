@@ -6,11 +6,6 @@ use self::std::path::PathBuf;
 use self::std::env;
 
 #[test]
-fn test_compositer_new() {
-  assert!(Compositer::new().is_ok());
-}
-
-#[test]
 fn test_compositer_command() {
     {
         env::set_var("NEKO_PATH", "/tmp/arukana1/.neko");

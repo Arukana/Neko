@@ -1,6 +1,6 @@
 [package]
 name            = "neko"
-version         = "0.0.1"
+version         = "0.1.0"
 authors         = [
 	"adjivas <adjivas@users.noreply.github.com>",
 	"brezaire <voncay@users.noreply.github.com>",
@@ -8,8 +8,8 @@ authors         = [
 	"jpepin <limaconoob@users.noreply.github.com>"
 ]
 description     = ""
-documentation   = "https://adjivas.github.io/Neko/neko"
-repository      = "https://github.com/adjivas/Neko.git"
+documentation   = "https://Arukana.github.io/Neko/neko"
+repository      = "https://github.com/Arukana/Neko.git"
 readme          = "README.md"
 keywords        = ["neko", "glyphArt"]
 license         = "GPL-3.0"
@@ -50,7 +50,7 @@ version          = "0.6"
 version          = "0.2"
 
 [dependencies.pty-proc]
-git              = "https://github.com/adjivas/pty-proc.git"
+git              = "https://github.com/Arukana/PtyProc.git"
 features         = ["task"]
 
 [dependencies.editeur]

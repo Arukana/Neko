@@ -158,13 +158,13 @@ impl Neko {
 
     /// The method `line` updates the current command line of proccess.
     fn line(&mut self, key: pty::Key) {
-        let position: u64 = self.line.position();
+        let position: usize = self.line.position() as usize;
         match key {
             key if key.is_left() => {
-                self.line.set_position(position.checked_sub(1).unwrap_or_default());
+                self.line.set_position(position.checked_sub(1).unwrap_or_default() as u64);
             },
             key if key.is_right() => {
-                self.line.set_position(position.checked_add(1).unwrap_or_default());
+                self.line.set_position(position.checked_add(1).unwrap_or_default() as u64);
             },
             key if key.is_start_heading() => {
                 self.line.set_position(0);
@@ -188,10 +188,6 @@ impl Neko {
                 self.line.get_mut().clear();
                 self.line.set_position(0);
             },
-            pty::Key::Char(glyph) => unsafe {
-                self.line.get_mut().insert(position as usize, char::from_u32_unchecked(glyph));
-                self.line.set_position(position.checked_add(1).unwrap_or_default());
-            },
             pty::Key::Str(line) => unsafe {
                 let position: usize = self.line.position() as usize;
                 let glyphs: String = String::from_utf8_unchecked(
@@ -204,6 +200,12 @@ impl Neko {
                 if let Some(count) = glyphs.len().checked_add(position) {
                     self.line.get_mut().extend(glyphs.chars());
                     self.line.set_position(count as u64);
+                }
+            },
+            _ => {
+                if let Some(glyph) = key.is_utf8() {
+                    self.line.get_mut().insert(position, glyph);
+                    self.line.set_position(position.checked_add(1).unwrap_or_default() as u64);
                 }
             },
         };

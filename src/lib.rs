@@ -87,9 +87,9 @@ pub struct Neko {
 }
 
 impl Neko {
-    pub fn new(repeat: Option<i64>, interval: Option<i64>) -> Result<Self> {
+    pub fn new(repeat: Option<i64>, interval: Option<i64>, command: Option<&'static str>, windows: Option<pty::Winszed>,) -> Result<Self> {
         let dynamic: Compositer = try!(Compositer::new());
-        let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, None));
+        let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let graphic: editeur::Graphic = try!(editeur::Graphic::new());
         let pid = shell.get_pid();
 
@@ -231,6 +231,13 @@ impl Neko {
     /// The accessor method `get_screen` returns a reference on the Display interface.
     pub fn get_screen(&self) -> &Display {
         &self.display
+    }
+
+
+    /// The mutator method `set_window_size_with` redimentionnes the window
+    /// with a argument size.
+    pub fn set_window_size_with(&mut self, size: &pty::Winszed) {
+        self.shell.set_window_size_with(size);
     }
 }
 

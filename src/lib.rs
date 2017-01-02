@@ -233,6 +233,11 @@ impl Neko {
         &self.display
     }
 
+    /// The accessor method `get_window_size` returns a reference on the window size of
+    /// terminal.
+    pub fn get_window_size(&self) -> &pty::Winszed {
+        self.shell.get_window_size()
+    }
 
     /// The mutator method `set_window_size_with` redimentionnes the window
     /// with a argument size.

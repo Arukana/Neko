@@ -4,4 +4,3 @@ pub use super::pty::{Shell, ShellError, ShellState, Winszed, Character, Key, Mou
 pub use super::dynamic::{Compositer, CompositerError};
 pub use super::dynamic::library::{Library, LibraryError};
 pub use super::editeur::{Graphic, GraphicError};
-

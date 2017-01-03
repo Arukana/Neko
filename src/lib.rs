@@ -267,11 +267,19 @@ impl Iterator for Neko {
 
 impl Write for Neko {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        self.shell.write(buf)
+        if self.dynamic.get_state().is_locked().not() {
+            self.shell.write(buf)
+        } else {
+            Ok(0)
+        }
     }
 
     fn flush(&mut self) -> io::Result<()> {
-        self.shell.flush()
+        if self.dynamic.get_state().is_locked().not() {
+           self.shell.flush()
+        } else {
+            Ok(())
+        }
     }
 }
 

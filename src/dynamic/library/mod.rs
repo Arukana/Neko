@@ -90,6 +90,7 @@ impl Library {
     pub fn start(&self, state: &LibraryState) {
         if let Some(start) = self.start {
             start(state, self.save);
+            println!("RUST::{:?}", state.get_position().cardinal);
         }
     }
 

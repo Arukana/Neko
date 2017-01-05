@@ -22,13 +22,13 @@ use ::pty;
 /// The struct `Library` is a table of callback.
 pub struct Library {
     /// `start` interface.
-    start: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
+    start: Option<extern fn(state: *const LibraryState, save: *const *const libc::c_void)>,
     /// `idle` interface.
-    idle: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
+    idle: Option<extern fn(state: *const LibraryState, save: *const *const libc::c_void)>,
     /// `idle` interface.
-    end: Option<extern fn(state: *const LibraryState, save: *const libc::c_void)>,
+    end: Option<extern fn(state: *const LibraryState, save: *const *const libc::c_void)>,
     /// `save` pointer to share a segment of librairy memory.
-    save: *mut libc::c_void,
+    save: *const *const libc::c_void,
     /// dynamic library interface.
     handle: *mut libc::c_void,
     /// priority queue.
@@ -51,7 +51,6 @@ impl Library {
                 libname.as_ptr() as *const libc::c_char,
                 libc::RTLD_LAZY
             );
-
             if handle.eq(&ptr::null_mut()) {
                 Err(LibraryError::BadDyLib(CString::from_raw(libc::dlerror())
                                                    .into_string()
@@ -67,7 +66,6 @@ impl Library {
                     path: path,
                     unmounted: false,
                 };
-
                 lib.start(state);
                 Ok(lib)
             }

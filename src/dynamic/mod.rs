@@ -10,6 +10,7 @@ use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::process;
 
+
 pub use self::err::{CompositerError, Result};
 pub use self::library::LibraryState;
 use self::library::Library;
@@ -205,6 +206,8 @@ impl Compositer {
                                                 source: &PathBuf,
                                                 sub: S)
                                                 -> Result<()> {
+        let path = Path::new(source.to_str().unwrap());
+        env::set_current_dir(&path);
         match self.get_lib() {
             Err(why) => Err(why),
             Ok(dest) => {

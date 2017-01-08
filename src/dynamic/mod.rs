@@ -155,7 +155,10 @@ impl Compositer {
                                   priority: Option<i64>)
                                   -> Result<()> {
         self.git_with_lib()
-            .and_then(|(git, lib)| match self.unmount(libraryname) {
+            .and_then(|(git, lib)| {
+              let path = Path::new(git.to_str().unwrap());
+              env::set_current_dir(&path);
+              match self.unmount(libraryname) {
                 Ok(_) |
                 Err(CompositerError::UnmountPosition) => {
                     let source: PathBuf = PathBuf::from(libraryname);
@@ -181,7 +184,7 @@ impl Compositer {
                         }})
                 }
                 Err(why) => Err(why),
-            })
+            }})
     }
 
     /// The method `unmount` removes library from the queue.

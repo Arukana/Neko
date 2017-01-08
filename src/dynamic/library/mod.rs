@@ -1,6 +1,7 @@
 #[macro_use]
 mod macros;
 pub mod position;
+pub mod infobulle;
 pub mod state;
 mod err;
 
@@ -15,6 +16,7 @@ use std::ffi::CString;
 pub use self::err::{LibraryError, Result};
 pub use self::state::LibraryState;
 pub use self::position::Position;
+pub use self::infobulle::{InfoBulle, PosFromNeko};
 
 use ::libc;
 use ::pty;

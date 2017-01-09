@@ -3,93 +3,55 @@ use ::editeur;
 use ::pty;
 use std::ops::{BitAnd, Rem, Not};
 
-pub const MESSAGE_WIDTH: usize = 16; // 16 + slide
-pub const MESSAGE_HEIGHT: usize = editeur::SPEC_MAX_Y;
+pub const MESSAGE_WIDTH: usize = 1024;
 
 #[repr(C)]
 #[derive(Clone, Debug, Default)]
-pub struct Display {
-    screen: Vec<pty::Character>,
-    size: pty::Winszed,
-}
+pub struct Display
+{ size: Winsized,
+  neko: Personnage,
+  infobulle: Say,
+  count: usize } 
 
-impl Display {
-    /// The accessor `get_window_size` returns the window size interface.
-    pub fn get_window_size(&self) -> &pty::Winszed {
-        &self.size
-    }
+impl Display
+{ /// The accessor `get_window_size` returns the window size interface.
+  pub fn get_window_size(&self) -> &pty::Winszed
+  { &self.size }
+  
+  /// The accessor `set_window_size` set terminal size to `new_size` valie
+  pub fn set_window_size(&mut self, new_size: &pty::Winszed)
+  { self.size = new_size; }}
 
-    pub fn with_draw(&mut self,
-                     screen: &pty::Display,
-                     draw: &editeur::Draw,
-                     message: &[pty::Character; 1024],
-                     (start_x, start_y): (usize, usize)) {
+impl<'a> Iterator for Display
+{ type Item = pty::Character;
+
+  fn next(&mut self) -> Option<pty::Character>
+  { if self.size.get_col() > 0 && self.size.get_row() > 0
+    { if self.count >= self.size.get_col() * self.size.get_row()
+      { self.count = 0; }
+      self.count += 1; 
+      let coord_neko: (usize, usize) = self.neko.position.get_coordinates(self.size);
+      let coord_bulle: (usize, usize) = self.infobulle.position.get_coordinates(self.size);
+      if {coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)}.contains((self.count - 1) / self.size.get_col()) && {coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)}.contains((self.count - 1) % self.size.get_col())
+      { /*Some(pty::Character::from(draw[]))*/ None }
+      else if {coord_bulle.1..(coord_bulle.1 + self.infobulle.get_height())}.contains((self.count - 1) / self.size.get_col()) && {coord_bulle.0..(coord_bulle.0 + self.infobulle.get_width())}.contains((self.count - 1) % self.size.get_col())
+      { Some(self.infobulle.message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
+      else
+      { Some(pty::Character::from(' ')) }}
+    else
+    { None }}}
 
 
-        let (end_x, end_y): (usize, usize) = (start_x + editeur::SPEC_MAX_X,
-                                              start_y + editeur::SPEC_MAX_Y);
-        let width_term: usize = screen.get_window_size().get_col();
-        let height_term: usize = screen.get_window_size().get_row();
-        let mut draw_it = draw.into_iter();
-        let mut text_it = message.into_iter();
-        let mes_x: i64 = if start_y + MESSAGE_HEIGHT <= height_term {
-            if end_x + MESSAGE_WIDTH + 1 <= width_term {
-                (end_x + MESSAGE_WIDTH + 1) as i64
-            } else if start_x > MESSAGE_WIDTH {
-                (start_x - MESSAGE_WIDTH) as i64 - 1
-            } else {
-                -1
-            }
+/*
+        if self.count == 10 {
+            self.count = 0;
         } else {
-            -1
-        };
-
-        self.size = *screen.get_window_size();
-        self.screen = screen.into_iter()
-            .enumerate()
-            .map(|(index, character): (usize, &pty::Character)|
-                 index.checked_div(width_term).and_then(|y|
-                    if mes_x.gt(&0).bitand(
-                       (start_x..end_x).contains(index.rem(width_term)).bitand(
-                       (start_y..end_y).contains(y))) {
-                       draw_it.next().and_then(|&(_, texel)|
-                           Some((index, pty::Character::from(texel.get_glyph()))))
-                    } else {
-                        None
-                    }
-                 ).unwrap_or_else(|| (index, *character)))
-            .map(|(index, character): (usize, pty::Character)|
-            { if mes_x > 0i64
-              { index.checked_div(width_term).and_then(|y|
-                { if mes_x > start_x as i64
-                  { if {end_x + 1..(mes_x as usize)}.contains(index.rem(width_term)).bitand((start_y..end_y).contains(y))
-                    { text_it.next().and_then(|&letter: &pty::Character|
-                      { if letter.is_null().not()
-                        { Some(letter) }
-                        else
-                        { None }}) }
-                    else
-                    { Some(character) }}
-                  else
-                  { if {(mes_x as usize)..start_x - 1}.contains(index.rem(width_term)).bitand((start_y..end_y).contains(y))
-                    { text_it.next().and_then(|&letter: &pty::Character|
-                      { if letter.is_null().not()
-                        { Some(letter) }
-                        else
-                        { None }}) }
-                    else
-                    { Some(character) }}}).unwrap_or_else(|| character) }
-              else
-              { character }})
-              .collect::<Vec<pty::Character>>();
-    
-}}
-
-impl<'a> IntoIterator for &'a Display {
-    type Item = &'a pty::Character;
-    type IntoIter = ::std::slice::Iter<'a, pty::Character>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.screen.as_slice().into_iter()
-    }
-}
+            self.count += 1;
+        }
+        if self.count < 5 {
+            Some(' ')
+        } else {
+            Some ('a')
+        }
+    }}
+*/

@@ -219,12 +219,14 @@ impl Neko {
             lib.get_sheet(),
             lib.get_emotion(),
         ) {
+/*
             self.display.with_draw(
                 screen,
                 sprite.into_iter().next().unwrap(),
                 lib.get_message(),
                 lib.get_position().get_coordinate(screen.get_window_size()),
             );
+*/
         }
     }
 
@@ -290,7 +292,7 @@ impl fmt::Display for Neko {
         let mut disp: String = String::new();
 
         self.get_screen()
-            .into_iter()
+            .iter()
             .all(|character: (&pty::Character)| {
                  disp.push_str(format!("{}", character).as_str());
                  true

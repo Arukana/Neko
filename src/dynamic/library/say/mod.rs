@@ -13,9 +13,11 @@ pub struct Say
   pub message: [pty::Character; 1024], }
 
 impl Say
-{ pub fn get_height(&self) -> usize
+{ /// Return the height of the message, assuming all `\n`
+  pub fn get_height(&self) -> usize
   { self.message.iter().filter(|&&nl| nl.is_enter()).count() }
 
+  /// Return the width of the message, assuming the characters between all `\n`
   pub fn get_width(&self) -> usize
   { self.message.split(|&nl| nl.is_enter()).fold(0, |acc, x|
     { if x.iter().find(|&x| x.is_null()).is_none() && acc < x.len()

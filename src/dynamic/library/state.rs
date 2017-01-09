@@ -6,15 +6,14 @@ use ::editeur;
 use ::pty;
 use ::libc;
 
-use super::InfoBulle;
-use super::infobulle::PosFromNeko;
-use super::neko::{NekoContent, Cardinal, Position};
+use super::say::{Say, PosFromNeko};
+use super::personnage::{Personnage, Cardinal, Position};
 
 #[repr(C)]
 #[derive(Copy)]
 pub struct LibraryState {
-    neko: NekoContent,
-    infobulle: InfoBulle,
+    neko: Personnage,
+    infobulle: Say,
     unmount: libc::c_uchar,
     lock: libc::c_uchar,
 }
@@ -71,8 +70,8 @@ impl LibraryState {
 impl Clone for LibraryState {
     fn clone(&self) -> Self {
         LibraryState {
-            neko: self.neko.clone(),
-            infobulle: self.infobulle.clone(),
+            neko: self.neko,
+            infobulle: self.infobulle,
             unmount: self.unmount,
             lock: self.lock,
         }
@@ -92,9 +91,9 @@ impl fmt::Debug for LibraryState {
 
 impl Default for LibraryState {
     fn default() -> Self {
-      LibraryState {
-            neko: NekoContent::default(),
-            infobulle: InfoBulle::default(),
+        LibraryState {
+            neko: Personnage::default(),
+            infobulle: Say::default(),
             unmount: b'\0',
             lock: b'\0',
         }

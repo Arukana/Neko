@@ -1,8 +1,6 @@
-pub mod cardinal;
-
 use std::fmt;
 
-use self::cardinal::Cardinal;
+use super::Cardinal;
 
 use ::libc;
 use ::pty;
@@ -25,7 +23,7 @@ impl Default for Position {
 
 impl fmt::Debug for Position {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Position {{ cardinal: {:?}, cartesian: {:?} }}", 0, self.cartesian)
+        write!(f, "Position {{ cardinal: {:?}, cartesian: {:?} }}", self.cardinal, self.cartesian)
     }
 }
 

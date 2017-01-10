@@ -1,12 +1,22 @@
 # This file describe the command line interface options
 name: Neko
-version: 0.1
-about: NEKO prompt program
+version: 1.0
+about: Neko of terminal
 author: adjivas <adjivas@users.noreply.github.com>, brezaire <voncay@users.noreply.github.com>, flime <LinFeiLong@users.noreply.github.com>, Jeremy PEPIN <jpepin@student.42.fr>
 
 args:
-    - delay:
-        help: Defines the delay.
-        short: d
-        long: delay
+    - repeat:
+        help: Defines the repeat.
+        short: r
+        long: repeat
+        takes_value: true
+    - interval:
+        help: Defines the interval.
+        short: i
+        long: interval
+        takes_value: true
+    - command:
+        help: Defines the command.
+        short: c
+        long:command
         takes_value: true

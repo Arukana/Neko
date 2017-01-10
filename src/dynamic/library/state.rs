@@ -71,8 +71,8 @@ impl LibraryState {
 impl Clone for LibraryState {
     fn clone(&self) -> Self {
         LibraryState {
-            neko: self.neko.clone(),
-            infobulle: self.infobulle.clone(),
+            neko: self.neko,
+            infobulle: self.infobulle,
             unmount: self.unmount,
             lock: self.lock,
         }

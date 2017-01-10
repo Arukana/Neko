@@ -55,3 +55,7 @@ features         = ["task"]
 
 [dependencies.editeur]
 git              = "https://github.com/Arukana/Editor.git"
+
+[dependencies.clap]
+version = "*"
+features = ["yaml", "suggestions", "color"]

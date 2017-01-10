@@ -87,7 +87,7 @@ pub struct Neko {
 }
 
 impl Neko {
-    pub fn new(repeat: Option<i64>, interval: Option<i64>, command: Option<&'static str>, windows: Option<pty::Winszed>,) -> Result<Self> {
+    pub fn new(repeat: Option<i64>, interval: Option<i64>, command: Option<&str>, windows: Option<pty::Winszed>,) -> Result<Self> {
         let dynamic: Compositer = try!(Compositer::new());
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let graphic: editeur::Graphic = try!(editeur::Graphic::new());

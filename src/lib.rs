@@ -211,24 +211,11 @@ impl Neko {
         };
     }
 
-    fn call(&mut self) {
-        let lib: &LibraryState = self.dynamic.get_state();
- 
-        let screen: &pty::Display = self.shell.get_screen();
-        if let Some(sprite) = self.graphic.explicite_emotion(
-            lib.get_sheet(),
-            lib.get_emotion(),
-        ) {
-/*
-            self.display.with_draw(
-                screen,
-                sprite.into_iter().next().unwrap(),
-                lib.get_message(),
-                lib.get_position().get_coordinate(screen.get_window_size()),
-            );
-*/
-        }
-    }
+    fn call(&mut self)
+    { let lib: &LibraryState = self.dynamic.get_state();
+      let screen: &pty::Display = self.shell.get_screen();
+      if let Some(&sprite) = self.graphic.explicite_emotion(lib.get_sheet(), lib.get_emotion())
+      { self.display = Display::new(screen.get_window_size(), lib.get_infobulle(), lib.get_position().get_coordinate(screen.get_window_size()), sprite); }}
 
     /// The accessor method `get_screen` returns a reference on the Display interface.
     pub fn get_screen(&self) -> &Display {

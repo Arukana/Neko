@@ -9,13 +9,15 @@ use ::libc;
 use super::say::{Say, PosFromNeko};
 use super::personnage::{Personnage, Cardinal, Position};
 
+
+
 #[repr(C)]
 #[derive(Copy)]
 pub struct LibraryState {
-    neko: Personnage,
-    infobulle: Say,
-    unmount: libc::c_uchar,
-    lock: libc::c_uchar,
+  neko: Personnage,
+  infobulle: Say,
+  unmount: libc::c_uchar,
+  lock: libc::c_uchar,
 }
 
 impl LibraryState {
@@ -31,11 +33,17 @@ impl LibraryState {
         &self.neko.sheet
     }
 
+    pub fn get_infobulle(&self) -> &Say
+    { &self.infobulle }
+
+    pub fn get_personnage(&self) -> &Personnage
+    { &self.neko }
+
     pub fn get_message(&self) -> &[pty::Character; 1024]
     { &self.infobulle.message }
 
-    pub fn message_pos_from_neko(&self) -> PosFromNeko
-    { self.infobulle.cardinal }
+    pub fn message_pos_from_neko(&self) -> &PosFromNeko
+    { &self.infobulle.cardinal }
 
     pub fn get_position(&self) -> &Position {
         &self.neko.position

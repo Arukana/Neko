@@ -59,7 +59,7 @@ use std::char;
 
 use dynamic::Compositer;
 use dynamic::library::state::LibraryState;
-use display::Display;
+pub use display::Display;
 
 pub use graphic::prelude as editeur;
 pub use pty_proc::prelude as pty;
@@ -70,6 +70,8 @@ pub use self::err::{NekoError, Result};
 pub const SPEC_ROOT: &'static str = editeur::SPEC_ROOT;
 /// The default first directory.
 pub const SPEC_ROOT_DEFAULT: &'static str = editeur::SPEC_ROOT_DEFAULT;
+
+pub type PtyDisplay = pty::Display;
 
 /// The module `neko` is the first interface level.
 pub struct Neko {
@@ -87,10 +89,38 @@ pub struct Neko {
 }
 
 impl Neko {
-    pub fn new(repeat: Option<i64>, interval: Option<i64>, command: Option<&str>, windows: Option<pty::Winszed>,) -> Result<Self> {
+    pub fn new(
+        repeat: Option<i64>,
+        interval: Option<i64>,
+        command: Option<&str>,
+        windows: Option<pty::Winszed>,
+    ) -> Result<Self> {
         let dynamic: Compositer = try!(Compositer::new());
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let graphic: editeur::Graphic = try!(editeur::Graphic::new());
+        let pid = shell.get_pid();
+
+        let mut neko = Neko {
+            screen: Display::default(),
+            dynamic: dynamic,
+            shell: shell,
+            graphic: graphic,
+            line: io::Cursor::new(Vec::new()),
+            pid: pid,
+        };
+        neko.call();
+        Ok(neko)
+    }
+    
+    pub fn from_graphic(
+        graphic: editeur::Graphic,
+        repeat: Option<i64>,
+        interval: Option<i64>,
+        command: Option<&str>,
+        windows: Option<pty::Winszed>,
+    ) -> Result<Self> {
+        let dynamic: Compositer = try!(Compositer::new());
+        let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let pid = shell.get_pid();
 
         let mut neko = Neko {
@@ -218,8 +248,8 @@ impl Neko {
       { self.screen = Display::new(screen.get_window_size(), lib.get_infobulle(), lib.get_position().get_coordinate(screen.get_window_size()), sprite.into_iter().next().unwrap()); }}
 
     /// The accessor method `get_screen` returns a reference on the Display interface.
-    pub fn get_screen(&self) -> (&Display, &pty::Display) {
-        (&self.screen, self.shell.get_screen())
+    pub fn get_screen(&self) -> (&pty::Display, &Display) {
+        (self.shell.get_screen(), &self.screen)
     }
 
     /// The accessor method `get_window_size` returns a reference on the window size of
@@ -278,18 +308,36 @@ impl fmt::Display for Neko {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut disp: String = String::new();
 
-        self.screen.clone().into_iter()
-                   .zip(self.shell.get_screen().into_iter())
-              .all(|(neko, term)|
-                  if neko.is_space().not() {
-                      disp.push_str(format!("{}", neko).as_str());
-                      true
-                  } else {
-                      disp.push_str(format!("{}", term).as_str());
-                      true
-                  }
-              );
-        write!(f, "{}", disp)
+/*
+        self.shell.get_screen()
+            .into_iter()
+            .all(|character: (&pty::Character)| {
+                 disp.push_str(format!("{}", character).as_str());
+                 true
+            });
+            */
+        self.screen.into_iter()
+            .all(|character| {
+                 disp.push_str(format!("{}", character).as_str());
+                 true
+            });
+            /*
+        self.shell.get_screen()
+            .into_iter()
+            .zip(self.screen.into_iter())
+            .all(|(pty_character, character)| {
+                    disp.push_str(format!("{}", pty_character).as_str());
+                    true
+                if character.is_space().not() {
+                    disp.push_str(format!("{}", character).as_str());
+                    true
+                } else {
+                    disp.push_str(format!("{}", pty_character).as_str());
+                    true
+                }
+            });
+            */
+         write!(f, "{}", disp)
     }
 }
 
@@ -299,5 +347,18 @@ impl fmt::Debug for Neko {
                self.dynamic,
                self.graphic,
                self.screen)
+    }
+}
+
+impl Default for Neko {
+    fn default() -> Neko {
+        Neko {
+            screen: Display::default(),
+            dynamic: Compositer::default(),
+            shell: pty::Shell::default(),
+            graphic: editeur::Graphic::default(),
+            line: io::Cursor::new(Vec::new()),
+            pid: 0,
+        }
     }
 }

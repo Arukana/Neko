@@ -7,7 +7,7 @@ use std::ops::{BitAnd, Rem, Not};
 pub const MESSAGE_WIDTH: usize = 1024;
 
 #[repr(C)]
-#[derive(Clone, Debug, Default)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Display
 { size: pty::Winszed,
   infobulle: Say,
@@ -64,7 +64,7 @@ impl Iterator for Display
 
   fn next(&mut self) -> Option<pty::Character>
   { if self.count >= self.size.get_col() * self.size.get_row()
-    { self.count = 0; }
+    { None } else {
     self.count += 1; 
     let (coord_bulle, coord_neko): ((usize, usize), (usize, usize)) = ultime_coordinates(self.size, self.coord_neko, self.infobulle);
     let mut draw = self.draw.into_iter();
@@ -73,4 +73,4 @@ impl Iterator for Display
     else if (coord_bulle.1..(coord_bulle.1 + self.infobulle.get_height())).contains((self.count - 1) / self.size.get_col()) && (coord_bulle.0..(coord_bulle.0 + self.infobulle.get_width())).contains((self.count - 1) % self.size.get_col())
     { Some(self.infobulle.message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
     else
-    { Some(pty::Character::from(' ')) }}}
+    { Some(pty::Character::from(' ')) }}}}

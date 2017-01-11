@@ -1,8 +1,7 @@
-
 use ::editeur;
 
 use ::pty;
-use dynamic::library::say::Say;
+use dynamic::library::say::{Say, Relative};
 use std::ops::{BitAnd, Rem, Not};
 
 pub const MESSAGE_WIDTH: usize = 1024;
@@ -14,7 +13,7 @@ pub struct Display
   infobulle: Say,
   coord_neko: (usize, usize),
   draw: editeur::Draw,
-  count: usize } 
+  count: usize }
 
 fn ultime_coordinates(size: pty::Winszed, mut coord_neko: (usize, usize), infobulle: Say) -> ((usize, usize), (usize, usize))
 { let width_message = infobulle.get_width();
@@ -23,27 +22,27 @@ fn ultime_coordinates(size: pty::Winszed, mut coord_neko: (usize, usize), infobu
   let col = size.get_col();
   let coord_bulle: (usize, usize);
   match infobulle.cardinal
-  { Top =>
+  { Relative::Top =>
       { if coord_neko.1 < height_message || coord_neko.1 + editeur::SPEC_MAX_Y + height_message >= row
         { coord_bulle = (coord_neko.0, 0);
           coord_neko = (coord_neko.0, coord_neko.1 + height_message); }
         else
         { coord_bulle = (coord_neko.0, coord_neko.1 - height_message); }}
-    Bottom =>
+    Relative::Bottom =>
       { if coord_neko.1 + editeur::SPEC_MAX_Y + height_message >= row
         { if editeur::SPEC_MAX_Y + height_message < row
           { coord_neko = (coord_neko.0, row - (editeur::SPEC_MAX_Y + height_message)); }
           else
           { coord_neko = (coord_neko.0, 0); }}
         coord_bulle = (coord_neko.0, coord_neko.1 + editeur::SPEC_MAX_Y); }
-    Right =>
+    Relative::Right =>
       { if coord_neko.0 + editeur::SPEC_MAX_X + width_message >= row
         { if editeur::SPEC_MAX_X + width_message < col
           { coord_neko = (col - (editeur::SPEC_MAX_X + width_message), coord_neko.1); }
           else
           { coord_neko = (0, coord_neko.1); }}
         coord_bulle = (coord_neko.0 + editeur::SPEC_MAX_X, coord_neko.1); }
-    Left =>
+    Relative::Left =>
       { if coord_neko.0 < width_message || coord_neko.0 + editeur::SPEC_MAX_X + width_message >= col
         { coord_bulle = (0, coord_neko.1);
           coord_neko = (coord_neko.0 + width_message, coord_neko.1); }
@@ -57,7 +56,7 @@ impl Display
     { size: *size,
       infobulle: *infobulle,
       coord_neko: coord_neko,
-      draw: *sprite,
+      draw: sprite.clone(),
       count: 0 }}}
 
 impl Iterator for Display

@@ -16,7 +16,7 @@ use std::ffi::CString;
 pub use self::err::{LibraryError, Result};
 pub use self::state::LibraryState;
 pub use self::personnage::position::Position;
-pub use self::say::{Say, PosFromNeko};
+pub use self::say::{Say, Relative};
 
 use ::libc;
 use ::pty;

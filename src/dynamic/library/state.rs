@@ -6,7 +6,7 @@ use ::editeur;
 use ::pty;
 use ::libc;
 
-use super::say::{Say, PosFromNeko};
+use super::say::{Say, Relative};
 use super::personnage::{Personnage, Cardinal, Position};
 
 
@@ -42,7 +42,7 @@ impl LibraryState {
     pub fn get_message(&self) -> &[pty::Character; 1024]
     { &self.infobulle.message }
 
-    pub fn message_pos_from_neko(&self) -> &PosFromNeko
+    pub fn message_pos_from_neko(&self) -> &Relative
     { &self.infobulle.cardinal }
 
     pub fn get_position(&self) -> &Position {

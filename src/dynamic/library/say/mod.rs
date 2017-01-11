@@ -1,6 +1,6 @@
-pub mod cardinal;
+pub mod relative;
 
-pub use self::cardinal::PosFromNeko;
+pub use self::relative::Relative;
 
 use ::editeur;
 use ::pty;
@@ -9,7 +9,7 @@ use ::std;
 #[repr(C)]
 #[derive(Copy)]
 pub struct Say
-{ pub cardinal: PosFromNeko,
+{ pub cardinal: Relative,
   pub message: [pty::Character; 1024], }
 
 impl Say
@@ -54,6 +54,6 @@ impl Default for Say
     for i in {0..16}
     { mes[i] = pty::Character::from(tmp[i]); }
 Say
-    { cardinal: PosFromNeko::default(), 
+    { cardinal: Relative::default(), 
       message: mes }}}
       //message: [pty::Character::from('\0'); 1024], }}}

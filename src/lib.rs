@@ -75,7 +75,7 @@ pub const SPEC_ROOT_DEFAULT: &'static str = editeur::SPEC_ROOT_DEFAULT;
 pub struct Neko {
     dynamic: Compositer,
     /// Overload of Display interface from Pty.
-    display: Display,
+    screen: Display,
     /// Interface of Pseudo terminal.
     shell: pty::Shell,
     /// Interface on a Sprite partition.
@@ -94,7 +94,7 @@ impl Neko {
         let pid = shell.get_pid();
 
         let mut neko = Neko {
-            display: Display::default(),
+            screen: Display::default(),
             dynamic: dynamic,
             shell: shell,
             graphic: graphic,
@@ -214,12 +214,12 @@ impl Neko {
     fn call(&mut self)
     { let lib: &LibraryState = self.dynamic.get_state();
       let screen: &pty::Display = self.shell.get_screen();
-      if let Some(&sprite) = self.graphic.explicite_emotion(lib.get_sheet(), lib.get_emotion())
-      { self.display = Display::new(screen.get_window_size(), lib.get_infobulle(), lib.get_position().get_coordinate(screen.get_window_size()), sprite.into_iter().next().unwrap()); }}
+      if let Some(sprite) = self.graphic.explicite_emotion(lib.get_sheet(), lib.get_emotion())
+      { self.screen = Display::new(screen.get_window_size(), lib.get_infobulle(), lib.get_position().get_coordinate(screen.get_window_size()), sprite.into_iter().next().unwrap()); }}
 
     /// The accessor method `get_screen` returns a reference on the Display interface.
-    pub fn get_screen(&self) -> &Display {
-        &self.display
+    pub fn get_screen(&self) -> (&Display, &pty::Display) {
+        (&self.screen, self.shell.get_screen())
     }
 
     /// The accessor method `get_window_size` returns a reference on the window size of
@@ -278,13 +278,17 @@ impl fmt::Display for Neko {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut disp: String = String::new();
 
-        self.get_screen()
-            .into_iter()
-						.as_slice()
-            .all(|character: (&pty::Character)| {
-                 disp.push_str(format!("{}", character).as_str());
-                 true
-            });
+        self.screen.clone().into_iter()
+                   .zip(self.shell.get_screen().into_iter())
+              .all(|(neko, term)|
+                  if neko.is_space().not() {
+                      disp.push_str(format!("{}", neko).as_str());
+                      true
+                  } else {
+                      disp.push_str(format!("{}", term).as_str());
+                      true
+                  }
+              );
         write!(f, "{}", disp)
     }
 }
@@ -294,6 +298,6 @@ impl fmt::Debug for Neko {
         write!(f, "Neko {{ dynamic: {:?}, graphic: {:?}, display: {:?} }}",
                self.dynamic,
                self.graphic,
-               self.display)
+               self.screen)
     }
 }

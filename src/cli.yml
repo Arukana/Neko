@@ -1,6 +1,6 @@
 # This file describe the command line interface options
 name: Neko
-version: 1.0
+#version: 1
 about: Neko of terminal
 author: adjivas <adjivas@users.noreply.github.com>, brezaire <voncay@users.noreply.github.com>, flime <LinFeiLong@users.noreply.github.com>, Jeremy PEPIN <jpepin@student.42.fr>
 
@@ -18,5 +18,5 @@ args:
     - command:
         help: Defines the command.
         short: c
-        long:command
+        long: command
         takes_value: true

@@ -67,7 +67,7 @@ impl Iterator for Display
     { self.count = 0; }
     self.count += 1; 
     let (coord_bulle, coord_neko): ((usize, usize), (usize, usize)) = ultime_coordinates(self.size, self.coord_neko, self.infobulle);
-    let draw = self.draw.into_iter();
+    let mut draw = self.draw.into_iter();
     if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) && (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col())
     { Some(pty::Character::from(draw.next().unwrap().1.get_glyph())) }
     else if (coord_bulle.1..(coord_bulle.1 + self.infobulle.get_height())).contains((self.count - 1) / self.size.get_col()) && (coord_bulle.0..(coord_bulle.0 + self.infobulle.get_width())).contains((self.count - 1) % self.size.get_col())

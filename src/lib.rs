@@ -279,7 +279,8 @@ impl fmt::Display for Neko {
         let mut disp: String = String::new();
 
         self.get_screen()
-            .iter()
+            .into_iter()
+						.as_slice()
             .all(|character: (&pty::Character)| {
                  disp.push_str(format!("{}", character).as_str());
                  true

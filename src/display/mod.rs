@@ -16,11 +16,11 @@ pub struct Display
   draw: editeur::Draw,
   count: usize } 
 
-fn ultime_coordinates(size: Winszed, mut coord_neko: (usize, usize), infobulle: Say) -> ((usize, usize), (usize, usize))
+fn ultime_coordinates(size: pty::Winszed, mut coord_neko: (usize, usize), infobulle: Say) -> ((usize, usize), (usize, usize))
 { let width_message = infobulle.get_width();
   let height_message = infobulle.get_height();
-  let row = self.size.get_row();
-  let col = self.size.get_col();
+  let row = size.get_row();
+  let col = size.get_col();
   let coord_bulle: (usize, usize);
   match infobulle.cardinal
   { Top =>
@@ -75,18 +75,3 @@ impl Iterator for Display
     { Some(self.infobulle.message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
     else
     { Some(pty::Character::from(' ')) }}}
-
-
-/*
-        if self.count == 10 {
-            self.count = 0;
-        } else {
-            self.count += 1;
-        }
-        if self.count < 5 {
-            Some(' ')
-        } else {
-            Some ('a')
-        }
-    }}
-*/

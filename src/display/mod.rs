@@ -49,18 +49,22 @@ impl Display {
     }
 }
 
-impl Iterator for Display {
-    type Item = pty::Character;
+impl Iterator for Display
+{ type Item = pty::Character;
 
-    fn next(&mut self) -> Option<pty::Character> {
-        if self.count < self.size.row_by_col() {
-            self.count += 1;
-            Some(pty::Character::default())
-        } else {
-            None
-        }
-    }
-}
+ fn next(&mut self) -> Option<pty::Character>
+ { if self.count >= self.size.row_by_col()
+   { self.count = 0;
+     None } else {
+   self.count += 1;
+   let (coord_bulle, coord_neko): ((usize, usize), (usize, usize)) = ultime_coordinates(self.size, self.coord_neko, *self.state.get_infobulle());
+   let mut draw = self.draw.into_iter();
+   if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) && (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col())
+   { Some(pty::Character::from(draw.next().unwrap().1.get_glyph())) }
+   else if (coord_bulle.1..(coord_bulle.1 + self.state.get_infobulle().get_height())).contains((self.count - 1) / self.size.get_col()) && (coord_bulle.0..(coord_bulle.0 + self.state.get_infobulle().get_width())).contains((self.count - 1) % self.size.get_col())
+   { Some(self.state.get_infobulle().message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
+   else
+   { Some(pty::Character::from(' ')) }}}}
 
 /// Returns the cartesiane coordinate of infobulle and neko.
 fn ultime_coordinates(
@@ -120,14 +124,3 @@ fn ultime_coordinates(
     (coord_bulle, coord_neko)
 }
 
-// if self.count >= self.size.get_col() * self.size.get_row()
-// { None } else {
-// self.count += 1;
-// let (coord_bulle, coord_neko): ((usize, usize), (usize, usize)) = ultime_coordinates(self.size, self.coord_neko, self.infobulle);
-// let mut draw = self.draw.into_iter();
-// if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) && (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col())
-// { Some(pty::Character::from(draw.next().unwrap().1.get_glyph())) }
-// else if (coord_bulle.1..(coord_bulle.1 + self.infobulle.get_height())).contains((self.count - 1) / self.size.get_col()) && (coord_bulle.0..(coord_bulle.0 + self.infobulle.get_width())).contains((self.count - 1) % self.size.get_col())
-// { Some(self.infobulle.message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
-// else
-// { Some(pty::Character::from(' ')) }}}}

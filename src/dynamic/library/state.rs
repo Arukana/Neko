@@ -37,12 +37,6 @@ impl LibraryState {
     pub fn get_personnage(&self) -> &Personnage
     { &self.neko }
 
-    pub fn get_message(&self) -> &[pty::Character; 1024]
-    { &self.infobulle.message }
-
-    pub fn message_pos_from_neko(&self) -> &Relative
-    { &self.infobulle.cardinal }
-
     pub fn get_position(&self) -> &Position {
         &self.neko.position
     }
@@ -58,18 +52,7 @@ impl LibraryState {
     pub fn set_message(&mut self,
         message: String,
     ) {
-        self.infobulle.message.iter_mut().zip(message.chars())
-                    .all(|(mut_character,
-                          character): (&mut pty::Character,
-                                       char)| {
-                        *mut_character = pty::Character::from(character);
-                        true
-                    });
-        self.infobulle.message.iter_mut().skip(message.len())
-                    .all(|mut_character: &mut pty::Character| {
-                        mut_character.clear();
-                        true
-                    });
+        self.infobulle.set_message(message);
     }
 }
 

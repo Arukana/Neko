@@ -12,6 +12,7 @@ fn bench_screen_pty(b: &mut test::Bencher) {
     b.iter(|| {
         let mut disp: String = String::new();
 
+        //let screen: Display = Display::default();
         let pty_screen: PtyDisplay = PtyDisplay::default();
 
         pty_screen.into_iter()
@@ -28,6 +29,7 @@ fn bench_screen_neko(b: &mut test::Bencher) {
         let mut disp: String = String::new();
 
         let screen: Display = Display::default();
+        //let pty_screen: PtyDisplay = PtyDisplay::default();
 
         screen.into_iter()
             .all(|character: Character| {

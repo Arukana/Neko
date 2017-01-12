@@ -9,8 +9,6 @@ use ::libc;
 use super::say::{Say, Relative};
 use super::personnage::{Personnage, Cardinal, Position};
 
-
-
 #[repr(C)]
 #[derive(Copy)]
 pub struct LibraryState {

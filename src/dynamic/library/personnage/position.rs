@@ -6,7 +6,7 @@ use ::libc;
 use ::pty;
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 pub struct Position {
     pub cardinal: Cardinal,
     pub cartesian: [libc::c_ushort; 2],

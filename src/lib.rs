@@ -99,9 +99,9 @@ impl Neko {
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let graphic: editeur::Graphic = try!(editeur::Graphic::new());
         let pid = shell.get_pid();
-
+        let size: pty::Winszed = *shell.get_window_size();
         let mut neko = Neko {
-            screen: Display::default(),
+            screen: Display::from_window_size(&size),
             dynamic: dynamic,
             shell: shell,
             graphic: graphic,
@@ -111,7 +111,15 @@ impl Neko {
         neko.call();
         Ok(neko)
     }
-    
+
+    /// The method `call` updates the Neko's Display for a LibraryState
+    /// and Graphic Dictionary.
+    fn call(&mut self) {
+        let lib: &LibraryState = self.dynamic.get_state();
+
+        self.screen.set_state(lib, &mut self.graphic)
+    }
+
     pub fn from_graphic(
         graphic: editeur::Graphic,
         repeat: Option<i64>,
@@ -131,7 +139,6 @@ impl Neko {
             line: io::Cursor::new(Vec::new()),
             pid: pid,
         };
-        neko.call();
         Ok(neko)
     }
 
@@ -241,12 +248,6 @@ impl Neko {
         };
     }
 
-    fn call(&mut self)
-    { let lib: &LibraryState = self.dynamic.get_state();
-      let screen: &pty::Display = self.shell.get_screen();
-      if let Some(sprite) = self.graphic.explicite_emotion(lib.get_sheet(), lib.get_emotion())
-      { self.screen = Display::new(screen.get_window_size(), lib.get_infobulle(), lib.get_position().get_coordinate(screen.get_window_size()), sprite.into_iter().next().unwrap()); }}
-
     /// The accessor method `get_screen` returns a reference on the Display interface.
     pub fn get_screen(&self) -> (&pty::Display, &Display) {
         (self.shell.get_screen(), &self.screen)
@@ -276,6 +277,10 @@ impl Iterator for Neko {
             if let Some(key) = shell.is_input_keydown() {
                 self.line(key);
                 self.neko(key, &mut shell);
+            }
+            if let Some(()) = shell.is_signal_resized() {
+                let size = self.shell.get_window_size();
+                self.screen.set_window_size(size);
             }
             self.dynamic.call(&shell);
             self.call();
@@ -308,7 +313,7 @@ impl fmt::Display for Neko {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut disp: String = String::new();
 
-/*
+            /*
         self.shell.get_screen()
             .into_iter()
             .all(|character: (&pty::Character)| {
@@ -316,18 +321,21 @@ impl fmt::Display for Neko {
                  true
             });
             */
+            /*
         self.screen.into_iter()
             .all(|character| {
                  disp.push_str(format!("{}", character).as_str());
                  true
             });
-            /*
+            */
+            
         self.shell.get_screen()
             .into_iter()
             .zip(self.screen.into_iter())
             .all(|(pty_character, character)| {
-                    disp.push_str(format!("{}", pty_character).as_str());
-                    true
+                disp.push_str(format!("{}", pty_character).as_str());
+                true
+                /*
                 if character.is_space().not() {
                     disp.push_str(format!("{}", character).as_str());
                     true
@@ -335,8 +343,8 @@ impl fmt::Display for Neko {
                     disp.push_str(format!("{}", pty_character).as_str());
                     true
                 }
+                */
             });
-            */
          write!(f, "{}", disp)
     }
 }

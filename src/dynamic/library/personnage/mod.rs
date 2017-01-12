@@ -1,6 +1,8 @@
 pub mod cardinal;
 pub mod position;
 
+use std::ops::BitAnd;
+
 use ::editeur;
 use ::pty;
 use ::std;
@@ -10,10 +12,31 @@ pub use self::position::Position;
 
 #[repr(C)]
 #[derive(Copy)]
-pub struct Personnage
-{ pub sheet: editeur::Sheet,
-  pub emotion: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
-  pub position: Position, }
+pub struct Personnage {
+    pub sheet: editeur::Sheet,
+    pub emotion: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+    pub position: Position,
+}
+
+impl PartialEq for Personnage {
+     fn eq(&self, other: &Personnage) -> bool {
+         self.sheet.eq(&other.sheet).bitand(
+             self.emotion.iter()
+                 .zip(other.emotion.iter())
+                 .all(|(emotions, other_emotions):
+                       (&[editeur::Tuple; editeur::SPEC_MAX_XY],
+                        &[editeur::Tuple; editeur::SPEC_MAX_XY])| {
+                     emotions.iter()
+                             .zip(other_emotions.iter())
+                             .all(|(emotion, other_emotion):
+                                   (&editeur::Tuple,
+                                    &editeur::Tuple)| {
+                                 emotion.eq(other_emotion)
+                             })
+                 })
+         )
+     }   
+}
 
 impl Clone for Personnage
 { fn clone(&self) -> Self

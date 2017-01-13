@@ -20,7 +20,7 @@ pub struct Display {
     nl: (usize, usize),
     personage: Personnage,
     message: Say,
-    flag_newline: bool,
+    padding: usize,
 }
 
 impl Display {
@@ -64,7 +64,6 @@ impl Display {
                                })
                            })
                           .unwrap_or_default();
-
  //       }
     }
 }
@@ -74,12 +73,31 @@ impl Iterator for Display
 
   fn next(&mut self) -> Option<pty::Character>
   { self.count += 1;
+/*
+println!("MESSAGE! COORD::{:?} | SIZE::{:?}", self.coord_bulle, self.nl);
+println!("PAD::{} | CURS::({} ,{})", self.padding, (self.count - 1) % self.size.get_col(), ((self.count - 1) / self.size.get_col()));
+*/
     let (coord_bulle, coord_neko) = (self.coord_bulle, self.coord_neko);
     let mut draw = self.draw.into_iter();
     if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) && (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col())
     { Some(pty::Character::from(draw.next().unwrap().1.get_glyph())) }
+
     else if (coord_bulle.1..(coord_bulle.1 + self.nl.1)).contains((self.count - 1) / self.size.get_col()) && (coord_bulle.0..(coord_bulle.0 + self.nl.0)).contains((self.count - 1) % self.size.get_col())
-    { Some(self.message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
+    { let k = ((((self.count - 1) / self.size.get_col()) - coord_bulle.1) * self.nl.0) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0);
+      if k < 1024
+      { // println!("CAR::{:?}", self.message[k]);
+        if self.padding == 0 && self.message[k].is_enter().not()
+        { Some(self.message[k]) }
+        else if self.padding == 0 && self.message[k].is_enter() && (self.count - 1) % self.size.get_col() > coord_bulle.0
+        { self.padding = ((self.count - 1) / self.size.get_col()) + 1;
+          Some(pty::Character::from(' ')) }
+        else if self.padding < (self.count / self.size.get_col())
+        { self.padding = 0;
+          Some(pty::Character::from(' ')) }
+        else
+        { Some(pty::Character::from(' ')) }}
+      else
+      { Some(pty::Character::from(' ')) }}
     else
     { Some(pty::Character::from(' ')) }}}
 

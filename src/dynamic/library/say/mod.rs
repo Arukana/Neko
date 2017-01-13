@@ -101,8 +101,8 @@ impl Default for Say
 { fn default() -> Self
   { let mut mes = [pty::Character::from('\0'); 1024];
     // TYPICAL TEST
-    let tmp: [char; 16] = ['B', 'o', 'n', 'j', 'o', 'u', 'r', '\n', 'C', 'o', 'u', 'c', 'o', 'u', '!', '\n'];
-    for i in {0..16}
+    let tmp: [char; 22] = ['B', 'o', 'n', 'j', 'o', 'u', 'r', '\n', 'C', 'o', 'u', 'c', 'o', 'u', ' ', 't', 'r', 'e', 's', 'o', 'r', '\n'];
+    for i in {0..22}
     { mes[i] = pty::Character::from(tmp[i]); }
 Say
     { cardinal: Relative::default(), 

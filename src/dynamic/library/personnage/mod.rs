@@ -55,7 +55,7 @@ impl std::fmt::Debug for Personnage
 impl Default for Personnage
 { fn default() -> Self
   { let mut pos = Position::default();
-    pos.cardinal = Cardinal::MiddleCentral;
+    pos.cardinal = Cardinal::MiddleRight;
     Personnage
     { sheet: editeur::Sheet::Bust,
       emotion: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],

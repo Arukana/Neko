@@ -14,11 +14,13 @@ pub const MESSAGE_WIDTH: usize = 1024;
 pub struct Display {
     size: pty::Winszed,
     coord_neko: (usize, usize),
+    coord_bulle: (usize, usize),
     draw: editeur::Draw,
     count: usize,
     nl: (usize, usize),
     personage: Personnage,
     message: Say,
+    flag_newline: bool,
 }
 
 impl Display {
@@ -45,8 +47,15 @@ impl Display {
     /// the persona has changed of expression or sheet
     /// and overwrites the variable State of Neko's Display.
     pub fn set_state(&mut self, lib: &LibraryState, dictionary: &mut editeur::Graphic) {
+ //       if self.get_message().ne(lib.get_infobulle()) {
+            self.message = *lib.get_infobulle();
+            self.nl = (self.message.get_width(), self.message.get_height());
+ //       }
  //       if self.get_personage().ne(lib.get_personnage()) {
             self.coord_neko = lib.get_position().get_coordinate(&self.size);
+            let (coord_bulle, coord_neko) = ultime_coordinates(self.size, self.coord_neko, self.message, (self.nl.0, self.nl.1));
+            self.coord_bulle = coord_bulle;
+            self.coord_neko = coord_neko;
             self.personage = *lib.get_personnage();
             self.draw =        dictionary.explicite_emotion(lib.get_sheet(), lib.get_emotion())
                           .and_then(|sprite| {
@@ -57,10 +66,6 @@ impl Display {
                           .unwrap_or_default();
 
  //       }
- //       if self.get_message().ne(lib.get_infobulle()) {
-            self.message = *lib.get_infobulle();
-            self.nl = (self.message.get_width(), self.message.get_height());
- //       }
     }
 }
 
@@ -69,8 +74,7 @@ impl Iterator for Display
 
   fn next(&mut self) -> Option<pty::Character>
   { self.count += 1;
-
-    let (coord_bulle, coord_neko): ((usize, usize), (usize, usize)) = ultime_coordinates(self.size, self.coord_neko, self.message, (self.nl.0, self.nl.1));
+    let (coord_bulle, coord_neko) = (self.coord_bulle, self.coord_neko);
     let mut draw = self.draw.into_iter();
     if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) && (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col())
     { Some(pty::Character::from(draw.next().unwrap().1.get_glyph())) }
@@ -103,8 +107,7 @@ fn ultime_coordinates(
             if coord_neko.1 + editeur::SPEC_MAX_Y + height_message >= row {
                 if editeur::SPEC_MAX_Y + height_message < row {
                     coord_neko = (coord_neko.0,
-                                  row -
-                                  (editeur::SPEC_MAX_Y + height_message));
+                                  row - (editeur::SPEC_MAX_Y + height_message));
                 } else {
                     coord_neko = (coord_neko.0, 0);
                 }
@@ -112,27 +115,25 @@ fn ultime_coordinates(
             coord_bulle = (coord_neko.0, coord_neko.1 + editeur::SPEC_MAX_Y);
         },
         &Relative::Right => {
-            if coord_neko.0 + editeur::SPEC_MAX_X + width_message >= row {
-                if editeur::SPEC_MAX_X + width_message < col {
-                    coord_neko = (col -
-                                  (editeur::SPEC_MAX_X + width_message),
+            if coord_neko.0 + editeur::SPEC_MAX_X + width_message + 2 >= row {
+                if editeur::SPEC_MAX_X + width_message + 2 < col {
+                    coord_neko = (col - (editeur::SPEC_MAX_X + width_message + 2),
                                   coord_neko.1);
                 } else {
                     coord_neko = (0, coord_neko.1);
                 }
             }
-            coord_bulle = (coord_neko.0 + editeur::SPEC_MAX_X, coord_neko.1);
+            coord_bulle = (coord_neko.0 + editeur::SPEC_MAX_X + 2, coord_neko.1);
         },
         &Relative::Left => {
             if coord_neko.0 < width_message ||
-               coord_neko.0 + editeur::SPEC_MAX_X + width_message >= col {
-                coord_bulle = (0, coord_neko.1);
-                coord_neko = (coord_neko.0 + width_message, coord_neko.1);
+                coord_neko.0 + editeur::SPEC_MAX_X + width_message >= col {
+                  coord_bulle = (0, coord_neko.1);
+                  coord_neko = (coord_neko.0 + width_message, coord_neko.1);
             } else {
-                coord_bulle = (coord_neko.0 - width_message, coord_neko.1);
+                  coord_bulle = (coord_neko.0 - width_message, coord_neko.1);
             }
         },
     }
     (coord_bulle, coord_neko)
 }
-

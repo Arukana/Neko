@@ -45,7 +45,7 @@ impl Display {
     /// the persona has changed of expression or sheet
     /// and overwrites the variable State of Neko's Display.
     pub fn set_state(&mut self, lib: &LibraryState, dictionary: &mut editeur::Graphic) {
-        if self.get_personage().ne(lib.get_personnage()) {
+ //       if self.get_personage().ne(lib.get_personnage()) {
             self.personage = *lib.get_personnage();
                     dictionary.explicite_emotion(lib.get_sheet(), lib.get_emotion())
                           .and_then(|sprite| {
@@ -55,11 +55,11 @@ impl Display {
                            })
                           .unwrap_or_default();
 
-        }
-        if self.get_message().ne(lib.get_infobulle()) {
+ //       }
+ //       if self.get_message().ne(lib.get_infobulle()) {
             self.message = *lib.get_infobulle();
-            self.nl = (self.message.get_height(), self.message.get_width());
-        }
+            self.nl = (self.message.get_width(), self.message.get_height());
+ //       }
     }
 }
 
@@ -68,13 +68,17 @@ impl Iterator for Display
 
   fn next(&mut self) -> Option<pty::Character>
   { self.count += 1;
+
+println!("NL::{:?}", self.nl);
+
     let (coord_bulle, coord_neko): ((usize, usize), (usize, usize)) = ultime_coordinates(self.size, self.coord_neko, self.message, (self.nl.0, self.nl.1));
     let mut draw = self.draw.into_iter();
 
     if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) && (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col())
     { Some(pty::Character::from(draw.next().unwrap().1.get_glyph())) }
     else if (coord_bulle.1..(coord_bulle.1 + self.nl.1)).contains((self.count - 1) / self.size.get_col()) && (coord_bulle.0..(coord_bulle.0 + self.nl.0)).contains((self.count - 1) % self.size.get_col())
-    { Some(self.message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
+    { println!("MESSAGE [{}]", self.count);
+      Some(self.message[(((self.count - 1) / self.size.get_col()) - coord_bulle.1) + (((self.count - 1) % self.size.get_col()) - coord_bulle.0)]) }
     else
     { Some(pty::Character::from(' ')) }}}
 

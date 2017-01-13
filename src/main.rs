@@ -18,7 +18,8 @@ fn main() {
 
     while let Some(shell) = neko.next() {
         if let Some(()) = shell.is_output_screen() {
-            print!("\x1B[H{}", format!("{}", neko));
+           // print!("\x1B[H{}", format!("{}", neko));
+            print!("{}", format!("{}", neko));
         }
         if let Some(ref text) = shell.is_input_slice() {
             neko.write(text).unwrap();

@@ -89,13 +89,13 @@ impl Iterator for Display
         else if self.padding == 0 && self.message[self.cursor].is_enter()
         { self.padding = ((self.count - 1) / self.size.get_col()) + 1;
           self.cursor += 1;
-          Some(pty::Character::from(' ')) }
+          Some(pty::Character::from('\0')) }
         else
-        { Some(pty::Character::from(' ')) }}
+        { Some(pty::Character::from('\0')) }}
       else
-      { Some(pty::Character::from(' ')) }}
+      { Some(pty::Character::from('\0')) }}
     else
-    { Some(pty::Character::from(' ')) }}}
+    { Some(pty::Character::from('\0')) }}}
 
 /// Returns the cartesiane coordinate of infobulle and neko.
 fn ultime_coordinates(
@@ -116,7 +116,7 @@ fn ultime_coordinates(
             } else {
                 coord_bulle = (coord_neko.0, coord_neko.1 - height_message);
             }
-        }
+        },
         &Relative::Bottom => {
             if coord_neko.1 + editeur::SPEC_MAX_Y + height_message >= row {
                 if editeur::SPEC_MAX_Y + height_message < row {

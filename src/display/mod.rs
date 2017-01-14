@@ -54,9 +54,7 @@ impl Display {
  //       }
  //       if self.get_personage().ne(lib.get_personnage()) {
             self.coord_neko = lib.get_position().get_coordinate(&self.size);
-//println!("NEKO_AVANT::{:?}", self.coord_neko);
             let (coord_bulle, coord_neko) = ultime_coordinates(self.size, self.coord_neko, self.message, (self.nl.0, self.nl.1));
-//println!("NEKO_APRES::{:?}", coord_neko);
             self.coord_bulle = coord_bulle;
             self.coord_neko = coord_neko;
             self.personnage = *lib.get_personnage();
@@ -76,10 +74,6 @@ impl Iterator for Display
 
   fn next(&mut self) -> Option<pty::Character>
   { self.count += 1;
-/*
-println!("MESSAGE! COORD::{:?} | SIZE::{:?}", self.coord_bulle, self.nl);
-println!("PAD::{} | CURS::({} ,{})", self.padding, (self.count - 1) % self.size.get_col(), ((self.count - 1) / self.size.get_col()));
-*/
     let (coord_bulle, coord_neko) = (self.coord_bulle, self.coord_neko);
     let mut draw = self.draw.into_iter();
     if self.padding < ((self.count - 1) / self.size.get_col()) + 1
@@ -89,8 +83,7 @@ println!("PAD::{} | CURS::({} ,{})", self.padding, (self.count - 1) % self.size.
 
     else if (coord_bulle.1..(coord_bulle.1 + self.nl.1)).contains((self.count - 1) / self.size.get_col()) && (coord_bulle.0..(coord_bulle.0 + self.nl.0)).contains((self.count - 1) % self.size.get_col())
     { if self.cursor < 1024
-      { //println!("CAR::{:?}", self.message[self.cursor]);
-        if self.padding == 0 && self.message[self.cursor].is_enter().not()
+      { if self.padding == 0 && self.message[self.cursor].is_enter().not()
         { self.cursor += 1;
           Some(self.message[self.cursor - 1]) }
         else if self.padding == 0 && self.message[self.cursor].is_enter()
@@ -123,7 +116,7 @@ fn ultime_coordinates(
             } else {
                 coord_bulle = (coord_neko.0, coord_neko.1 - height_message);
             }
-        },
+        }
         &Relative::Bottom => {
             if coord_neko.1 + editeur::SPEC_MAX_Y + height_message >= row {
                 if editeur::SPEC_MAX_Y + height_message < row {
@@ -149,10 +142,8 @@ fn ultime_coordinates(
         &Relative::Left => {
             if coord_neko.0 < width_message ||
                 editeur::SPEC_MAX_X + width_message >= col {
-//println!("1 NEKO::{:?}", coord_neko);
                   coord_bulle = (0, coord_neko.1);
                   coord_neko = (width_message + 1, coord_neko.1);
-//println!("2 NEKO::{:?}", coord_neko);
             } else {
                   coord_bulle = (coord_neko.0 - width_message, coord_neko.1);
             }

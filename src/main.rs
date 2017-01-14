@@ -9,6 +9,8 @@ fn main() {
     let yaml = load_yaml!("cli.yml");
     let options = clap::App::from_yaml(yaml).get_matches();
 
+    println!("\x1B[?25l");
+
     let mut neko: Neko = Neko::new(
         options.value_of("repeat").and_then(|repeat| repeat.parse::<i64>().ok()),
         options.value_of("interval").and_then(|interval| interval.parse::<i64>().ok()),

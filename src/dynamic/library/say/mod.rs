@@ -18,7 +18,7 @@ pub struct Say
 impl Say
 { /// Return the height of the message, assuming all `\n`
   pub fn get_height(&self) -> usize
-  { self.message.iter().filter(|&&nl| nl.is_enter()).count() }
+  { self.message.iter().filter(|&&nl| nl.is_enter()).count() + 1 }
 
   /// Return the width of the message, assuming the characters between all `\n`
   pub fn get_width(&self) -> usize
@@ -101,10 +101,12 @@ impl Default for Say
 { fn default() -> Self
   { let mut mes = [pty::Character::from('\0'); 1024];
     // TYPICAL TEST
-    let tmp: [char; 22] = ['B', 'o', 'n', 'j', 'o', 'u', 'r', '\n', 'C', 'o', 'u', 'c', 'o', 'u', ' ', 't', 'r', 'e', 's', 'o', 'r', '\n'];
-    for i in {0..22}
-    { mes[i] = pty::Character::from(tmp[i]); }
+    for i in {0..1024}
+    { mes[i] = pty::Character::from('a'); }
+    mes[0] = pty::Character::from('B');
+    mes[10] = pty::Character::from('\n');
+    mes[11] = pty::Character::from('Q');
 Say
-    { cardinal: Relative::Left, 
+    { cardinal: Relative::Bottom, 
       message: mes }}}
       //message: [pty::Character::from('\0'); 1024], }}}

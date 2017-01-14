@@ -131,7 +131,7 @@ impl Neko {
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let pid = shell.get_pid();
 
-        let mut neko = Neko {
+        let neko = Neko {
             screen: Display::default(),
             dynamic: dynamic,
             shell: shell,

@@ -6,7 +6,7 @@ use dynamic::library::personnage::Personnage;
 use ::editeur;
 
 use ::pty;
-use std::ops::{BitAnd, BitOr, Rem, Not};
+use std::ops::Not;
 
 pub const MESSAGE_WIDTH: usize = 1024;
 
@@ -30,14 +30,6 @@ impl Display {
 
         display.set_window_size(size);
         display
-    }
-
-    fn get_personnage(&self) -> &Personnage {
-        &self.personnage
-    }
-
-    fn get_message(&self) -> &Say {
-        &self.message
     }
 
     pub fn set_window_size(&mut self, size: &pty::Winszed) {

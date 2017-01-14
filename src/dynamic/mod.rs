@@ -157,7 +157,7 @@ impl Compositer {
         self.git_with_lib()
             .and_then(|(git, lib)| {
               let path = Path::new(git.to_str().unwrap());
-              env::set_current_dir(&path);
+              let _ = env::set_current_dir(&path);
               match self.unmount(libraryname) {
                 Ok(_) |
                 Err(CompositerError::UnmountPosition) => {
@@ -210,7 +210,7 @@ impl Compositer {
                                                 sub: S)
                                                 -> Result<()> {
         let path = Path::new(source.to_str().unwrap());
-        env::set_current_dir(&path);
+        let _ = env::set_current_dir(&path);
         match self.get_lib() {
             Err(why) => Err(why),
             Ok(dest) => {

@@ -4,7 +4,6 @@ pub mod position;
 use std::ops::BitAnd;
 
 use ::editeur;
-use ::pty;
 use ::std;
 
 pub use self::cardinal::Cardinal;

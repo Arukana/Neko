@@ -1,13 +1,11 @@
-use std::mem;
 use std::fmt;
 use std::str;
 
 use ::editeur;
-use ::pty;
 use ::libc;
 
-use super::say::{Say, Relative};
-use super::personnage::{Personnage, Cardinal, Position};
+use super::say::Say;
+use super::personnage::{Personnage, Position};
 
 #[repr(C)]
 #[derive(Copy)]

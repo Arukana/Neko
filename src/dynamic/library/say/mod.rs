@@ -6,7 +6,6 @@ use std::fmt;
 
 pub use self::relative::Relative;
 
-use ::editeur;
 use ::pty;
 
 #[repr(C)]

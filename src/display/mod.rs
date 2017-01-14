@@ -32,6 +32,14 @@ impl Display {
         display
     }
 
+    fn get_personnage(&self) -> &Personnage {        
+        &self.personnage        
+    }        
+        
+    fn get_message(&self) -> &Say {        
+        &self.message        
+    }
+
     pub fn set_window_size(&mut self, size: &pty::Winszed) {
         self.size = *size;
     }

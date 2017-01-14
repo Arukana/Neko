@@ -24,10 +24,10 @@ impl Cardinal {
             Cardinal::UpperLeft => (0, 0),
             Cardinal::UpperMiddle => ((width / 2) - (editeur::SPEC_MAX_X / 2), 0),
             Cardinal::UpperRight => (width - editeur::SPEC_MAX_X, 0),
-            Cardinal::MiddleLeft => (0, (height / 2) - (editeur::SPEC_MAX_X / 2)),
-            Cardinal::MiddleCentral => ((width / 2) - (editeur::SPEC_MAX_X / 2), (height / 2) - editeur::SPEC_MAX_X / 2),
-            Cardinal::MiddleRight => (width - editeur::SPEC_MAX_X, (height / 2) - (editeur::SPEC_MAX_X / 2)),
-            Cardinal::LowerLeft => (0, height - editeur::SPEC_MAX_X),
+            Cardinal::MiddleLeft => (0, (height / 2) - (editeur::SPEC_MAX_Y / 2)),
+            Cardinal::MiddleCentral => ((width / 2) - (editeur::SPEC_MAX_X / 2), (height / 2) - (editeur::SPEC_MAX_X / 2)),
+            Cardinal::MiddleRight => (width - editeur::SPEC_MAX_X, (height / 2) - (editeur::SPEC_MAX_Y / 2)),
+            Cardinal::LowerLeft => (0, height - editeur::SPEC_MAX_Y),
             Cardinal::LowerMiddle => ((width / 2) - (editeur::SPEC_MAX_X / 2), height - editeur::SPEC_MAX_Y),
             Cardinal::LowerRight => (width - editeur::SPEC_MAX_X, height - editeur::SPEC_MAX_Y), }
         }

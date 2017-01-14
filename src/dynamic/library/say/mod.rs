@@ -105,6 +105,6 @@ impl Default for Say
     for i in {0..22}
     { mes[i] = pty::Character::from(tmp[i]); }
 Say
-    { cardinal: Relative::Right, 
+    { cardinal: Relative::Left, 
       message: mes }}}
       //message: [pty::Character::from('\0'); 1024], }}}

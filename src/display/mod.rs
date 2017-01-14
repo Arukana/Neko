@@ -45,7 +45,7 @@ impl Display {
     }
 
     /// The mutator method `set_state` updates the draw if
-    /// the persona has changed of expression or sheet
+    /// the personna has changed of expression or sheet
     /// and overwrites the variable State of Neko's Display.
     pub fn set_state(&mut self, lib: &LibraryState, dictionary: &mut editeur::Graphic) {
  //       if self.get_message().ne(lib.get_infobulle()) {
@@ -54,7 +54,9 @@ impl Display {
  //       }
  //       if self.get_personage().ne(lib.get_personnage()) {
             self.coord_neko = lib.get_position().get_coordinate(&self.size);
+//println!("NEKO_AVANT::{:?}", self.coord_neko);
             let (coord_bulle, coord_neko) = ultime_coordinates(self.size, self.coord_neko, self.message, (self.nl.0, self.nl.1));
+//println!("NEKO_APRES::{:?}", coord_neko);
             self.coord_bulle = coord_bulle;
             self.coord_neko = coord_neko;
             self.personnage = *lib.get_personnage();
@@ -80,7 +82,7 @@ println!("PAD::{} | CURS::({} ,{})", self.padding, (self.count - 1) % self.size.
 */
     let (coord_bulle, coord_neko) = (self.coord_bulle, self.coord_neko);
     let mut draw = self.draw.into_iter();
-    if self.padding < (self.count / self.size.get_col())
+    if self.padding < ((self.count - 1) / self.size.get_col()) + 1
     { self.padding = 0; }
     if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) && (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col())
     { Some(pty::Character::from(draw.next().unwrap().1.get_glyph())) }
@@ -92,7 +94,7 @@ println!("PAD::{} | CURS::({} ,{})", self.padding, (self.count - 1) % self.size.
         { self.cursor += 1;
           Some(self.message[self.cursor - 1]) }
         else if self.padding == 0 && self.message[self.cursor].is_enter()
-        { self.padding = ((self.count - 1) / self.size.get_col());
+        { self.padding = ((self.count - 1) / self.size.get_col()) + 1;
           self.cursor += 1;
           Some(pty::Character::from(' ')) }
         else
@@ -134,9 +136,9 @@ fn ultime_coordinates(
             coord_bulle = (coord_neko.0, coord_neko.1 + editeur::SPEC_MAX_Y);
         },
         &Relative::Right => {
-            if coord_neko.0 + editeur::SPEC_MAX_X + width_message + 2 >= row {
-                if editeur::SPEC_MAX_X + width_message + 2 < col {
-                    coord_neko = (col - (editeur::SPEC_MAX_X + width_message + 2),
+            if coord_neko.0 + editeur::SPEC_MAX_X + width_message >= row {
+                if editeur::SPEC_MAX_X + width_message < col {
+                    coord_neko = (col - (editeur::SPEC_MAX_X + width_message),
                                   coord_neko.1);
                 } else {
                     coord_neko = (0, coord_neko.1);
@@ -146,9 +148,11 @@ fn ultime_coordinates(
         },
         &Relative::Left => {
             if coord_neko.0 < width_message ||
-                coord_neko.0 + editeur::SPEC_MAX_X + width_message >= col {
+                editeur::SPEC_MAX_X + width_message >= col {
+//println!("1 NEKO::{:?}", coord_neko);
                   coord_bulle = (0, coord_neko.1);
-                  coord_neko = (coord_neko.0 + width_message, coord_neko.1);
+                  coord_neko = (width_message + 1, coord_neko.1);
+//println!("2 NEKO::{:?}", coord_neko);
             } else {
                   coord_bulle = (coord_neko.0 - width_message, coord_neko.1);
             }

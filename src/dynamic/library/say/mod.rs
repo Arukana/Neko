@@ -100,12 +100,12 @@ impl Default for Say
 { fn default() -> Self
   { let mut mes = [pty::Character::from('\0'); 1024];
     // TYPICAL TEST
-    for i in {0..1024}
+    for i in {0..20}
     { mes[i] = pty::Character::from('a'); }
     mes[0] = pty::Character::from('B');
     mes[10] = pty::Character::from('\n');
     mes[11] = pty::Character::from('Q');
 Say
-    { cardinal: Relative::Bottom, 
+    { cardinal: Relative::Left, 
       message: mes }}}
       //message: [pty::Character::from('\0'); 1024], }}}

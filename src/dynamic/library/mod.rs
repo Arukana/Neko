@@ -24,11 +24,11 @@ use ::pty;
 /// The struct `Library` is a table of callback.
 pub struct Library {
     /// `start` interface.
-    start: Option<extern fn(state: *const LibraryState, save: *const *const libc::c_void)>,
+    start: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
     /// `idle` interface.
-    idle: Option<extern fn(state: *const LibraryState, save: *const *const libc::c_void)>,
+    idle: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
     /// `idle` interface.
-    end: Option<extern fn(state: *const LibraryState, save: *const *const libc::c_void)>,
+    end: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
     /// `save` pointer to share a segment of librairy memory.
     save: *const *const libc::c_void,
     /// dynamic library interface.
@@ -91,22 +91,21 @@ impl Library {
     /// The method `start` call the extern function if defined.
     pub fn start(&self, state: &LibraryState) {
         if let Some(start) = self.start {
-            start(state, self.save);
-            println!("RUST::{:?}", state.get_position().cardinal);
+            start(state, &self.save);
         }
     }
 
     /// The method `start` call the extern function if defined.
     pub fn end(&self, state: &LibraryState) {
         if let Some(end) = self.end {
-            end(state, self.save);
+            end(state, &self.save);
         }
     }
     /// The method `idle` call the extern function if defined.
     pub fn call(&self, state: &LibraryState, event: &pty::ShellState) {
         if let Some(()) = event.is_idle() {
             if let Some(idle) = self.idle {
-                idle(state, self.save);
+                idle(state, &self.save);
             }
         }
     }

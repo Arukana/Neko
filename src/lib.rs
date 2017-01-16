@@ -201,7 +201,10 @@ impl Neko {
                 self.line.set_position(position.checked_sub(1).unwrap_or_default() as u64);
             },
             key if key.is_right() => {
-                self.line.set_position(position.checked_add(1).unwrap_or_default() as u64);
+                let position: usize = position.checked_add(1).unwrap_or_default();
+                if position < self.line.get_ref().len() {
+                    self.line.set_position(position as u64);
+                }
             },
             key if key.is_start_heading() => {
                 self.line.set_position(0);
@@ -312,22 +315,6 @@ impl fmt::Display for Neko {
     /// the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut disp: String = String::new();
-
-            /*
-        self.shell.get_screen()
-            .into_iter()
-            .all(|character: (&pty::Character)| {
-                 disp.push_str(format!("{}", character).as_str());
-                 true
-            });
-            */
-            /*
-        self.screen.into_iter()
-            .all(|character| {
-                 disp.push_str(format!("{}", character).as_str());
-                 true
-            });
-            */
             
         self.shell.get_screen()
             .into_iter()

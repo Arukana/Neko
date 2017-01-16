@@ -15,8 +15,10 @@ pub use self::err::{CompositerError, Result};
 pub use self::library::LibraryState;
 use self::library::Library;
 
-use ::toml;
 use ::SPEC_ROOT;
+
+use ::pty;
+use ::toml;
 use ::git2;
 use ::pty_proc::shell::ShellState;
 
@@ -173,7 +175,7 @@ impl Compositer {
                             ) {
                                 Err(why) => Err(CompositerError::Mount(why)),
                                 Ok(dy) => {
-                                    dy.start(&self.state);
+                                    dy.mount(&self.state);
                                     self.list.push(dy);
                                     self.list.sort();
                                     Ok(())
@@ -398,6 +400,18 @@ impl Compositer {
         self.state.set_message(message);
     }
 
+
+    /// The general method `call` according to the state will run
+    /// the evenement functions by library group.
+    pub fn resized(&mut self, size: &pty::Winszed) {
+        self.list.iter()
+            .all(|lib: &Library| {
+                lib.resized(&self.state, size);
+                true
+            });
+        self.list.retain(|lib: &Library|
+             lib.is_unmounted().not());
+    }
 
     /// The general method `call` according to the state will run
     /// the evenement functions by library group.

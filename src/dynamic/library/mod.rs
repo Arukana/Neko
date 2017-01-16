@@ -23,12 +23,36 @@ use ::pty;
 
 /// The struct `Library` is a table of callback.
 pub struct Library {
-    /// `start` interface.
-    start: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
+    /// `install` interface.
+    install: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
+    /// `uninstall` interface.
+    uninstall: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
+    /// `mount` interface.
+    mount: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
+    /// `unmount` interface.
+    unmount: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
     /// `idle` interface.
     idle: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
-    /// `idle` interface.
-    end: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void)>,
+    /// `process` interface.
+    process: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, name: *const libc::c_uchar, pid: libc::c_int)>,
+    /// `command` interface.
+    command: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, line: *const libc::c_uchar)>,
+    /// `key_unicode_down` interface.
+    key_unicode_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, code: libc::c_ulonglong)>,
+    /// `key_string_down` interface.
+    key_string_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const libc::c_uchar)>,
+    /// `key_repeat_down` interface.
+    key_repeat_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, repeat: libc::c_ulong)>,
+    /// `key_interval_down` interface.
+    key_interval_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, interval: libc::c_longlong)>,
+    /// `input` interface.
+    input: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const libc::c_uchar)>,
+    /// `output` interface.
+    output: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const libc::c_uchar)>,
+    /// `signal` interface.
+    signal: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, number: libc::c_int)>,
+    /// `resized` interface.
+    resized: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const pty::Winszed)>,
     /// `save` pointer to share a segment of librairy memory.
     save: *const *const libc::c_void,
     /// dynamic library interface.
@@ -59,16 +83,28 @@ impl Library {
                                                    .unwrap_or_default()))
             } else {
                 let lib: Library = Library {
-                    start: symbol!(handle, b"start\0".as_ptr() as *const libc::c_char),
+                    install: symbol!(handle, b"install\0".as_ptr() as *const libc::c_char),
+                    uninstall: symbol!(handle, b"uninstall\0".as_ptr() as *const libc::c_char),
+                    mount: symbol!(handle, b"mount\0".as_ptr() as *const libc::c_char),
+                    unmount: symbol!(handle, b"unmount\0".as_ptr() as *const libc::c_char),
                     idle: symbol!(handle, b"idle\0".as_ptr() as *const libc::c_char),
-                    end: symbol!(handle, b"end\0".as_ptr() as *const libc::c_char),
+                    process: symbol!(handle, b"process\0".as_ptr() as *const libc::c_char),
+                    command: symbol!(handle, b"command\0".as_ptr() as *const libc::c_char),
+                    key_unicode_down: symbol!(handle, b"key_unicode_down\0".as_ptr() as *const libc::c_char),
+                    key_string_down: symbol!(handle, b"key_string_down\0".as_ptr() as *const libc::c_char),
+                    key_repeat_down: symbol!(handle, b"key_repeat_down\0".as_ptr() as *const libc::c_char),
+                    key_interval_down: symbol!(handle, b"key_interval_down\0".as_ptr() as *const libc::c_char),
+                    input: symbol!(handle, b"input\0".as_ptr() as *const libc::c_char),
+                    output: symbol!(handle, b"output\0".as_ptr() as *const libc::c_char),
+                    signal: symbol!(handle, b"signal\0".as_ptr() as *const libc::c_char),
+                    resized: symbol!(handle, b"resized\0".as_ptr() as *const libc::c_char),
                     save: ptr::null_mut(),
                     handle: handle,
                     index: index,
                     path: path,
                     unmounted: false,
                 };
-                lib.start(state);
+                lib.mount(state);
                 Ok(lib)
             }
         }
@@ -88,24 +124,149 @@ impl Library {
         self.unmounted
     }
 
-    /// The method `start` call the extern function if defined.
-    pub fn start(&self, state: &LibraryState) {
-        if let Some(start) = self.start {
-            start(state, &self.save);
+    /// The method `install` call the extern function if defined
+    /// when the library is installed.
+    pub fn install(&self, state: &LibraryState) {
+        if let Some(install) = self.install {
+            install(state, &self.save);
         }
     }
 
-    /// The method `start` call the extern function if defined.
-    pub fn end(&self, state: &LibraryState) {
-        if let Some(end) = self.end {
-            end(state, &self.save);
+    /// The method `uninstall` call the extern function if defined
+    /// when the library is uninstalled.
+    pub fn uninstall(&self, state: &LibraryState) {
+        if let Some(uninstall) = self.uninstall {
+            uninstall(state, &self.save);
         }
     }
-    /// The method `idle` call the extern function if defined.
+
+    /// The method `mount` call the extern function if defined
+    /// when the library is mounted.
+    pub fn mount(&self, state: &LibraryState) {
+        if let Some(mount) = self.mount {
+            mount(state, &self.save);
+        }
+    }
+
+    /// The method `unmount` call the extern function if defined
+    /// when the library is mounted.
+    pub fn unmount(&self, state: &LibraryState) {
+        if let Some(unmount) = self.unmount {
+            unmount(state, &self.save);
+        }
+    }
+
+    /// The method `end` call the extern function if defined.
+    pub fn idle(&self, state: &LibraryState) {
+        if let Some(idle) = self.idle {
+            idle(state, &self.save);
+        }
+    }
+
+    /// The method `process` call the extern function if defined
+    /// when the library is mounted.
+    pub fn process(&self, state: &LibraryState, taskname: &[libc::c_uchar], pid: libc::c_int) {
+        if let Some(process) = self.process {
+            process(state, &self.save, taskname.as_ptr(), pid);
+        }
+    }
+
+    /// The method `command` call the extern function if defined
+    /// when the library is mounted.
+    pub fn command(&self, state: &LibraryState, line: &[libc::c_uchar]) {
+        if let Some(command) = self.command {
+            command(state, &self.save, line.as_ptr());
+        }
+    }
+
+    /// The method `key_unicode_down` call the extern function if defined
+    /// when a key is pressed.
+    pub fn key_unicode_down(&self, state: &LibraryState, code: libc::c_ulonglong) {
+        if let Some(key_unicode_down) = self.key_unicode_down {
+            key_unicode_down(state, &self.save, code);
+        }
+    }
+
+    /// The method `key_unicode_down` call the extern function if defined
+    /// when a text is pressed.
+    pub fn key_string_down(&self, state: &LibraryState, text: &[libc::c_uchar]) {
+        if let Some(key_string_down) = self.key_string_down {
+            key_string_down(state, &self.save, text.as_ptr());
+        }
+    }
+
+    /// The method `key_repeat_down` call the extern function if defined
+    pub fn key_repeat_down(&self, state: &LibraryState, repeat: libc::c_ulong) {
+        if let Some(key_repeat_down) = self.key_repeat_down {
+            key_repeat_down(state, &self.save, repeat);
+        }
+    }
+
+    /// The method `key_interval_down` call the extern function if defined
+    pub fn key_interval_down(&self, state: &LibraryState, interval: libc::c_longlong) {
+        if let Some(key_interval_down) = self.key_interval_down {
+            key_interval_down(state, &self.save, interval);
+        }
+    }
+
+     /// The method `input` call the extern function if defined
+    pub fn input(&self, state: &LibraryState, text: &[libc::c_uchar]) {
+        if let Some(input) = self.input {
+            input(state, &self.save, text.as_ptr());
+        }
+    }
+
+     /// The method `output` call the extern function if defined.
+    pub fn output(&self, state: &LibraryState, text: &[libc::c_uchar]) {
+        if let Some(output) = self.output {
+            output(state, &self.save, text.as_ptr());
+        }
+    }
+
+    /// The method `resized` call the extern function if defined
+    /// when the window is resized.
+    pub fn resized(&self, state: &LibraryState, size: &pty::Winszed) {
+        if let Some(resized) = self.resized {
+            resized(state, &self.save, size);
+        }
+    }
+
+    /// The method `signal` call the extern function if defined.
+    pub fn signal(&self, state: &LibraryState, number: libc::c_int) {
+        if let Some(signal) = self.signal {
+            signal(state, &self.save, number);
+        }
+    }
+
+    /// The method `call` will read the ShellState to call an adapted extern function if defined.
     pub fn call(&self, state: &LibraryState, event: &pty::ShellState) {
         if let Some(()) = event.is_idle() {
             if let Some(idle) = self.idle {
                 idle(state, &self.save);
+            }
+        } else {
+            if let Some(num) = event.is_signal() {
+                self.signal(state, num);
+            } else {
+                if let Some(key) = event.is_input_keydown() {
+                    match key {
+                        pty::Key::Char(code) => self.key_unicode_down(state, code),
+                        _ => {},
+//                        pty::Key::Str(text) => self.key_string_down(state, text[]),
+                    }
+                } else if let Some(repeat) = event.is_input_keyrepeat() {
+                    self.key_repeat_down(state, repeat)
+                } else if let Some(interval) = event.is_input_keyinterval() {
+                    self.key_interval_down(state, interval)
+//                } else if let Some((mouse, x, y)) = event.is_input_mouse() {
+//                    self.mouse_press(state, mouse, x, y)
+                } else if let Some(slice) = event.is_input_slice() {
+                    self.input(state, slice)
+                } else if let Some(slice) = event.is_output_last() {
+                    self.output(state, slice)
+                } else if let Some(&(pid, name)) = event.is_task() {
+                    self.process(state, &name[..], pid)
+                }
             }
         }
     }
@@ -144,9 +305,9 @@ impl Ord for Library {
 impl fmt::Debug for Library {
     /// Formats the value using the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "library({}): start:{} path:({:?})",
+        write!(f, "library({}): mount:{} path:({:?})",
                self.index,
-               self.start.is_some(),
+               self.mount.is_some(),
                self.path)
     }
 }

@@ -175,7 +175,7 @@ impl Compositer {
                             ) {
                                 Err(why) => Err(CompositerError::Mount(why)),
                                 Ok(dy) => {
-                                    dy.mount(&self.state);
+                                    dy.start(&self.state);
                                     self.list.push(dy);
                                     self.list.sort();
                                     Ok(())

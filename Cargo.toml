@@ -15,18 +15,13 @@ keywords        = ["neko", "glyphArt"]
 license         = "GPL-3.0"
 
 [[bin]]
-name            = "neko"
-path            = "src/main.rs"
-doc             = false
-test            = false
-
+name = "neko"
+test = false
+doc = false
 
 [lib]
-name             = "neko"
-path             = "src/lib.rs"
-plugin           = true
-doctest          = false
-test             = false
+test = false
+doctest = false
 
 [features]
 default          = []

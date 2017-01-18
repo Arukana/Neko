@@ -40,6 +40,10 @@ impl Tooltip {
         &self.cardinal
     }
 
+    pub fn get_message(&self) -> &[pty::Character; 1024] {
+        &self.message
+    }
+
     pub fn set_message(&mut self, message: String) {
         self.message
             .iter_mut()

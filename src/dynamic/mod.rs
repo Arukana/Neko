@@ -400,7 +400,6 @@ impl Compositer {
         self.state.set_message(message);
     }
 
-
     /// The general method `call` according to the state will run
     /// the evenement functions by library group.
     pub fn resized(&mut self, size: &pty::Winszed) {

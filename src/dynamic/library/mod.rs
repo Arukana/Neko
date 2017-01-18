@@ -10,6 +10,7 @@ use std::os::unix::ffi::OsStrExt;
 use std::cmp::{Eq, Ordering};
 use std::path::PathBuf;
 use std::ffi::CString;
+use std::ops::Deref;
 
 pub use self::state::LibraryState;
 pub use self::err::{LibraryError, Result};
@@ -78,7 +79,6 @@ impl Library {
                                                    .into_string()
                                                    .unwrap_or_default()))
             } else {
-                println!("path: {:?}", path);
                 let lib: Library = Library {
                     install: symbol!(handle, b"install\0".as_ptr() as *const libc::c_char),
                     uninstall: symbol!(handle, b"uninstall\0".as_ptr() as *const libc::c_char),
@@ -255,8 +255,7 @@ impl Library {
                 if let Some(key) = event.is_input_keydown() {
                     match key {
                         pty::Key::Char(code) => self.key_unicode_down(state, code),
-                        _ => {},
-//                        pty::Key::Str(text) => self.key_string_down(state, text[]),
+                        pty::Key::Str(text) => self.key_string_down(state, &text.deref()),
                     }
                 } else if let Some(repeat) = event.is_input_keyrepeat() {
                     self.key_repeat_down(state, repeat)

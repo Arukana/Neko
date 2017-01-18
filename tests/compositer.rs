@@ -1,8 +1,11 @@
 extern crate neko;
 
+#[cfg(feature = "compositer_command")]
 use neko::prelude::*;
 
+#[cfg(feature = "compositer_command")]
 use self::std::path::PathBuf;
+#[cfg(feature = "compositer_command")]
 use self::std::env;
 
 #[test]

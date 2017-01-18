@@ -1,17 +1,22 @@
+pub mod relative;
+pub mod tooltip;
+pub mod persona;
+
 use std::fmt;
 use std::str;
 
 use ::editeur;
 use ::libc;
 
-use super::say::Say;
-use super::personnage::{Personnage, Position};
+use self::tooltip::Tooltip;
+use self::persona::{Persona, Position};
+pub use self::relative::Relative;
 
 #[repr(C)]
 #[derive(Copy)]
 pub struct LibraryState {
-  neko: Personnage,
-  infobulle: Say,
+  neko: Persona,
+  message: Tooltip,
   unmount: libc::c_uchar,
   lock: libc::c_uchar,
 }
@@ -29,10 +34,10 @@ impl LibraryState {
         &self.neko.sheet
     }
 
-    pub fn get_infobulle(&self) -> &Say
-    { &self.infobulle }
+    pub fn get_message(&self) -> &Tooltip
+    { &self.message }
 
-    pub fn get_personnage(&self) -> &Personnage
+    pub fn get_personnage(&self) -> &Persona
     { &self.neko }
 
     pub fn get_position(&self) -> &Position {
@@ -50,7 +55,7 @@ impl LibraryState {
     pub fn set_message(&mut self,
         message: String,
     ) {
-        self.infobulle.set_message(message);
+        self.message.set_message(message);
     }
 }
 
@@ -58,7 +63,7 @@ impl Clone for LibraryState {
     fn clone(&self) -> Self {
         LibraryState {
             neko: self.neko,
-            infobulle: self.infobulle,
+            message: self.message,
             unmount: self.unmount,
             lock: self.lock,
         }
@@ -69,7 +74,7 @@ impl fmt::Debug for LibraryState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "LibraryState {{ neko: {:?}, message: {:?}, unmount: {}, lock: {:?} }}",
                self.neko,
-               self.infobulle,
+               self.message,
                self.unmount,
                self.lock.ne(&0),
         )
@@ -79,8 +84,8 @@ impl fmt::Debug for LibraryState {
 impl Default for LibraryState {
     fn default() -> Self {
         LibraryState {
-            neko: Personnage::default(),
-            infobulle: Say::default(),
+            neko: Persona::default(),
+            message: Tooltip::default(),
             unmount: b'\0',
             lock: b'\0',
         }

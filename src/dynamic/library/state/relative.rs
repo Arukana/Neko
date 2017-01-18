@@ -1,4 +1,4 @@
-#[repr(u8)]
+#[repr(u32)]
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq)]
 pub enum Relative {
     Top = 0,

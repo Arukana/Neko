@@ -1,20 +1,19 @@
-pub mod relative;
-
 use std::ops::{BitAnd, Index, RangeTo};
 use std::mem;
 use std::fmt;
 
-pub use self::relative::Relative;
+use super::relative::Relative;
 
 use ::pty;
 
 #[repr(C)]
 #[derive(Copy)]
-pub struct Say
-{ cardinal: Relative,
-  message: [pty::Character; 1024], }
+pub struct Tooltip {
+    cardinal: Relative,
+    message: [pty::Character; 1024],
+}
 
-impl Say
+impl Tooltip
 { /// Return the height of the message, assuming all `\n`
   pub fn get_height(&self) -> usize
   { self.message.iter().filter(|&&nl| nl.is_enter()).count() + 1 }
@@ -55,7 +54,7 @@ impl Say
     }
 }
 
-impl Index<usize> for Say {
+impl Index<usize> for Tooltip {
     type Output = pty::Character;
 
     fn index(&self, count: usize) -> &pty::Character {
@@ -63,7 +62,7 @@ impl Index<usize> for Say {
     }
 }
 
-impl Index<RangeTo<usize>> for Say {
+impl Index<RangeTo<usize>> for Tooltip {
     type Output = [pty::Character];
 
     fn index(&self, range: RangeTo<usize>) -> &[pty::Character] {
@@ -71,8 +70,8 @@ impl Index<RangeTo<usize>> for Say {
     }
 }
 
-impl PartialEq for Say {
-    fn eq(&self, other: &Say) -> bool {
+impl PartialEq for Tooltip {
+    fn eq(&self, other: &Tooltip) -> bool {
         self.cardinal.eq(&other.cardinal)
             .bitand(self.message.iter()
                         .zip(other.message.iter())
@@ -83,20 +82,20 @@ impl PartialEq for Say {
     }
 }
 
-impl fmt::Debug for Say
+impl fmt::Debug for Tooltip
 { fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
-  { write!(f, "Say {{ cardinal: {:?}, message: {} }}", self.cardinal, self.message.iter().take(1024).map(|character| character.get_glyph()).collect::<String>()) }}
+  { write!(f, "Tooltip {{ cardinal: {:?}, message: {} }}", self.cardinal, self.message.iter().take(1024).map(|character| character.get_glyph()).collect::<String>()) }}
 
-impl Clone for Say
+impl Clone for Tooltip
 { fn clone(&self) -> Self
   { unsafe
     { let mut message: [pty::Character; 1024] = mem::uninitialized();
       message.copy_from_slice(&self.message); 
-      Say
+      Tooltip
       { cardinal: self.cardinal,
         message: message, }}}}
 
-impl Default for Say
+impl Default for Tooltip
 { fn default() -> Self
   { let mut mes = [pty::Character::from('\0'); 1024];
     // TYPICAL TEST
@@ -105,7 +104,7 @@ impl Default for Say
     mes[0] = pty::Character::from('B');
     mes[10] = pty::Character::from('\n');
     mes[11] = pty::Character::from('Q');
-Say
+Tooltip
     { cardinal: Relative::Left, 
       message: mes }}}
       //message: [pty::Character::from('\0'); 1024], }}}

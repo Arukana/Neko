@@ -1,7 +1,6 @@
-
-use dynamic::library::say::{Say, Relative};
-use dynamic::library::state::LibraryState;
-use dynamic::library::personnage::Personnage;
+use dynamic::library::state::{LibraryState, Relative};
+use dynamic::library::state::persona::Persona;
+use dynamic::library::state::tooltip::Tooltip;
 
 use ::editeur;
 
@@ -18,8 +17,8 @@ pub struct Display {
     draw: editeur::Draw,
     count: usize,
     nl: (usize, usize),
-    personnage: Personnage,
-    message: Say,
+    personnage: Persona,
+    message: Tooltip,
     padding: usize,
     cursor: usize,
 }
@@ -32,11 +31,11 @@ impl Display {
         display
     }
 
-    fn get_personnage(&self) -> &Personnage {        
+    fn get_personnage(&self) -> &Persona {        
         &self.personnage        
     }        
         
-    fn get_message(&self) -> &Say {        
+    fn get_message(&self) -> &Tooltip {        
         &self.message        
     }
 
@@ -48,8 +47,8 @@ impl Display {
     /// the personna has changed of expression or sheet
     /// and overwrites the variable State of Neko's Display.
     pub fn set_state(&mut self, lib: &LibraryState, dictionary: &mut editeur::Graphic) {
- //       if self.get_message().ne(lib.get_infobulle()) {
-            self.message = *lib.get_infobulle();
+ //       if self.get_message().ne(lib.get_message()) {
+            self.message = *lib.get_message();
             self.nl = (self.message.get_width() + 2, self.message.get_height());
  //       }
  //       if self.get_personage().ne(lib.get_personnage()) {
@@ -97,17 +96,17 @@ impl Iterator for Display
     else
     { Some(pty::Character::from('\0')) }}}
 
-/// Returns the cartesiane coordinate of infobulle and neko.
+/// Returns the cartesiane coordinate of message and neko.
 fn ultime_coordinates(
     size: pty::Winszed,
     mut coord_neko: (usize, usize),
-    infobulle: Say,
+    message: Tooltip,
     (width_message, height_message): (usize, usize),
 ) -> ((usize, usize), (usize, usize)) {
     let row = size.get_row();
     let col = size.get_col();
     let coord_bulle: (usize, usize);
-    match infobulle.get_cardinal() {
+    match message.get_cardinal() {
         &Relative::Top => {
             if coord_neko.1 < height_message ||
                coord_neko.1 + editeur::SPEC_MAX_Y + height_message >= row {

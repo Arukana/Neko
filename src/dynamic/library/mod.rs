@@ -1,7 +1,5 @@
 #[macro_use]
 mod macros;
-pub mod personnage;
-pub mod say;
 pub mod state;
 mod err;
 
@@ -13,10 +11,8 @@ use std::cmp::{Eq, Ordering};
 use std::path::PathBuf;
 use std::ffi::CString;
 
-pub use self::err::{LibraryError, Result};
 pub use self::state::LibraryState;
-pub use self::personnage::position::Position;
-pub use self::say::{Say, Relative};
+pub use self::err::{LibraryError, Result};
 
 use ::libc;
 use ::pty;

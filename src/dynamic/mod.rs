@@ -12,7 +12,7 @@ use std::process;
 
 
 pub use self::err::{CompositerError, Result};
-pub use self::library::LibraryState;
+use self::library::LibraryState;
 use self::library::Library;
 
 use ::SPEC_ROOT;

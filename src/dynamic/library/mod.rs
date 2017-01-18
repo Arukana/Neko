@@ -78,6 +78,7 @@ impl Library {
                                                    .into_string()
                                                    .unwrap_or_default()))
             } else {
+                println!("path: {:?}", path);
                 let lib: Library = Library {
                     install: symbol!(handle, b"install\0".as_ptr() as *const libc::c_char),
                     uninstall: symbol!(handle, b"uninstall\0".as_ptr() as *const libc::c_char),

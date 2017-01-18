@@ -17,4 +17,5 @@ env:
 
 script:
   - cargo build
-  - cargo test
+  - cargo test --features compositer_command
+  - cargo test --features compositer_ffi

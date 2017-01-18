@@ -24,32 +24,34 @@ test = false
 doctest = false
 
 [features]
-default          = []
-lints            = ["clippy", "nightly"]
-nightly          = [] # for building with nightly and unstable features
-unstable         = [] # for building with unstable features on stable Rust
-debug            = [] # for building with debug messages
-travis           = ["lints", "nightly"] # for building with travis-cargo
+default            = []
+compositer_command = []
+compositer_ffi     = []
+lints              = ["clippy", "nightly"]
+nightly            = [] # for building with nightly and unstable features
+unstable           = [] # for building with unstable features on stable Rust
+debug              = [] # for building with debug messages
+travis             = ["lints", "nightly"] # for building with travis-cargo
 
 [dependencies.clippy]
-version          = "*"
-optional         = true
+version            = "*"
+optional           = true
 
 [dependencies.toml]
-version          = "0.2"
+version            = "0.2"
 
 [dependencies.git2]
-version          = "0.6"
+version            = "0.6"
 
 [dependencies.libc]
-version          = "0.2"
+version            = "0.2"
 
 [dependencies.pty-proc]
-git              = "https://github.com/Arukana/PtyProc.git"
-features         = ["task"]
+git                = "https://github.com/Arukana/PtyProc.git"
+features           = ["task"]
 
 [dependencies.editeur]
-git              = "https://github.com/Arukana/Editor.git"
+git                = "https://github.com/Arukana/Editor.git"
 
 [dependencies.clap]
 version = "*"

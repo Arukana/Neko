@@ -6,6 +6,7 @@ use self::std::path::PathBuf;
 use self::std::env;
 
 #[test]
+#[cfg(feature = "compositer_command")]
 fn test_compositer_command() {
     {
         env::set_var("NEKO_PATH", "/tmp/arukana1/.neko");

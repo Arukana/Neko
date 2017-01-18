@@ -1,4 +1,4 @@
-pub mod relative;
+mod relative;
 pub mod tooltip;
 pub mod persona;
 
@@ -15,8 +15,8 @@ pub use self::relative::Relative;
 #[repr(C)]
 #[derive(Copy)]
 pub struct LibraryState {
-  neko: Persona,
-  message: Tooltip,
+  persona: Persona,
+  tooltip: Tooltip,
   unmount: libc::c_uchar,
   lock: libc::c_uchar,
 }
@@ -31,17 +31,17 @@ impl LibraryState {
     }
  
     pub fn get_sheet(&self) -> &editeur::Sheet {
-        &self.neko.sheet
+        &self.persona.sheet
     }
 
-    pub fn get_message(&self) -> &Tooltip
-    { &self.message }
+    pub fn get_tooltip(&self) -> &Tooltip
+    { &self.tooltip }
 
-    pub fn get_personnage(&self) -> &Persona
-    { &self.neko }
+    pub fn get_persona(&self) -> &Persona
+    { &self.persona }
 
     pub fn get_position(&self) -> &Position {
-        &self.neko.position
+        &self.persona.position
     }
 
     /// The function `get_emotion` returns a reference on a ffi argument
@@ -49,21 +49,21 @@ impl LibraryState {
     pub fn get_emotion(&self)
         -> &[[editeur::Tuple; editeur::SPEC_MAX_XY];
     editeur::SPEC_MAX_DRAW] {
-        &self.neko.emotion
+        &self.persona.emotion
     }
 
     pub fn set_message(&mut self,
         message: String,
     ) {
-        self.message.set_message(message);
+        self.tooltip.set_message(message);
     }
 }
 
 impl Clone for LibraryState {
     fn clone(&self) -> Self {
         LibraryState {
-            neko: self.neko,
-            message: self.message,
+            persona: self.persona,
+            tooltip: self.tooltip,
             unmount: self.unmount,
             lock: self.lock,
         }
@@ -72,9 +72,9 @@ impl Clone for LibraryState {
 
 impl fmt::Debug for LibraryState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "LibraryState {{ neko: {:?}, message: {:?}, unmount: {}, lock: {:?} }}",
-               self.neko,
-               self.message,
+        write!(f, "LibraryState {{ persona: {:?}, tooltip: {:?}, unmount: {}, lock: {:?} }}",
+               self.persona,
+               self.tooltip,
                self.unmount,
                self.lock.ne(&0),
         )
@@ -84,8 +84,8 @@ impl fmt::Debug for LibraryState {
 impl Default for LibraryState {
     fn default() -> Self {
         LibraryState {
-            neko: Persona::default(),
-            message: Tooltip::default(),
+            persona: Persona::default(),
+            tooltip: Tooltip::default(),
             unmount: b'\0',
             lock: b'\0',
         }

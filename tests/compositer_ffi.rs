@@ -7,6 +7,7 @@ use neko::prelude::*;
 use std::process::Command;
 
 #[test]
+#[ignore]
 #[cfg(feature = "compositer_ffi")]
 fn test_compositer_ffi() {
     {

@@ -28,11 +28,6 @@ const SPEC_CAPACITY: usize = 10;
 pub const SPEC_ROOT_DEFAULT: &'static str = ".neko";
 
 /// The shared library extention.
-#[cfg(any(target_os = "linux", target_os = "android"))]
-const SPEC_LIB_EXT: &'static str = "so";
-#[cfg(any(target_os = "bitrig", target_os = "dragonfly",
-          target_os = "freebsd", target_os = "ios", target_os = "macos",
-          target_os = "netbsd", target_os = "openbsd"))]
 const SPEC_LIB_EXT: &'static str = "dylib";
 
 /// The default priority of call.

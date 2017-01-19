@@ -37,17 +37,17 @@ macro_rules! account_at_rep {
             $start.ends_with(".git")
         ) {
             let right = $start.len()-4;
-            $start.split_at(middle).0.rfind(|c: char|
-                                           c.eq(&':').bitor(c.eq(&'/'))
+            $start.split_at(middle).0.rfind(|c: char| c.eq(&':').bitor(c.eq(&'/'))
             ).and_then(|left| unsafe {
-                let all = $start.slice_unchecked(left+1, right).to_lowercase()
-                                                               .replace("/", "@");
+                let all = $start.slice_unchecked(left+1, right)
+                                .to_lowercase()
+                                .replace("/", "@");
                 let left = $start.slice_unchecked(left+1, middle).to_lowercase();
                 let right = $start.slice_unchecked(middle+1, right).to_lowercase();
                 if left.is_empty().bitor(right.is_empty()) {
-                  None
+                    None
                 } else {
-                  Some(all)
+                    Some(all)
                 }
             })
         } else {

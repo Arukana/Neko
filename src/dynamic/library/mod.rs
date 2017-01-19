@@ -42,10 +42,10 @@ pub struct Library {
     key_repeat_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, repeat: libc::c_ulong)>,
     /// `key_interval_down` interface.
     key_interval_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, interval: libc::c_longlong)>,
-    /// 'mouse_down' interface.
-    mouse_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort)>,
-    /// 'mouse_up' interface.
-    mouse_up: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort)>,
+    /// 'mouse_pressed' interface.
+    mouse_pressed: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, code: libc::c_uint, xy: [libc::c_ushort; 2])>,
+    /// 'mouse_released' interface.
+    mouse_released: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, code: libc::c_uint, xy: [libc::c_ushort; 2])>,
     /// `input` interface.
     input: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const libc::c_uchar)>,
     /// `output` interface.
@@ -95,8 +95,8 @@ impl Library {
                     key_string_down: symbol!(handle, b"key_string_down\0".as_ptr() as *const libc::c_char),
                     key_repeat_down: symbol!(handle, b"key_repeat_down\0".as_ptr() as *const libc::c_char),
                     key_interval_down: symbol!(handle, b"key_interval_down\0".as_ptr() as *const libc::c_char),
-                    mouse_down: symbol!(handle, b"mouse_down\0".as_ptr() as *const libc::c_char),
-                    mouse_up: symbol!(handle, b"mouse_up\0".as_ptr() as *const libc::c_char),
+                    mouse_pressed: symbol!(handle, b"mouse_pressed\0".as_ptr() as *const libc::c_char),
+                    mouse_released: symbol!(handle, b"mouse_released\0".as_ptr() as *const libc::c_char),
                     input: symbol!(handle, b"input\0".as_ptr() as *const libc::c_char),
                     output: symbol!(handle, b"output\0".as_ptr() as *const libc::c_char),
                     signal: symbol!(handle, b"signal\0".as_ptr() as *const libc::c_char),
@@ -216,19 +216,19 @@ impl Library {
         }
     }
 
-    /// The method `mouse_down` call the extern function if defined
+    /// The method `mouse_pressed` call the extern function if defined
     /// when the mouse is pressed.
-    pub fn mouse_down(&self, state: &LibraryState, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort) {
-        if let Some(mouse_down) = self.mouse_down {
-            mouse_down(state, &self.save, code, x, y);
+    pub fn mouse_pressed(&self, state: &LibraryState, code: libc::c_uint, xy: [libc::c_ushort; 2]) {
+        if let Some(mouse_pressed) = self.mouse_pressed {
+            mouse_pressed(state, &self.save, code, xy);
         }
     }
 
-    /// The method `mouse_up` call the extern function if defined
+    /// The method `mouse_released` call the extern function if defined
     /// when the mouse is released.
-    pub fn mouse_up(&self, state: &LibraryState, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort) {
-        if let Some(mouse_up) = self.mouse_up {
-            mouse_up(state, &self.save, code, x, y);
+    pub fn mouse_released(&self, state: &LibraryState, code: libc::c_uint, xy: [libc::c_ushort; 2]) {
+        if let Some(mouse_released) = self.mouse_released {
+            mouse_released(state, &self.save, code, xy);
         }
     }
 
@@ -285,9 +285,9 @@ impl Library {
                     self.key_interval_down(state, interval)
                 } else if let Some((mouse, pressed, x, y)) = event.is_input_mouse() {
                     if pressed {
-                        self.mouse_down(state, mouse as u32, x, y)
+                        self.mouse_pressed(state, mouse as u32, [x, y])
                     } else {
-                        self.mouse_up(state, mouse as u32, x, y)
+                        self.mouse_released(state, mouse as u32, [x, y])
                     }
                 } else if let Some(slice) = event.is_input_slice() {
                     self.input(state, slice)

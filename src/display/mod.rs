@@ -35,12 +35,17 @@ impl Display {
         &self.persona
     }
 
-    fn get_tooltipe(&self) -> &Tooltip {
+    fn get_tooltip(&self) -> &Tooltip {
         &self.tooltip
     }
 
     pub fn set_window_size(&mut self, size: &pty::Winszed) {
         self.size = *size;
+    }
+
+    /// The mutator method `set_draw` updates the draw from a sprite.
+    pub fn set_draw(&mut self, sprite: &editeur::Sprite) {
+        self.draw = *sprite.into_iter().next().unwrap();
     }
 
     /// The mutator method `set_state` updates the draw if
@@ -49,23 +54,21 @@ impl Display {
     pub fn set_state(&mut self,
                      lib: &LibraryState,
                      dictionary: &mut editeur::Graphic) {
-        //       if self.get_tooltip().ne(lib.get_tooltip()) {
-        self.tooltip = *lib.get_tooltip();
-        self.nl = (self.tooltip.get_width() + 2, self.tooltip.get_height());
-        //       }
-        //       if self.get_persona().ne(lib.get_persona()) {
-        self.coord_neko = lib.get_position().get_coordinate(&self.size);
-        let (coord_bulle, coord_neko) = self.get_coordinates();
-        self.coord_bulle = coord_bulle;
-        self.coord_neko = coord_neko;
-        self.persona = *lib.get_persona();
-        self.draw =
-            dictionary.explicite_emotion(lib.get_sheet(), lib.get_emotion())
-                .and_then(|sprite| {
-                    sprite.into_iter().next().and_then(|draw| Some(*draw))
-                })
-                .unwrap_or_default();
-        //       }
+       if self.get_tooltip().ne(lib.get_tooltip()) {
+            self.tooltip = *lib.get_tooltip();
+            self.nl = (self.tooltip.get_width() + 2, self.tooltip.get_height());
+       }
+       if self.get_persona().ne(lib.get_persona()) {
+            self.coord_neko = lib.get_position().get_coordinate(&self.size);
+            let (coord_bulle, coord_neko) = self.get_coordinates();
+            self.coord_bulle = coord_bulle;
+            self.coord_neko = coord_neko;
+            self.persona = *lib.get_persona();
+            if let Some(sprite) =
+                dictionary.explicite_emotion(lib.get_sheet(), lib.get_emotion()) {
+                self.set_draw(sprite)
+            }
+        }
     }
 
     /// Returns the cartesiane coordinate of tooltip and neko.

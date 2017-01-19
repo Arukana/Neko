@@ -42,6 +42,10 @@ pub struct Library {
     key_repeat_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, repeat: libc::c_ulong)>,
     /// `key_interval_down` interface.
     key_interval_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, interval: libc::c_longlong)>,
+    /// 'mouse_down' interface.
+    mouse_down: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort)>,
+    /// 'mouse_up' interface.
+    mouse_up: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort)>,
     /// `input` interface.
     input: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const libc::c_uchar)>,
     /// `output` interface.
@@ -58,7 +62,7 @@ pub struct Library {
     index: i64,
     /// Address of the library.
     path: PathBuf,
-    /// .
+    /// Inform to unmount the library.
     unmounted: bool,
 }
 
@@ -91,6 +95,8 @@ impl Library {
                     key_string_down: symbol!(handle, b"key_string_down\0".as_ptr() as *const libc::c_char),
                     key_repeat_down: symbol!(handle, b"key_repeat_down\0".as_ptr() as *const libc::c_char),
                     key_interval_down: symbol!(handle, b"key_interval_down\0".as_ptr() as *const libc::c_char),
+                    mouse_down: symbol!(handle, b"mouse_down\0".as_ptr() as *const libc::c_char),
+                    mouse_up: symbol!(handle, b"mouse_up\0".as_ptr() as *const libc::c_char),
                     input: symbol!(handle, b"input\0".as_ptr() as *const libc::c_char),
                     output: symbol!(handle, b"output\0".as_ptr() as *const libc::c_char),
                     signal: symbol!(handle, b"signal\0".as_ptr() as *const libc::c_char),
@@ -210,6 +216,22 @@ impl Library {
         }
     }
 
+    /// The method `mouse_down` call the extern function if defined
+    /// when the mouse is pressed.
+    pub fn mouse_down(&self, state: &LibraryState, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort) {
+        if let Some(mouse_down) = self.mouse_down {
+            mouse_down(state, &self.save, code, x, y);
+        }
+    }
+
+    /// The method `mouse_up` call the extern function if defined
+    /// when the mouse is released.
+    pub fn mouse_up(&self, state: &LibraryState, code: libc::c_uint, x: libc::c_ushort, y: libc::c_ushort) {
+        if let Some(mouse_up) = self.mouse_up {
+            mouse_up(state, &self.save, code, x, y);
+        }
+    }
+
     /// The method `input` call the extern function if defined
     /// when something is inputted to the terminal, whatever it is.
     pub fn input(&self, state: &LibraryState, text: &[libc::c_uchar]) {
@@ -261,8 +283,12 @@ impl Library {
                     self.key_repeat_down(state, repeat)
                 } else if let Some(interval) = event.is_input_keyinterval() {
                     self.key_interval_down(state, interval)
-//                } else if let Some((mouse, x, y)) = event.is_input_mouse() {
-//                    self.mouse_press(state, mouse, x, y)
+                } else if let Some((mouse, pressed, x, y)) = event.is_input_mouse() {
+                    if pressed {
+                        self.mouse_down(state, mouse as u32, x, y)
+                    } else {
+                        self.mouse_up(state, mouse as u32, x, y)
+                    }
                 } else if let Some(slice) = event.is_input_slice() {
                     self.input(state, slice)
                 } else if let Some(slice) = event.is_output_last() {

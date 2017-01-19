@@ -56,6 +56,6 @@ impl Default for Persona
   { let mut pos = Position::default();
     pos.cardinal = Cardinal::UpperRight;
     Persona
-    { sheet: editeur::Sheet::Bust,
+    { sheet: editeur::Sheet::default(),
       emotion: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
       position: pos, }}}

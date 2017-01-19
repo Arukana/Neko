@@ -55,11 +55,7 @@ impl Display {
         //       }
         //       if self.get_persona().ne(lib.get_persona()) {
         self.coord_neko = lib.get_position().get_coordinate(&self.size);
-        let (coord_bulle, coord_neko) = ultime_coordinates(self.size,
-                                                           self.coord_neko,
-                                                           self.tooltip,
-                                                           (self.nl.0,
-                                                            self.nl.1));
+        let (coord_bulle, coord_neko) = self.get_coordinates();
         self.coord_bulle = coord_bulle;
         self.coord_neko = coord_neko;
         self.persona = *lib.get_persona();
@@ -70,6 +66,62 @@ impl Display {
                 })
                 .unwrap_or_default();
         //       }
+    }
+
+    /// Returns the cartesiane coordinate of tooltip and neko.
+    fn get_coordinates(&self) -> ((usize, usize), (usize, usize)) {
+        let row = self.size.get_row();
+        let col = self.size.get_col();
+        let coord_bulle: (usize, usize);
+        let (width_tooltip, height_tooltip): (usize, usize) = (self.nl.0, self.nl.1);
+        let mut coord_neko: (usize, usize) = self.coord_neko;
+
+        match self.tooltip.get_cardinal() {
+            &Relative::Top => {
+                if coord_neko.1 < height_tooltip ||
+                   coord_neko.1 + editeur::SPEC_MAX_Y + height_tooltip >= row {
+                    coord_bulle = (coord_neko.0, 0);
+                    coord_neko = (coord_neko.0, coord_neko.1 + height_tooltip);
+                } else {
+                    coord_bulle = (coord_neko.0, coord_neko.1 - height_tooltip);
+                }
+            }
+            &Relative::Bottom => {
+                if coord_neko.1 + editeur::SPEC_MAX_Y + height_tooltip >= row {
+                    if editeur::SPEC_MAX_Y + height_tooltip < row {
+                        coord_neko = (coord_neko.0,
+                                      row -
+                                      (editeur::SPEC_MAX_Y + height_tooltip));
+                    } else {
+                        coord_neko = (coord_neko.0, 0);
+                    }
+                }
+                coord_bulle = (coord_neko.0, coord_neko.1 + editeur::SPEC_MAX_Y);
+            }
+            &Relative::Right => {
+                if coord_neko.0 + editeur::SPEC_MAX_X + width_tooltip >= row {
+                    if editeur::SPEC_MAX_X + width_tooltip < col {
+                        coord_neko = (col -
+                                      (editeur::SPEC_MAX_X + width_tooltip),
+                                      coord_neko.1);
+                    } else {
+                        coord_neko = (0, coord_neko.1);
+                    }
+                }
+                coord_bulle = (coord_neko.0 + editeur::SPEC_MAX_X + 2,
+                               coord_neko.1);
+            }
+            &Relative::Left => {
+                if coord_neko.0 < width_tooltip ||
+                   editeur::SPEC_MAX_X + width_tooltip >= col {
+                    coord_bulle = (0, coord_neko.1);
+                    coord_neko = (width_tooltip + 1, coord_neko.1);
+                } else {
+                    coord_bulle = (coord_neko.0 - width_tooltip, coord_neko.1);
+                }
+            }
+        }
+        (coord_bulle, coord_neko)
     }
 }
 
@@ -106,61 +158,4 @@ impl Iterator for Display {
             Some(pty::Character::from('\0'))
         }
     }
-}
-
-/// Returns the cartesiane coordinate of tooltip and neko.
-fn ultime_coordinates(size: pty::Winszed,
-                      mut coord_neko: (usize, usize),
-                      tooltip: Tooltip,
-                      (width_tooltip, height_tooltip): (usize, usize))
-                      -> ((usize, usize), (usize, usize)) {
-    let row = size.get_row();
-    let col = size.get_col();
-    let coord_bulle: (usize, usize);
-    match tooltip.get_cardinal() {
-        &Relative::Top => {
-            if coord_neko.1 < height_tooltip ||
-               coord_neko.1 + editeur::SPEC_MAX_Y + height_tooltip >= row {
-                coord_bulle = (coord_neko.0, 0);
-                coord_neko = (coord_neko.0, coord_neko.1 + height_tooltip);
-            } else {
-                coord_bulle = (coord_neko.0, coord_neko.1 - height_tooltip);
-            }
-        }
-        &Relative::Bottom => {
-            if coord_neko.1 + editeur::SPEC_MAX_Y + height_tooltip >= row {
-                if editeur::SPEC_MAX_Y + height_tooltip < row {
-                    coord_neko = (coord_neko.0,
-                                  row -
-                                  (editeur::SPEC_MAX_Y + height_tooltip));
-                } else {
-                    coord_neko = (coord_neko.0, 0);
-                }
-            }
-            coord_bulle = (coord_neko.0, coord_neko.1 + editeur::SPEC_MAX_Y);
-        }
-        &Relative::Right => {
-            if coord_neko.0 + editeur::SPEC_MAX_X + width_tooltip >= row {
-                if editeur::SPEC_MAX_X + width_tooltip < col {
-                    coord_neko = (col -
-                                  (editeur::SPEC_MAX_X + width_tooltip),
-                                  coord_neko.1);
-                } else {
-                    coord_neko = (0, coord_neko.1);
-                }
-            }
-            coord_bulle = (coord_neko.0 + editeur::SPEC_MAX_X + 2,
-                           coord_neko.1);
-        }
-        &Relative::Left => {
-            if coord_neko.0 < width_tooltip ||
-               editeur::SPEC_MAX_X + width_tooltip >= col {
-                coord_bulle = (0, coord_neko.1);
-                coord_neko = (width_tooltip + 1, coord_neko.1);
-            } else {
-                coord_bulle = (coord_neko.0 - width_tooltip, coord_neko.1);
-            }
-        }
-    }
-    (coord_bulle, coord_neko)
 }

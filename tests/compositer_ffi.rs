@@ -3,9 +3,6 @@ extern crate neko;
 #[cfg(feature = "compositer_ffi")]
 use neko::prelude::*;
 
-#[cfg(feature = "compositer_ffi")]
-use std::process::Command;
-
 #[test]
 #[cfg(feature = "compositer_ffi")]
 fn test_compositer_ffi() {

@@ -12,6 +12,17 @@ macro_rules! parse_number {
 }
 
 #[macro_export]
+macro_rules! format_subneko {
+    ($dy: expr, $arg: expr, $verb: expr, $command: expr) => ({
+        let output: String = match $command {
+            Ok(_) => format!("{}'s was {}ed.", $verb, $arg),
+            Err(why) => format!("Can't {} the \"{}\" because: {}.", $verb, $arg, why),
+        };
+        $dy.set_message(output);
+    });
+}
+
+#[macro_export]
 macro_rules! only_rep {
     ($sub: expr) => ({
         let lib: &OsStr = $sub.as_ref();

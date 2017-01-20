@@ -79,9 +79,7 @@ impl Library {
                 libc::RTLD_LAZY
             );
             if handle.eq(&ptr::null_mut()) {
-                Err(LibraryError::BadDyLib(CString::from_raw(libc::dlerror())
-                                                   .into_string()
-                                                   .unwrap_or_default()))
+                Err(LibraryError::BadDyLib(CString::from_raw(libc::dlerror()).into_string().unwrap_or_default()))
             } else {
                 let lib: Library = Library {
                     install: symbol!(handle, b"install\0".as_ptr() as *const libc::c_char),

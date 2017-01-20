@@ -23,6 +23,7 @@ Cargo.lock
 *.swn
 *.swm
 *.swo
+*.swl
 
 # Backup files
 *.bak

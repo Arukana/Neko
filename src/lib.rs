@@ -147,7 +147,6 @@ impl Neko {
         if key.is_enter().bitand(
             self.pid.eq(&self.shell.get_pid())
         ) {
-            let message: Option<String> =
                 match &self.line.get_ref()
                             .iter()
                             .cloned()
@@ -159,35 +158,47 @@ impl Neko {
                 &["neko", ref arguments..] => {
                     state.set_input_keyown('\u{3}');
                     match arguments {
-                        &["install", ref repository] => Some(
-                            format!("{:?}", self.dynamic.install(repository))
-                        ),
-                        &["mount", ref libraryname, ref priority] => Some(
-                            format!("{:?}",
-                                    self.dynamic.mount(
-                                        libraryname,
-                                        priority.parse::<i64>().ok()))
-                        ),
-                        &["mount", ref libraryname] => Some(
-                            format!("{:?}", self.dynamic.mount(libraryname, None))
-                        ),
-                        &["unmount", ref libraryname] => Some(
-                            format!("{:?}", self.dynamic.unmount(libraryname))
-                        ),
-                        &["uninstall", ref libraryname] => Some(
-                            format!("{:?}", self.dynamic.uninstall(libraryname))
-                        ),
-                        &["update", ref libraryname] => Some(
-                            format!("{:?}", self.dynamic.update(libraryname))
-                        ),
-                        _ => None,
+                        &["install", ref repository] => {
+                            format_subneko!(self.dynamic, repository, "install",
+                                self.dynamic.install(repository)
+                            )
+                        },
+                        &["uninstall", ref libraryname] => {
+                            format_subneko!(self.dynamic, libraryname, "uninstall",
+                                self.dynamic.uninstall(libraryname)
+                            )
+                        },
+                        &["mount", ref libraryname, ref priority] => {
+                            format_subneko!(self.dynamic, libraryname, "mount",
+                                self.dynamic.mount(
+                                    libraryname,
+                                    priority.parse::<i64>().ok()
+                                )
+                            )
+                        },
+                        &["mount", ref libraryname] => {
+                            format_subneko!(self.dynamic, libraryname, "mount",
+                                self.dynamic.mount(
+                                    libraryname,
+                                    None
+                                )
+                            )
+                        },
+                        &["unmount", ref libraryname] => {
+                            format_subneko!(self.dynamic, libraryname, "unmount",
+                                self.dynamic.unmount(libraryname)
+                            )
+                        },
+                        &["update", ref libraryname] => {
+                            format_subneko!(self.dynamic, libraryname, "update",
+                                self.dynamic.update(libraryname)
+                            )
+                        },
+                        _ => {},
                     }
                 },
-                _ => None,
+                _ => {},
             };
-            if let Some(message) = message {
-                self.dynamic.set_message(message)
-            }
             self.line.get_mut().clear();
             self.line.set_position(0);
         }

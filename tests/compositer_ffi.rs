@@ -7,7 +7,7 @@ use neko::prelude::*;
 #[cfg(feature = "compositer_ffi")]
 fn test_compositer_ffi() {
     {
-        let compositer: Compositer = Compositer::new().unwrap();
+        let mut compositer: Compositer = Compositer::new().unwrap();
 
         compositer.install(
             "https://github.com/Arukana/libnya.git"

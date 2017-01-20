@@ -54,6 +54,8 @@ impl Display {
     pub fn set_state(&mut self,
                      lib: &LibraryState,
                      dictionary: &mut editeur::Graphic) {
+            println!("P{:?}", lib.get_tooltip() );
+            unsafe { ::libc::sleep(5); }
        if self.get_tooltip().ne(lib.get_tooltip()) {
             self.tooltip = *lib.get_tooltip();
             self.nl = (self.tooltip.get_width() + 2, self.tooltip.get_height());

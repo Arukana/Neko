@@ -24,6 +24,7 @@ Cargo.lock
 *.swm
 *.swo
 *.swl
+*.swk
 
 # Backup files
 *.bak

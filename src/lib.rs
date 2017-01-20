@@ -255,8 +255,10 @@ impl Neko {
             },
             _ => {
                 if let Some(glyph) = key.is_utf8() {
-                    self.line.get_mut().insert(position, glyph);
-                    self.line.set_position(position.checked_add(1).unwrap_or_default() as u64);
+                    if position.eq(&self.line.get_ref().len()) {
+                        self.line.get_mut().insert(position, glyph);
+                        self.line.set_position(position.checked_add(1).unwrap_or_default() as u64);
+                    }
                 }
             },
         };

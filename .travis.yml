@@ -18,6 +18,7 @@ matrix:
 
 before_script:
   - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/.local/bin:$PATH
+  - ls $HOME/.local/bin:$PATH
 script:
   - |
       travis-cargo --only nightly build -- --features "nightly"

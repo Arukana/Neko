@@ -334,7 +334,7 @@ impl fmt::Display for Neko {
             .into_iter()
             .zip(self.screen.into_iter())
             .all(|(pty_character, character)| {
-                if character.is_space().not().bitand(character.is_null().not()) {
+                if character.is_null().not() {
                     disp.push_str(format!("{}", character).as_str());
                     true
                 } else {

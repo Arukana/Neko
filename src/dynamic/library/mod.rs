@@ -289,11 +289,12 @@ impl Library {
                     self.key_interval_down(state, interval)
                 } else if let Some(slice) = event.is_input_slice() {
                     self.input(state, slice)
-                } else if let Some(&(pid, name)) = event.is_task() {
-                    self.process(state, &name[..], pid)
                 } else if let Some(slice) = event.is_output_last() {
                     self.output(state, slice)
                 }
+                if let Some(&(pid, name)) = event.is_task() {
+                    self.process(state, &name[..], pid)
+                } 
             }
         }
     }

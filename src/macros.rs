@@ -14,9 +14,10 @@ macro_rules! parse_number {
 #[macro_export]
 macro_rules! format_subneko {
     ($dy: expr, $arg: expr, $verb: expr, $command: expr) => ({
+        use std::error::Error;
         let output: String = match $command {
             Ok(_) => format!("{}'s was {}ed.", $verb, $arg),
-            Err(why) => format!("Can't {} the \"{}\" because: {}.", $verb, $arg, why),
+            Err(why) => format!("Can't {} the \"{}\" because: {}.", $verb, $arg, why.description()),
         };
         $dy.set_message(output);
     });

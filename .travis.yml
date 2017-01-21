@@ -1,21 +1,27 @@
----
-sudo: false
 language: rust
-rust:
-  - nightly
+sudo: false
 
 os:
   - osx
 
-branches:
-  only:
-    - master
+matrix:
+  include:
+    - rust: stable
+    - rust: beta
+    - rust: nightly
 
-env:
-  - ARCH=x86_64
-  - ARCH=i686
-
+install:
+  - |
+      pip install 'travis-cargo<0.2' --user &&
+      export PATH=$HOME/.local/bin:$PATH
 script:
-  - cargo build
-  - cargo test --features compositer_command
-  - cargo test --features compositer_ffi
+  - |
+      cargo build
+      cargo test --features compositer_command
+      cargo test --features compositer_ffi
+      travis-cargo build &&
+      travis-cargo build -- --release &&
+      travis-cargo test &&
+      travis-cargo test -- --release &&
+      travis-cargo bench &&
+      travis-cargo --only stable doc

@@ -272,21 +272,24 @@ impl Library {
             if let Some(num) = event.is_signal() {
                 self.signal(state, num);
             } else {
-                if let Some(key) = event.is_input_keydown() {
-                    match key {
-                        pty::Key::Char(code) => self.key_unicode_down(state, code),
-                        pty::Key::Str(text) => self.key_string_down(state, &text.deref()),
-                    }
-                } else if let Some(repeat) = event.is_input_keyrepeat() {
-                    self.key_repeat_down(state, repeat)
-                } else if let Some(interval) = event.is_input_keyinterval() {
-                    self.key_interval_down(state, interval)
-                } else if let Some((mouse, pressed, x, y)) = event.is_input_mouse() {
+println!("EVENT::{:?}", event);
+               	if let Some((mouse, pressed, x, y)) = event.is_input_mouse() {
                     if pressed {
                         self.mouse_pressed(state, mouse as u32, [x, y])
                     } else {
                         self.mouse_released(state, mouse as u32, [x, y])
                     }
+                } else if let Some(key) = event.is_input_keydown() {
+                    match key {
+                        pty::Key::Char(code) => self.key_unicode_down(state, code),
+                        pty::Key::Str(text) =>
+{ println!("TEXT::{:?}", text);
+self.key_string_down(state, &text.deref()) },
+                    }
+                } else if let Some(repeat) = event.is_input_keyrepeat() {
+                    self.key_repeat_down(state, repeat)
+                } else if let Some(interval) = event.is_input_keyinterval() {
+                    self.key_interval_down(state, interval)
                 } else if let Some(slice) = event.is_input_slice() {
                     self.input(state, slice)
                 } else if let Some(slice) = event.is_output_last() {

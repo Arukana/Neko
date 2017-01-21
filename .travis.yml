@@ -17,8 +17,8 @@ matrix:
       env: FEATURES=nightly
 
 before_script:
-  - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/.local/bin:$PATH
-  - ls $HOME/.local/bin
+  - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/Library/Python/2.7/bin:$PATH
+  - ls -R $HOME/
 script:
   - |
       travis-cargo --only nightly build -- --features "nightly"

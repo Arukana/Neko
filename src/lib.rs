@@ -143,33 +143,34 @@ impl Neko {
     }
 
     /// The method `neko` runs a neko command for first level of shell.
+    #[allow(unused_must_use)]
     fn neko(&mut self, key: pty::Key, state: &mut pty::ShellState) {
         if key.is_enter().bitand(
             self.pid.eq(&self.shell.get_pid())
         ) {
-                match &self.line.get_ref()
-                            .iter()
-                            .cloned()
-                            .collect::<String>()
-                            .to_string()
-                            .split_whitespace()
-                            .collect::<Vec<&str>>()
-                            .as_slice()[..] {
+            match &self.line.get_ref()
+                        .iter()
+                        .cloned()
+                        .collect::<String>()
+                        .to_string()
+                        .split_whitespace()
+                        .collect::<Vec<&str>>()
+                        .as_slice()[..] {
                 &["neko", ref arguments..] => {
                     state.set_input_keyown('\u{3}');
                     match arguments {
                         &["install", ref repository] => {
-                            format_subneko!(self.dynamic, repository, "install",
+                            format_subneko!(self, repository, "install",
                                 self.dynamic.install(repository)
                             )
                         },
                         &["uninstall", ref libraryname] => {
-                            format_subneko!(self.dynamic, libraryname, "uninstall",
+                            format_subneko!(self, libraryname, "uninstall",
                                 self.dynamic.uninstall(libraryname)
                             )
                         },
                         &["mount", ref libraryname, ref priority] => {
-                            format_subneko!(self.dynamic, libraryname, "mount",
+                            format_subneko!(self, libraryname, "mount",
                                 self.dynamic.mount(
                                     libraryname,
                                     priority.parse::<i64>().ok()
@@ -177,7 +178,7 @@ impl Neko {
                             )
                         },
                         &["mount", ref libraryname] => {
-                            format_subneko!(self.dynamic, libraryname, "mount",
+                            format_subneko!(self, libraryname, "mount",
                                 self.dynamic.mount(
                                     libraryname,
                                     None
@@ -185,12 +186,12 @@ impl Neko {
                             )
                         },
                         &["unmount", ref libraryname] => {
-                            format_subneko!(self.dynamic, libraryname, "unmount",
+                            format_subneko!(self, libraryname, "unmount",
                                 self.dynamic.unmount(libraryname)
                             )
                         },
                         &["update", ref libraryname] => {
-                            format_subneko!(self.dynamic, libraryname, "update",
+                            format_subneko!(self, libraryname, "update",
                                 self.dynamic.update(libraryname)
                             )
                         },

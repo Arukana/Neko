@@ -1,25 +1,11 @@
 language: rust
-sudo: false
-
-os:
-  - osx
-
-matrix:
-  include:
-    - rust: nightly
-
-install:
-  - |
-      pip install 'travis-cargo<0.2' --user &&
-      export PATH=$HOME/.local/bin:$PATH
+rust:
+  - nightly
+before_script:
+- pip install 'travis-cargo<0.2' --user && export PATH=$HOME/.local/bin:$PATH
 script:
-  - |
-      cargo build
-      cargo test --features compositer_command
-      cargo test --features compositer_ffi
-      travis-cargo build &&
-      travis-cargo build -- --release &&
-      travis-cargo test &&
-      travis-cargo test -- --release &&
-      travis-cargo bench &&
-      travis-cargo --only stable doc
+  - travis-cargo build
+  - travis-cargo test
+  - travis-cargo doc
+after_success:
+  - travis-cargo doc-upload

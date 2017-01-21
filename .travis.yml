@@ -18,14 +18,13 @@ matrix:
 
 before_script:
   - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/Library/Python/2.7/bin:$PATH
-  - ls -R $HOME/
 script:
   - |
       travis-cargo --only nightly build -- --features "nightly"
       travis-cargo --only nightly test -- --features "nightly"
       travis-cargo --only nightly doc -- --features "nightly"
 after_success:
-  - travis-cargo doc-uploada
+  - travis-cargo --only nightly doc-upload 
 
 env:
   global:

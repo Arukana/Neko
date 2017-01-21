@@ -54,11 +54,11 @@ impl Display {
     pub fn set_state(&mut self,
                      lib: &LibraryState,
                      dictionary: &mut editeur::Graphic) {
-       if self.get_tooltip().ne(lib.get_tooltip()) {
+   //    if self.get_tooltip().ne(lib.get_tooltip()) {
             self.tooltip = *lib.get_tooltip();
             self.nl = (self.tooltip.get_width() + 2, self.tooltip.get_height());
-       }
-       if self.get_persona().ne(lib.get_persona()) {
+   //    }
+   //    if self.get_persona().ne(lib.get_persona()) {
             self.coord_neko = lib.get_position().get_coordinate(&self.size);
             let (coord_bulle, coord_neko) = self.get_coordinates();
             self.coord_bulle = coord_bulle;
@@ -68,7 +68,7 @@ impl Display {
                 dictionary.explicite_emotion(lib.get_sheet(), lib.get_emotion()) {
                 self.set_draw(sprite)
             }
-        }
+   //     }
     }
 
     /// Returns the cartesiane coordinate of tooltip and neko.

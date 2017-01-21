@@ -6,8 +6,6 @@ os:
 
 matrix:
   include:
-    - rust: stable
-    - rust: beta
     - rust: nightly
 
 install:

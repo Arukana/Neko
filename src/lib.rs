@@ -239,18 +239,18 @@ impl Neko {
                 self.line.get_mut().clear();
                 self.line.set_position(0);
             },
-            pty::Key::Str(line) => {
+            pty::Key::Str(line) => unsafe {
                 let position: usize = self.line.position() as usize;
-                if let Ok(glyphs) = String::from_utf8(
+                let glyphs: String = String::from_utf8_unchecked(
                     line.iter()
                           .filter(|c: &&u8| c.eq(&&b'\0').not())
                           .map(|c: &u8| *c)
                           .collect::<Vec<u8>>()
-                ) {
-                    if let Some(count) = glyphs.len().checked_add(position) {
-                        self.line.get_mut().extend(glyphs.chars());
-                        self.line.set_position(count as u64);
-                    }
+                );
+
+                if let Some(count) = glyphs.len().checked_add(position) {
+                    self.line.get_mut().extend(glyphs.chars());
+                    self.line.set_position(count as u64);
                 }
             },
             _ => {

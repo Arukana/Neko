@@ -89,6 +89,8 @@ pub struct Neko {
 }
 
 impl Neko {
+    /// The constructor method `new` returns a Neko interface for a Shell, 
+    /// a Compositer of dynamic libraries and a dictionnary of sprite.
     pub fn new(
         repeat: Option<i64>,
         interval: Option<i64>,

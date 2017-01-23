@@ -3,7 +3,7 @@ mod cardinal;
 
 use std::ops::BitAnd;
 
-use ::editeur;
+use ::graphic;
 use ::std;
 
 pub use self::cardinal::Cardinal;
@@ -12,8 +12,8 @@ pub use self::position::Position;
 #[repr(C)]
 #[derive(Copy)]
 pub struct Persona {
-    pub sheet: editeur::Sheet,
-    pub emotion: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+    pub sheet: graphic::Sheet,
+    pub emotion: [[graphic::Tuple; graphic::SPEC_MAX_XY]; graphic::SPEC_MAX_DRAW],
     pub position: Position,
 }
 
@@ -23,13 +23,13 @@ impl PartialEq for Persona {
              self.emotion.iter()
                  .zip(other.emotion.iter())
                  .all(|(emotions, other_emotions):
-                       (&[editeur::Tuple; editeur::SPEC_MAX_XY],
-                        &[editeur::Tuple; editeur::SPEC_MAX_XY])| {
+                       (&[graphic::Tuple; graphic::SPEC_MAX_XY],
+                        &[graphic::Tuple; graphic::SPEC_MAX_XY])| {
                      emotions.iter()
                              .zip(other_emotions.iter())
                              .all(|(emotion, other_emotion):
-                                   (&editeur::Tuple,
-                                    &editeur::Tuple)| {
+                                   (&graphic::Tuple,
+                                    &graphic::Tuple)| {
                                  emotion.eq(other_emotion)
                              })
                  })
@@ -40,7 +40,7 @@ impl PartialEq for Persona {
 impl Clone for Persona
 { fn clone(&self) -> Self
   { unsafe
-    { let mut emotion: [[editeur::Tuple; editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW] = std::mem::uninitialized();
+    { let mut emotion: [[graphic::Tuple; graphic::SPEC_MAX_XY]; graphic::SPEC_MAX_DRAW] = std::mem::uninitialized();
       emotion.copy_from_slice(&self.emotion);
       Persona
       { sheet: self.sheet,
@@ -56,6 +56,6 @@ impl Default for Persona
   { let mut pos = Position::default();
     pos.cardinal = Cardinal::UpperRight;
     Persona
-    { sheet: editeur::Sheet::default(),
-      emotion: [[editeur::Tuple::default(); editeur::SPEC_MAX_XY]; editeur::SPEC_MAX_DRAW],
+    { sheet: graphic::Sheet::default(),
+      emotion: [[graphic::Tuple::default(); graphic::SPEC_MAX_XY]; graphic::SPEC_MAX_DRAW],
       position: pos, }}}

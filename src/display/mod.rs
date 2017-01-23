@@ -2,7 +2,7 @@ use dynamic::library::state::{LibraryState, Relative};
 use dynamic::library::state::persona::Persona;
 use dynamic::library::state::tooltip::Tooltip;
 
-use ::editeur;
+use ::graphic;
 
 use ::pty;
 use std::ops::Not;
@@ -14,7 +14,7 @@ pub struct Display {
     size: pty::Winszed,
     coord_neko: (usize, usize),
     coord_bulle: (usize, usize),
-    draw: editeur::Draw,
+    draw: graphic::Draw,
     count: usize,
     nl: (usize, usize),
     persona: Persona,
@@ -44,7 +44,7 @@ impl Display {
     }
 
     /// The mutator method `set_draw` updates the draw from a sprite.
-    pub fn set_draw(&mut self, sprite: &editeur::Sprite) {
+    pub fn set_draw(&mut self, sprite: &graphic::Sprite) {
         self.draw = *sprite.into_iter().next().unwrap();
     }
 
@@ -53,7 +53,7 @@ impl Display {
     /// and overwrites the variable State of Neko's Display.
     pub fn set_state(&mut self,
                      lib: &LibraryState,
-                     dictionary: &mut editeur::Graphic) {
+                     dictionary: &mut graphic::Graphic) {
         //if self.get_tooltip().ne(lib.get_tooltip()) {
             self.tooltip = *lib.get_tooltip();
             self.nl = (self.tooltip.get_width() + 2, self.tooltip.get_height());
@@ -82,7 +82,7 @@ impl Display {
         match self.tooltip.get_cardinal() {
             &Relative::Top => {
                 if coord_neko.1 < height_tooltip ||
-                   coord_neko.1 + editeur::SPEC_MAX_Y + height_tooltip >= row {
+                   coord_neko.1 + graphic::SPEC_MAX_Y + height_tooltip >= row {
                     coord_bulle = (coord_neko.0, 0);
                     coord_neko = (coord_neko.0, coord_neko.1 + height_tooltip);
                 } else {
@@ -90,33 +90,33 @@ impl Display {
                 }
             }
             &Relative::Bottom => {
-                if coord_neko.1 + editeur::SPEC_MAX_Y + height_tooltip >= row {
-                    if editeur::SPEC_MAX_Y + height_tooltip < row {
+                if coord_neko.1 + graphic::SPEC_MAX_Y + height_tooltip >= row {
+                    if graphic::SPEC_MAX_Y + height_tooltip < row {
                         coord_neko = (coord_neko.0,
                                       row -
-                                      (editeur::SPEC_MAX_Y + height_tooltip));
+                                      (graphic::SPEC_MAX_Y + height_tooltip));
                     } else {
                         coord_neko = (coord_neko.0, 0);
                     }
                 }
-                coord_bulle = (coord_neko.0, coord_neko.1 + editeur::SPEC_MAX_Y);
+                coord_bulle = (coord_neko.0, coord_neko.1 + graphic::SPEC_MAX_Y);
             }
             &Relative::Right => {
-                if coord_neko.0 + editeur::SPEC_MAX_X + width_tooltip >= row {
-                    if editeur::SPEC_MAX_X + width_tooltip < col {
+                if coord_neko.0 + graphic::SPEC_MAX_X + width_tooltip >= row {
+                    if graphic::SPEC_MAX_X + width_tooltip < col {
                         coord_neko = (col -
-                                      (editeur::SPEC_MAX_X + width_tooltip),
+                                      (graphic::SPEC_MAX_X + width_tooltip),
                                       coord_neko.1);
                     } else {
                         coord_neko = (0, coord_neko.1);
                     }
                 }
-                coord_bulle = (coord_neko.0 + editeur::SPEC_MAX_X + 2,
+                coord_bulle = (coord_neko.0 + graphic::SPEC_MAX_X + 2,
                                coord_neko.1);
             }
             &Relative::Left => {
                 if coord_neko.0 < width_tooltip ||
-                   editeur::SPEC_MAX_X + width_tooltip >= col {
+                   graphic::SPEC_MAX_X + width_tooltip >= col {
                     coord_bulle = (0, coord_neko.1);
                     coord_neko = (width_tooltip + 1, coord_neko.1);
                 } else {
@@ -137,8 +137,8 @@ impl Iterator for Display {
         if self.padding < ((self.count - 1) / self.size.get_col()) + 1 {
             self.padding = 0;
         }
-        if (coord_neko.1..(coord_neko.1 + editeur::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) &&
-           (coord_neko.0..(coord_neko.0 + editeur::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col()) {
+        if (coord_neko.1..(coord_neko.1 + graphic::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) &&
+           (coord_neko.0..(coord_neko.0 + graphic::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col()) {
             let (_, texel) = self.draw.next().unwrap();
             Some(pty::Character::from(texel.get_glyph()))
         } else if (coord_bulle.1..(coord_bulle.1 + self.nl.1)).contains((self.count - 1) / self.size.get_col()) &&

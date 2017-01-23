@@ -5,7 +5,7 @@ pub mod persona;
 use std::fmt;
 use std::str;
 
-use ::editeur;
+use ::graphic;
 use ::libc;
 
 use self::tooltip::Tooltip;
@@ -30,7 +30,7 @@ impl LibraryState {
         self.lock.ne(&b'\0')
     }
  
-    pub fn get_sheet(&self) -> &editeur::Sheet {
+    pub fn get_sheet(&self) -> &graphic::Sheet {
         &self.persona.sheet
     }
 
@@ -47,8 +47,8 @@ impl LibraryState {
     /// The function `get_emotion` returns a reference on a ffi argument
     /// of detailed emotion by draw.
     pub fn get_emotion(&self)
-        -> &[[editeur::Tuple; editeur::SPEC_MAX_XY];
-    editeur::SPEC_MAX_DRAW] {
+        -> &[[graphic::Tuple; graphic::SPEC_MAX_XY];
+    graphic::SPEC_MAX_DRAW] {
         &self.persona.emotion
     }
 

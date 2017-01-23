@@ -52,6 +52,7 @@ features           = ["task"]
 
 [dependencies.editeur]
 git                = "https://github.com/Arukana/Editor.git"
+name               = "graphic"
 
 [dependencies.clap]
 version = "*"

@@ -35,7 +35,7 @@
 #![doc(html_logo_url = "https://arukana.github.io/Neko/images/neko.png")]
 
 extern crate pty_proc;
-extern crate graphic;
+extern crate editeur;
 extern crate git2;
 extern crate toml;
 extern crate libc;
@@ -61,7 +61,7 @@ use dynamic::Compositer;
 use dynamic::library::state::LibraryState;
 pub use display::Display;
 
-pub use graphic::prelude as editeur;
+pub use editeur::prelude as graphic;
 pub use pty_proc::prelude as pty;
 
 pub use self::err::{NekoError, Result};

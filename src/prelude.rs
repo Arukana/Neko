@@ -5,7 +5,7 @@ pub use super::{Neko, NekoError};
 pub use super::pty::{Shell, ShellError, ShellState, Winszed, Character, Key, Mouse};
 pub use super::dynamic::{Compositer, CompositerError};
 pub use super::dynamic::library::{Library, LibraryError, LibraryState};
-pub use super::editeur::{Graphic, GraphicError, Sheet, Tuple, SPEC_MAX_DRAW, SPEC_MAX_XY};
+pub use super::graphic::{Graphic, GraphicError, Sheet, Tuple, SPEC_MAX_DRAW, SPEC_MAX_XY};
 pub use super::dynamic::library::state::tooltip::Tooltip;
 pub use super::dynamic::library::state::persona::{Persona, Position};
 pub use super::dynamic::library::state::Relative;

@@ -12,7 +12,6 @@ addons:
 matrix:
   include:
     - rust: nightly
-      env: FEATURES=nightly
 before_script:
   - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/Library/Python/2.7/bin:$PATH
 script:

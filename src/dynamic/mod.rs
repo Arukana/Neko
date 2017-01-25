@@ -151,7 +151,8 @@ impl Compositer {
                                   libraryname: &S,
                                   priority: Option<i64>)
                                   -> Result<()> {
-        self.git_with_lib()
+        let old = env::current_dir()?;
+        let mount = self.git_with_lib()
             .and_then(|(git, lib)| {
               let path = Path::new(git.to_str().unwrap());
               let _ = env::set_current_dir(&path);
@@ -179,9 +180,11 @@ impl Compositer {
                         } else {
                             Err(CompositerError::ParseInteger)
                         }})
-                }
+                },
                 Err(why) => Err(why),
-            }})
+            }});
+        let _ = env::set_current_dir(old);
+        mount
     }
 
     /// The method `unmount` removes library from the queue.

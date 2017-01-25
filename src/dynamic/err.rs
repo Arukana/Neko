@@ -68,6 +68,7 @@ pub enum CompositerError {
     InstallFormat,
     /// The dynamic library as already a repository.
     InstallExists,
+    Io(io::Error),
 }
 
 impl fmt::Display for CompositerError {
@@ -130,7 +131,8 @@ impl Error for CompositerError {
             CompositerError::InstallExists => {
                 "The dynamic library as already a\
                                            repository."
-            }
+            },
+            CompositerError::Io(ref why) => why.description(),
         }
     }
 
@@ -155,6 +157,7 @@ impl Error for CompositerError {
             CompositerError::UpdateRepBranch(ref why) |
             CompositerError::UpdateRepObject(ref why) |
             CompositerError::UpdateRepReset(ref why) => Some(why),
+            CompositerError::Io(ref why) => Some(why),
             CompositerError::Mount(ref why) => Some(why),
             _ => None,
         }
@@ -163,6 +166,12 @@ impl Error for CompositerError {
 
 impl From<env::VarError> for CompositerError {
     fn from(_: env::VarError) -> CompositerError {
+        CompositerError::NekoPath
+    }
+}
+
+impl From<io::Error> for CompositerError {
+    fn from(_: io::Error) -> CompositerError {
         CompositerError::NekoPath
     }
 }

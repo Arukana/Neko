@@ -48,7 +48,7 @@ version            = "0.2"
 
 [dependencies.pty-proc]
 git                = "https://github.com/Arukana/PtyProc.git"
-features           = ["task"]
+features           = ["task", "idle", "signal"]
 
 [dependencies.editeur]
 git                = "https://github.com/Arukana/Editor.git"

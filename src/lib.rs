@@ -267,6 +267,11 @@ impl Neko {
         };
     }
 
+    /// The accessor method `get_speudo` returns the master interface.
+    pub fn get_speudo(&self) -> &pty::Master {
+        self.shell.get_speudo()
+    }
+
     /// The accessor method `get_screen` returns a reference on the Display interface.
     pub fn get_screen(&self) -> (&pty::Display, &Display) {
         (self.shell.get_screen(), &self.screen)

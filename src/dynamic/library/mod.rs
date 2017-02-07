@@ -50,8 +50,6 @@ pub struct Library {
     input: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const libc::c_uchar)>,
     /// `output` interface.
     output: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const libc::c_uchar)>,
-    /// `signal` interface.
-    signal: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, number: libc::c_int)>,
     /// `resized` interface.
     resized: Option<extern fn(state: *const LibraryState, save: &*const *const libc::c_void, text: *const pty::Winszed)>,
     /// `save` pointer to share a segment of librairy memory.
@@ -97,7 +95,6 @@ impl Library {
                     mouse_released: symbol!(handle, b"mouse_released\0".as_ptr() as *const libc::c_char),
                     input: symbol!(handle, b"input\0".as_ptr() as *const libc::c_char),
                     output: symbol!(handle, b"output\0".as_ptr() as *const libc::c_char),
-                    signal: symbol!(handle, b"signal\0".as_ptr() as *const libc::c_char),
                     resized: symbol!(handle, b"resized\0".as_ptr() as *const libc::c_char),
                     save: ptr::null_mut(),
                     handle: handle,
@@ -254,14 +251,6 @@ impl Library {
         }
     }
 
-    /// The method `signal` call the extern function if defined.
-    /// when a signal is handled
-    pub fn signal(&self, state: &LibraryState, number: libc::c_int) {
-        if let Some(signal) = self.signal {
-            signal(state, &self.save, number);
-        }
-    }
-
     /// The method `call` will read the ShellState to call an adapted extern function if defined.
     pub fn call(&self, state: &LibraryState, event: &pty::ShellState) {
         if let Some(()) = event.is_idle() {
@@ -269,33 +258,29 @@ impl Library {
                 idle(state, &self.save);
             }
         } else {
-            if let Some(num) = event.is_signal() {
-                self.signal(state, num);
-            } else {
-               	if let Some((mouse, pressed, x, y)) = event.is_input_mouse() {
-                    if pressed {
-                        self.mouse_pressed(state, mouse as u32, [x, y])
-                    } else {
-                        self.mouse_released(state, mouse as u32, [x, y])
-                    }
-                } else if let Some(key) = event.is_input_keydown() {
-                    match key {
-                        pty::Key::Char(code) => self.key_unicode_down(state, code),
-                        pty::Key::Str(text) => self.key_string_down(state, &text.deref()),
-                    }
-                } else if let Some(repeat) = event.is_input_keyrepeat() {
-                    self.key_repeat_down(state, repeat)
-                } else if let Some(interval) = event.is_input_keyinterval() {
-                    self.key_interval_down(state, interval)
-                } else if let Some(slice) = event.is_input_slice() {
-                    self.input(state, slice)
-                } else if let Some(slice) = event.is_output_last() {
-                    self.output(state, slice)
+            if let Some((mouse, pressed, x, y)) = event.is_input_mouse() {
+                if pressed {
+                    self.mouse_pressed(state, mouse as u32, [x, y])
+                } else {
+                    self.mouse_released(state, mouse as u32, [x, y])
                 }
-                if let Some(&(pid, name)) = event.is_task() {
-                    self.process(state, &name[..], pid)
-                } 
+            } else if let Some(key) = event.is_input_keydown() {
+                match key {
+                    pty::Key::Char(code) => self.key_unicode_down(state, code),
+                    pty::Key::Str(text) => self.key_string_down(state, &text.deref()),
+                }
+            } else if let Some(repeat) = event.is_input_keyrepeat() {
+                self.key_repeat_down(state, repeat)
+            } else if let Some(interval) = event.is_input_keyinterval() {
+                self.key_interval_down(state, interval)
+            } else if let Some(slice) = event.is_input_slice() {
+                self.input(state, slice)
+            } else if let Some(slice) = event.is_output_last() {
+                self.output(state, slice)
             }
+            if let Some(&(pid, name)) = event.is_task() {
+                self.process(state, &name[..], pid)
+            } 
         }
     }
 }

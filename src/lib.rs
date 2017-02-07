@@ -302,8 +302,7 @@ impl Iterator for Neko {
                 self.line(key);
                 self.neko(key, &mut shell);
             }
-            if let Some(()) = shell.is_signal_resized() {
-                let size: &pty::Winszed = self.shell.get_window_size();
+            if let Some(ref size) = shell.is_resized() {
                 self.screen.set_window_size(size);
                 self.dynamic.resized(size);
             }

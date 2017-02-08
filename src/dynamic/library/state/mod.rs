@@ -29,19 +29,20 @@ impl LibraryState {
     pub fn is_locked(&self) -> bool {
         self.lock.ne(&b'\0')
     }
- 
+
     pub fn get_sheet(&self) -> &graphic::Sheet {
-        &self.persona.sheet
+        self.persona.get_sheet()
     }
 
-    pub fn get_tooltip(&self) -> &Tooltip
-    { &self.tooltip }
+    pub fn get_tooltip(&self) -> &Tooltip {
+        &self.tooltip
+    }
 
     pub fn get_persona(&self) -> &Persona
     { &self.persona }
 
     pub fn get_position(&self) -> &Position {
-        &self.persona.position
+        self.persona.get_position()
     }
 
     /// The function `get_emotion` returns a reference on a ffi argument
@@ -49,13 +50,25 @@ impl LibraryState {
     pub fn get_emotion(&self)
         -> &[[graphic::Tuple; graphic::SPEC_MAX_XY];
     graphic::SPEC_MAX_DRAW] {
-        &self.persona.emotion
+        self.persona.get_emotion()
     }
 
-    pub fn set_message(&mut self,
+    pub fn set_tooltip_message(&mut self,
         message: String,
     ) {
         self.tooltip.set_message(message);
+    }
+
+    pub fn set_tooltip_cardinal(&mut self, cardinal: Relative) {
+        self.tooltip.set_cardinal(cardinal);
+    }
+
+    pub fn set_persona_sheet(&mut self, sheet: graphic::Sheet) {
+        self.persona.set_sheet(sheet);
+    }
+
+    pub fn set_persona_position(&mut self, position: Position) {
+        self.persona.set_position(position);
     }
 }
 

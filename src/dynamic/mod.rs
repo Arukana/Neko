@@ -14,9 +14,12 @@ use std::process;
 pub use self::err::{CompositerError, Result};
 use self::library::LibraryState;
 use self::library::Library;
+use self::library::state::Relative;
+use self::library::state::persona::Position;
 
 use ::SPEC_ROOT;
 
+use ::graphic;
 use ::pty;
 use ::toml;
 use ::git2;
@@ -392,10 +395,20 @@ impl Compositer {
         &self.state
     }
 
-    pub fn set_message(&mut self,
-        message: String,
-    ) {
-        self.state.set_message(message);
+    pub fn set_tooltip_message(&mut self, text: String) {
+        self.state.set_tooltip_message(text);
+    }
+
+    pub fn set_tooltip_cardinal(&mut self, sheet: Relative) {
+        self.state.set_tooltip_cardinal(sheet);
+    }
+
+    pub fn set_persona_sheet(&mut self, sheet: graphic::Sheet) {
+        self.state.set_persona_sheet(sheet);
+    }
+
+    pub fn set_persona_position(&mut self, position: Position) {
+        self.state.set_persona_position(position);
     }
 
     /// The general method `call` according to the state will run

@@ -13,14 +13,27 @@ macro_rules! parse_number {
 
 #[macro_export]
 macro_rules! format_subneko {
+    ($slf: expr, $msg: expr) => ({
+        $slf.shell.write_screen(b"\n");
+        $slf.shell.write_screen($msg);
+    });
     ($slf: expr, $arg: expr, $verb: expr, $command: expr) => ({
         use std::error::Error;
         let output: String = match $command {
             Ok(_) => format!("{}ed with success.", $verb),
             Err(why) => format!("Can't {} \"{}\" because: {}.", $verb, $arg, why.description()),
         };
-        $slf.shell.write_screen(b"\n");
-        $slf.shell.write_screen(output.as_ref());
+        format_subneko!($slf, output.as_ref());
+    });
+}
+
+#[macro_export]
+macro_rules! format_subneko_err {
+    ($slf: expr, $arg: expr, $verb: expr, $why: expr) => ({
+        use std::error::Error;
+        let output: String =
+            format!("Can't {} \"{}\" because: {}.", $verb, $arg, $why.description());
+        format_subneko!($slf, output.as_ref());
     });
 }
 

@@ -31,11 +31,11 @@ impl Display {
         display
     }
 
-    fn get_persona(&self) -> &Persona {
+    pub fn get_persona(&self) -> &Persona {
         &self.persona
     }
 
-    fn get_tooltip(&self) -> &Tooltip {
+    pub fn get_tooltip(&self) -> &Tooltip {
         &self.tooltip
     }
 
@@ -54,10 +54,10 @@ impl Display {
     pub fn set_state(&mut self,
                      lib: &LibraryState,
                      dictionary: &mut graphic::Graphic) {
-//        if self.get_tooltip().ne(lib.get_tooltip()) {
+        if self.get_tooltip().ne(lib.get_tooltip()) {
             self.tooltip = *lib.get_tooltip();
             self.nl = (self.tooltip.get_width() + 2, self.tooltip.get_height());
-//        }
+        }
         if self.get_persona().ne(lib.get_persona()) {
             self.coord_neko = lib.get_position().get_coordinate(&self.size);
             let (coord_bulle, coord_neko) = self.get_coordinates();

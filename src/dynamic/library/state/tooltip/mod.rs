@@ -60,6 +60,10 @@ impl Tooltip {
                 true
             });
     }
+
+    pub fn set_cardinal(&mut self, cardinal: Relative) {
+        self.cardinal = cardinal
+    }
 }
 
 impl Index<usize> for Tooltip {
@@ -86,6 +90,19 @@ impl PartialEq for Tooltip {
                 .iter()
                 .zip(other.message.iter())
                 .all(|(letter, other_letter)| letter.eq(&other_letter)))
+    }
+}
+
+impl fmt::Display for Tooltip {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f,
+               "Tooltip {{ cardinal: {:?}, message: \"{}\"... }}",
+               self.cardinal,
+               self.message
+                   .iter()
+                   .take(5)
+                   .map(|character| character.get_glyph())
+                   .collect::<String>())
     }
 }
 

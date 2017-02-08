@@ -59,6 +59,10 @@ use std::char;
 
 use dynamic::Compositer;
 use dynamic::library::state::LibraryState;
+use dynamic::library::state::Relative;
+use dynamic::library::state::persona::{Position, Cardinal};
+
+
 pub use display::Display;
 
 pub use editeur::prelude as graphic;
@@ -161,15 +165,23 @@ impl Neko {
                 &["neko", ref arguments..] => {
                     state.set_input_keyown('\u{3}');
                     match arguments {
+                        &["debug"] => {
+                            format_subneko!(self,
+                                format!("{}\n{}",
+                                    self.screen.get_persona(),
+                                    self.screen.get_tooltip(),
+                                ).as_bytes()
+                            );
+                        },
                         &["install", ref repository] => {
                             format_subneko!(self, repository, "install",
                                 self.dynamic.install(repository)
-                            )
+                            );
                         },
                         &["uninstall", ref libraryname] => {
                             format_subneko!(self, libraryname, "uninstall",
                                 self.dynamic.uninstall(libraryname)
-                            )
+                            );
                         },
                         &["mount", ref libraryname, ref priority] => {
                             format_subneko!(self, libraryname, "mount",
@@ -177,7 +189,7 @@ impl Neko {
                                     libraryname,
                                     priority.parse::<i64>().ok()
                                 )
-                            )
+                            );
                         },
                         &["mount", ref libraryname] => {
                             format_subneko!(self, libraryname, "mount",
@@ -185,19 +197,110 @@ impl Neko {
                                     libraryname,
                                     None
                                 )
-                            )
+                            );
                         },
                         &["unmount", ref libraryname] => {
                             format_subneko!(self, libraryname, "unmount",
                                 self.dynamic.unmount(libraryname)
-                            )
+                            );
                         },
                         &["update", ref libraryname] => {
-                            format_subneko!(self, libraryname, "update",
+                            format_subneko!(self, libraryname, "update the library",
                                 self.dynamic.update(libraryname)
-                            )
+                            );
                         },
-                        _ => {},
+                        &["persona", ref x, ref y] => {
+                            match (x.parse::<u16>(), y.parse::<u16>()) {
+                                (Ok(x), Ok(y)) => {
+                                    self.dynamic.set_persona_position(
+                                        Position::from([x, y])
+                                    );
+                                },
+                                (Err(why), _) => {
+                                    format_subneko_err!(
+                                        self, x, "update the Persona's coordinate", why
+                                    );
+                                },
+                                (_, Err(why)) => {
+                                    format_subneko_err!(
+                                        self, y, "update the Persona's coordinate", why
+                                    );
+                                },
+                            }
+                        },
+                        &["persona", "UpperLeft"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::UpperLeft)
+                            );
+                        },
+                        &["persona", "UpperMiddle"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::UpperMiddle)
+                            );
+                        },
+                        &["persona", "UpperRight"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::UpperRight)
+                            );
+                        },
+                        &["persona", "MiddleLeft"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::MiddleLeft)
+                            );
+                        },
+                        &["persona", "MiddleCentral"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::MiddleCentral)
+                            );
+                        },
+                        &["persona", "MiddleRight"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::MiddleRight)
+                            );
+                        },
+                        &["persona", "LowerLeft"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::LowerLeft)
+                            );
+                        },
+                        &["persona", "LowerMiddle"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::LowerMiddle)
+                            );
+                        },
+                        &["persona", "LowerRight"] => {
+                            self.dynamic.set_persona_position(
+                                Position::from(Cardinal::LowerRight)
+                            );
+                        },
+                        &["persona", ref sheetname] => {
+                            match graphic::Sheet::new(sheetname) {
+                                Ok(sheet) => {
+                                    self.dynamic.set_persona_sheet(sheet);
+                                },
+                                Err(why) => {
+                                    format_subneko_err!(
+                                        self, sheetname, "update the Persona's sheet", why
+                                    );
+                                },
+                            }
+                        },
+                        &["tooltip", "Top"] => {
+                            self.dynamic.set_tooltip_cardinal(Relative::Top)
+                        },
+                        &["tooltip", "Bottom"] => {
+                            self.dynamic.set_tooltip_cardinal(Relative::Bottom)
+                        },
+                        &["tooltip", "Right"] => {
+                            self.dynamic.set_tooltip_cardinal(Relative::Right);
+                        },
+                        &["tooltip", "Left"] => {
+                            self.dynamic.set_tooltip_cardinal(Relative::Left);
+                        },
+                        &["tooltip", ref text] => {
+                            self.dynamic.set_tooltip_message(text.to_string());
+                        },
+                        _ => format_subneko!(self, b"The command's argument is unvalid."),
                     }
                 },
                 _ => {},

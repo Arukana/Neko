@@ -377,6 +377,13 @@ impl Neko {
 }
 
 impl Parent for Neko {
+
+    /// The mutator method `write_screen` set a buffer to the display
+    /// without needing to print it
+    fn write_screen(&mut self, buf: &[u8]) -> io::Result<usize> {
+        self.shell.write_screen(buf)
+    }
+
     /// The accessor method `get_pid` returns the pid from the master.
     fn get_pid(&self) -> libc::pid_t {
         self.shell.get_pid()

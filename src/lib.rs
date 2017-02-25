@@ -78,12 +78,12 @@ pub const SPEC_ROOT_DEFAULT: &'static str = editeur::SPEC_ROOT_DEFAULT;
 pub type PtyDisplay = pty::Display;
 
 /// The module `neko` is the first interface level.
-pub struct Neko {
+pub struct Neko <T> where T: Parent {
     dynamic: Compositer,
     /// Overload of Display interface from Pty.
     screen: Display,
     /// Interface of Pseudo terminal.
-    shell: pty::Shell,
+    shell: T,
     /// Interface on a Sprite partition.
     graphic: editeur::Graphic,
     /// The current pid.
@@ -92,7 +92,7 @@ pub struct Neko {
     line: io::Cursor<Vec<char>>,
 }
 
-impl Neko {
+impl <T> Neko<T> where T: Parent {
     /// The constructor method `new` returns a Neko interface for a Shell, 
     /// a Compositer of dynamic libraries and a dictionnary of sprite.
     pub fn new(
@@ -100,7 +100,7 @@ impl Neko {
         interval: Option<i64>,
         command: Option<&str>,
         windows: Option<pty::Winszed>,
-    ) -> Result<Self> {
+    ) -> Result<Neko<pty::Shell>> {
         let dynamic: Compositer = try!(Compositer::new());
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let graphic: editeur::Graphic = try!(editeur::Graphic::new());
@@ -132,7 +132,7 @@ impl Neko {
         interval: Option<i64>,
         command: Option<&str>,
         windows: Option<pty::Winszed>,
-    ) -> Result<Self> {
+    ) -> Result<Neko<pty::Shell>> {
         let dynamic: Compositer = try!(Compositer::new());
         let shell: pty::Shell = try!(pty::Shell::new(repeat, interval, command, windows));
         let pid = shell.get_pid();
@@ -376,7 +376,7 @@ impl Neko {
     }
 }
 
-impl Parent for Neko {
+impl <T> Parent for Neko<T> where T: Parent {
 
     /// The mutator method `write_screen` set a buffer to the display
     /// without needing to print it
@@ -418,7 +418,7 @@ impl Parent for Neko {
     }
 }
 
-impl Iterator for Neko {
+impl <T> Iterator for Neko<T> where T: Parent {
     type Item = pty::ShellState;
 
     fn next(&mut self) -> Option<pty::ShellState> {
@@ -441,7 +441,7 @@ impl Iterator for Neko {
     }
 }
 
-impl Write for Neko {
+impl <T> Write for Neko<T> where T: Parent {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         if self.dynamic.get_state().is_locked().not() {
             self.shell.write(buf)
@@ -459,7 +459,7 @@ impl Write for Neko {
     }
 }
 
-impl fmt::Display for Neko {
+impl <T> fmt::Display for Neko<T> where T: Parent {
     /// The function `fmt` formats the value using
     /// the given formatter.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -481,7 +481,7 @@ impl fmt::Display for Neko {
     }
 }
 
-impl fmt::Debug for Neko {
+impl <T> fmt::Debug for Neko<T> where T: Parent {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Neko {{ dynamic: {:?}, graphic: {:?}, display: {:?} }}",
                self.dynamic,
@@ -490,20 +490,7 @@ impl fmt::Debug for Neko {
     }
 }
 
-impl Default for Neko {
-    fn default() -> Neko {
-        Neko {
-            screen: Display::default(),
-            dynamic: Compositer::default(),
-            shell: pty::Shell::default(),
-            graphic: editeur::Graphic::default(),
-            line: io::Cursor::new(Vec::new()),
-            pid: 0,
-        }
-    }
-}
-
-impl Drop for Neko {
+impl <T> Drop for Neko<T> where T: Parent {
     fn drop(&mut self) {
     }
 }

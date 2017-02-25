@@ -2,7 +2,8 @@
 extern crate clap;
 extern crate neko;
 
-use neko::Neko;
+use neko::prelude::Neko;
+use neko::prelude::Shell;
 use std::io::Write;
 
 fn main() {
@@ -11,7 +12,7 @@ fn main() {
 
     println!("\x1B[?25l");
 
-    let mut neko: Neko = Neko::new(
+    let mut neko: Neko<Shell> = Neko::<Shell>::new(
         options.value_of("repeat").and_then(|repeat| repeat.parse::<i64>().ok()),
         options.value_of("interval").and_then(|interval| interval.parse::<i64>().ok()),
         options.value_of("command"),

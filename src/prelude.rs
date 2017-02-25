@@ -1,4 +1,5 @@
 pub use super::SPEC_ROOT;
+pub use super::Parent;
 pub use super::PtyDisplay;
 pub use super::Display;
 pub use super::{Neko, NekoError};

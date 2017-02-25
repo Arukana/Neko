@@ -62,11 +62,11 @@ use dynamic::library::state::LibraryState;
 use dynamic::library::state::Relative;
 use dynamic::library::state::persona::{Position, Cardinal};
 
-
 pub use display::Display;
 
 pub use editeur::prelude as graphic;
 pub use pty_proc::prelude as pty;
+pub use pty_proc::parent::Parent;
 
 pub use self::err::{NekoError, Result};
 
@@ -370,25 +370,43 @@ impl Neko {
         };
     }
 
-    /// The accessor method `get_speudo` returns the master interface.
-    pub fn get_speudo(&self) -> &pty::Master {
-        self.shell.get_speudo()
-    }
-
     /// The accessor method `get_screen` returns a reference on the Display interface.
     pub fn get_screen(&self) -> (&pty::Display, &Display) {
         (self.shell.get_screen(), &self.screen)
     }
+}
+
+impl Parent for Neko {
+    /// The accessor method `get_pid` returns the pid from the master.
+    fn get_pid(&self) -> libc::pid_t {
+        self.shell.get_pid()
+    }
+
+    /// The accessor method `get_speudo` returns the master interface.
+    fn get_speudo(&self) -> &pty::Master {
+        self.shell.get_speudo()
+    }
+
+    /// The accessor method `get_screen` returns a reference on the Display interface.
+    fn get_screen(&self) -> &pty::Display {
+        self.shell.get_screen()
+    }
 
     /// The accessor method `get_window_size` returns a reference on the window size of
     /// terminal.
-    pub fn get_window_size(&self) -> &pty::Winszed {
+    fn get_window_size(&self) -> &pty::Winszed {
         self.shell.get_window_size()
+    }
+
+    /// The mutator method `set_window_size` redimentionnes the window
+    /// with a default size.
+    fn set_window_size(&mut self) {
+        self.shell.set_window_size()
     }
 
     /// The mutator method `set_window_size_with` redimentionnes the window
     /// with a argument size.
-    pub fn set_window_size_with(&mut self, size: &pty::Winszed) {
+    fn set_window_size_with(&mut self, size: &pty::Winszed) {
         self.shell.set_window_size_with(size);
     }
 }
@@ -475,5 +493,10 @@ impl Default for Neko {
             line: io::Cursor::new(Vec::new()),
             pid: 0,
         }
+    }
+}
+
+impl Drop for Neko {
+    fn drop(&mut self) {
     }
 }

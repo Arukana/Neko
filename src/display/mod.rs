@@ -92,9 +92,7 @@ impl Display {
             &Relative::Bottom => {
                 if coord_neko.1 + graphic::SPEC_MAX_Y + height_tooltip >= row {
                     if graphic::SPEC_MAX_Y + height_tooltip < row {
-                        coord_neko = (coord_neko.0,
-                                      row -
-                                      (graphic::SPEC_MAX_Y + height_tooltip));
+                        coord_neko = (coord_neko.0, row - (graphic::SPEC_MAX_Y + height_tooltip));
                     } else {
                         coord_neko = (coord_neko.0, 0);
                     }

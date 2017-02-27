@@ -118,6 +118,27 @@ impl <T> Neko<T> where T: Parent {
         Ok(neko)
     }
 
+    /// The constructor method `from_shell` returns a Neko interface for a Shell, 
+    /// a Compositer of dynamic libraries and a dictionnary of sprite.
+    pub fn from_shell(
+        shell: T,
+    ) -> Result<Neko<T>> {
+        let dynamic: Compositer = try!(Compositer::new());
+        let graphic: editeur::Graphic = try!(editeur::Graphic::new());
+        let pid = shell.get_pid();
+        let size: pty::Winszed = *shell.get_window_size();
+        let mut neko = Neko {
+            screen: Display::from_window_size(&size),
+            dynamic: dynamic,
+            shell: shell,
+            graphic: graphic,
+            line: io::Cursor::new(Vec::new()),
+            pid: pid,
+        };
+        neko.call();
+        Ok(neko)
+    }
+
     /// The method `call` updates the Neko's Display for a LibraryState
     /// and Graphic Dictionary.
     fn call(&mut self) {

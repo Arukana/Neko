@@ -399,12 +399,6 @@ impl <T> Neko<T> where T: Parent {
 
 impl <T> Parent for Neko<T> where T: Parent {
 
-    /// The mutator method `write_screen` set a buffer to the display
-    /// without needing to print it
-    fn write_screen(&mut self, buf: &[u8]) -> io::Result<usize> {
-        self.shell.write_screen(buf)
-    }
-
     /// The accessor method `get_pid` returns the pid from the master.
     fn get_pid(&self) -> libc::pid_t {
         self.shell.get_pid()
@@ -437,13 +431,23 @@ impl <T> Parent for Neko<T> where T: Parent {
     fn set_window_size_with(&mut self, size: &pty::Winszed) {
         self.shell.set_window_size_with(size);
     }
+
+    /// The mutator method `write` set a buffer to the display
+    /// without needing to print it
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        pty::Parent::write(&mut self.shell, buf)
+    }
+
+    fn next(&mut self, event: pty::DeviceState) -> pty::ShellState {
+        pty::Parent::next(&mut self.shell, event)
+    }
 }
 
 impl <T> Iterator for Neko<T> where T: Parent {
     type Item = pty::ShellState;
 
     fn next(&mut self) -> Option<pty::ShellState> {
-        self.shell.next().and_then(|mut shell| {
+        <T as Iterator>::next(&mut self.shell).and_then(|mut shell| {
             if let Some(&(pid, _)) = shell.is_task() {
                 self.pid = pid;
             }
@@ -465,7 +469,7 @@ impl <T> Iterator for Neko<T> where T: Parent {
 impl <T> Write for Neko<T> where T: Parent {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         if self.dynamic.get_state().is_locked().not() {
-            self.shell.write(buf)
+            <T as io::Write>::write(&mut self.shell, buf)
         } else {
             Ok(0)
         }

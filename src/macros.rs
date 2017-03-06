@@ -14,8 +14,8 @@ macro_rules! parse_number {
 #[macro_export]
 macro_rules! format_subneko {
     ($slf: expr, $msg: expr) => ({
-        $slf.shell.write_screen(b"\n");
-        $slf.shell.write_screen($msg);
+        <T as io::Write>::write(&mut $slf.shell, b"\n");
+        <T as io::Write>::write(&mut $slf.shell, $msg);
     });
     ($slf: expr, $arg: expr, $verb: expr, $command: expr) => ({
         use std::error::Error;

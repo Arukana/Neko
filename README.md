@@ -14,3 +14,8 @@ How to build:
 git clone https://github.com/Arukana/Neko.git
 cargo build
 ```
+
+How to use:
+```shell
+neko persona BustHappy
+```

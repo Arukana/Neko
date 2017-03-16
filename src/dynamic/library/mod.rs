@@ -258,11 +258,11 @@ impl Library {
                 idle(state, &self.save);
             }
         } else {
-            if let Some((mouse, pressed, x, y)) = event.is_input_mouse() {
+            if let Some(pty::Mouse {code, pressed, x, y}) = event.is_input_mouse() {
                 if pressed {
-                    self.mouse_pressed(state, mouse as u32, [x, y])
+                    self.mouse_pressed(state, code as u32, [x, y])
                 } else {
-                    self.mouse_released(state, mouse as u32, [x, y])
+                    self.mouse_released(state, code as u32, [x, y])
                 }
             } else if let Some(key) = event.is_input_keydown() {
                 match key {

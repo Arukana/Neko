@@ -13,6 +13,7 @@ repository      = "https://github.com/Arukana/Neko.git"
 readme          = "README.md"
 keywords        = ["neko", "glyphArt"]
 license         = "GPL-3.0"
+build           = "build.rs"
 
 [[bin]]
 name = "neko"
@@ -32,6 +33,9 @@ nightly            = [] # for building with nightly and unstable features
 unstable           = [] # for building with unstable features on stable Rust
 debug              = [] # for building with debug messages
 travis             = ["lints", "nightly"] # for building with travis-cargo
+
+[build-dependencies.mml]
+version = "0.1"
 
 [dependencies.clippy]
 version            = "*"

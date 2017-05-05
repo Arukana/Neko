@@ -34,6 +34,8 @@
 
 #![doc(html_logo_url = "https://arukana.github.io/Neko/images/neko.png")]
 
+//! ![uml](ml.svg)
+
 extern crate pty_proc;
 extern crate editeur;
 extern crate git2;

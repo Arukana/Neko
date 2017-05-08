@@ -35,7 +35,8 @@ debug              = [] # for building with debug messages
 travis             = ["lints", "nightly"] # for building with travis-cargo
 
 [build-dependencies.mml]
-version = "0.1"
+version            = "0.1"
+features           = ["implem"]
 
 [dependencies.clippy]
 version            = "*"

@@ -243,20 +243,21 @@ impl Compositer {
 
     fn dependency_from_git(&mut self,
                            table: &toml::Table)
-                           -> Option<CompositerError> {
+                           -> Result<()>{
         table.get("git").and_then(|git| {
             git.as_str().and_then(|repo| match self.install(repo) {
                 Err(CompositerError::InstallExists) => {
                     account_at_rep!(repo)
                         .and_then(|sub| match self.update(&sub) {
                             Ok(()) => None,
-                            Err(why) => Some(why),
+                            Err(why) => Some(Err(why)),
                         })
                 },
                 Ok(()) => None,
-                Err(why) => Some(why),
+                Err(why) => Some(Err(why)),
             })
         })
+        .unwrap_or_else(|| Ok(()))
     }
 
     /// The method `dependency` lists the dependencies from
@@ -264,20 +265,16 @@ impl Compositer {
     /// @ source: `$HOME/.neko/git/Arukana@libnya`.
     pub fn dependency(&mut self, source: &PathBuf) -> Result<()> {
         self.get_manifest(source).and_then(|table|
-            if let Some(why) = table.get("dependencies")
-                .and_then(|deps|
-                    deps.as_table().and_then(|table|
-                        table.into_iter()
-                            .filter_map(|dep|
-                                dep.1.as_table()
-                                    .and_then(|table|
-                                        self.dependency_from_git(table)))
-                            .next())) {
-                Err(why)
-            } else {
-                Ok(())
-            }
-        )
+                                           table.get("dependencies")
+                                           .and_then(|deps|
+                                                     deps.as_table().and_then(|table|
+                                                                              table.into_iter()
+                                                                              .filter_map(|dep|
+                                                                                          dep.1.as_table()
+                                                                                          .and_then(|table|
+                                                                                                    Some(self.dependency_from_git(table))))
+                                                                              .next()))
+                                           .unwrap_or_else(|| Ok(())))
     }
 
     /// The methodd `install` clones and makes a dynamic library from repository

@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["SPEC_ROOT_DEFAULT","The default root."]],"enum":[["CompositerError","The enum `CompositerError` defines the possible errors from constructor Compositer."]],"mod":[["library",""]],"struct":[["Compositer","The struct `Compositer` is a heap of a double tuple of a dynamic libraries and a priority order."]],"type":[["Result",""]]});

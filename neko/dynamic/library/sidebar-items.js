@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["LibraryError","The enum `LibraryError` defines the possible errors from constructor Library."]],"mod":[["state",""]],"struct":[["Library","The struct `Library` is a table of callback."]],"type":[["Result",""]]});

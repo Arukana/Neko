@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Graphic` struct in crate `neko`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Graphic">
+
+    <title>neko::graphic::Graphic - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <a href='../../neko/index.html'><img src='https://arukana.github.io/Neko/images/neko.png' alt='logo' width='100'></a>
+        <p class='location'>Struct Graphic</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>neko</a>::<wbr><a href='index.html'>graphic</a></p><script>window.sidebarCurrent = {name: 'Graphic', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>neko</a>::<wbr><a href='index.html'>graphic</a>::<wbr><a class="struct" href=''>Graphic</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
+<pre class='rust struct'>pub struct Graphic { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../neko/prelude/struct.Graphic.html" title="struct neko::prelude::Graphic">Graphic</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.get_posture' class="method"><span id='get_posture.v' class='invisible'><code>fn <a href='#method.get_posture' class='fnname'>get_posture</a>(&amp;self, name: &amp;<a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>&gt;</code></span></h4>
+<h4 id='method.explicite_emotion' class="method"><span id='explicite_emotion.v' class='invisible'><code>fn <a href='#method.explicite_emotion' class='fnname'>explicite_emotion</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: &amp;<a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;change: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="struct" href="../../neko/prelude/struct.Tuple.html" title="struct neko::prelude::Tuple">Tuple</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 50]</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 16]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../../neko/graphic/struct.Sprite.html" title="struct neko::graphic::Sprite">Sprite</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>explicite_emotion</code> returns the sprite modified by a list
+of emotion.</p>
+</div><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../../neko/prelude/struct.Graphic.html" title="struct neko::prelude::Graphic">Graphic</a>, <a class="enum" href="../../neko/prelude/enum.GraphicError.html" title="enum neko::prelude::GraphicError">GraphicError</a>&gt;</code></span></h4>
+<div class='docblock'><p>The constructor <code>new</code> returns a Graphic prepared with
+the texel and sprite root.</p>
+</div><h4 id='method.get_nct' class="method"><span id='get_nct.v' class='invisible'><code>fn <a href='#method.get_nct' class='fnname'>get_nct</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>, <a class="enum" href="../../neko/prelude/enum.GraphicError.html" title="enum neko::prelude::GraphicError">GraphicError</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_nct</code> returns the texel sub-directory.</p>
+</div><h4 id='method.get_ncs' class="method"><span id='get_ncs.v' class='invisible'><code>fn <a href='#method.get_ncs' class='fnname'>get_ncs</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>, <a class="enum" href="../../neko/prelude/enum.GraphicError.html" title="enum neko::prelude::GraphicError">GraphicError</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_ncs</code> returns the sprite sub-directory.</p>
+</div><h4 id='method.nct_with_ncs' class="method"><span id='nct_with_ncs.v' class='invisible'><code>fn <a href='#method.nct_with_ncs' class='fnname'>nct_with_ncs</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>, <a class="enum" href="../../neko/prelude/enum.GraphicError.html" title="enum neko::prelude::GraphicError">GraphicError</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>nct_with_ncs</code> returns a couple
+of texel and sprite sub-repositories.</p>
+</div><h4 id='method.get_emotion_list' class="method"><span id='get_emotion_list.v' class='invisible'><code>fn <a href='#method.get_emotion_list' class='fnname'>get_emotion_list</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;posture_key: &amp;<a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;part_key: &amp;<a class="enum" href="../../neko/graphic/enum.Part.html" title="enum neko::graphic::Part">Part</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;&amp;<a class="enum" href="../../neko/graphic/enum.Emotion.html" title="enum neko::graphic::Emotion">Emotion</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_emotion_list</code> returns a list of available emotions
+for the Sheet key and Part sub-key.</p>
+</div><h4 id='method.get_cell_list' class="method"><span id='get_cell_list.v' class='invisible'><code>fn <a href='#method.get_cell_list' class='fnname'>get_cell_list</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;posture_key: &amp;<a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;part_key: &amp;<a class="enum" href="../../neko/graphic/enum.Part.html" title="enum neko::graphic::Part">Part</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a>&amp;<a class="enum" href="../../neko/graphic/enum.Emotion.html" title="enum neko::graphic::Emotion">Emotion</a>, &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="../../neko/graphic/struct.Texel.html" title="struct neko::graphic::Texel">Texel</a>&gt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;&gt;</code></span></h4>
+<h4 id='method.get_texel' class="method"><span id='get_texel.v' class='invisible'><code>fn <a href='#method.get_texel' class='fnname'>get_texel</a>(&amp;self, position: &amp;<a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>, tuple: &amp;<a class="struct" href="../../neko/prelude/struct.Tuple.html" title="struct neko::prelude::Tuple">Tuple</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="../../neko/graphic/struct.Texel.html" title="struct neko::graphic::Texel">Texel</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_texel</code> returns a reference on texel.</p>
+</div><h4 id='method.get_sprite' class="method"><span id='get_sprite.v' class='invisible'><code>fn <a href='#method.get_sprite' class='fnname'>get_sprite</a>(&amp;self, name: &amp;<a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../../neko/graphic/struct.Sprite.html" title="struct neko::graphic::Sprite">Sprite</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_sprite</code> returns a reference on sprite.</p>
+</div><h4 id='method.insert_from_texelfile' class="method"><span id='insert_from_texelfile.v' class='invisible'><code>fn <a href='#method.insert_from_texelfile' class='fnname'>insert_from_texelfile</a>&lt;S&gt;(&amp;mut self, source: S) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../neko/prelude/enum.GraphicError.html" title="enum neko::prelude::GraphicError">GraphicError</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;S: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>The function <code>from_file_texel</code> insert a texel from a file.</p>
+</div><h4 id='method.insert_from_spritefile' class="method"><span id='insert_from_spritefile.v' class='invisible'><code>fn <a href='#method.insert_from_spritefile' class='fnname'>insert_from_spritefile</a>&lt;S&gt;(&amp;mut self, source: S) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../neko/prelude/enum.GraphicError.html" title="enum neko::prelude::GraphicError">GraphicError</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;S: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsStr.html" title="struct std::ffi::os_str::OsStr">OsStr</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>The function <code>from_file_sprite</code> insert a sprite from a file.</p>
+</div><h4 id='method.add_position' class="method"><span id='add_position.v' class='invisible'><code>fn <a href='#method.add_position' class='fnname'>add_position</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The mutator method <code>add_position</code> changes the position of
+the file sprite cursor.</p>
+</div><h4 id='method.sub_position' class="method"><span id='sub_position.v' class='invisible'><code>fn <a href='#method.sub_position' class='fnname'>sub_position</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The mutator method <code>sub_position</code> changes the position of
+the file sprite cursor.</p>
+</div><h4 id='method.start_position' class="method"><span id='start_position.v' class='invisible'><code>fn <a href='#method.start_position' class='fnname'>start_position</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<h4 id='method.end_position' class="method"><span id='end_position.v' class='invisible'><code>fn <a href='#method.end_position' class='fnname'>end_position</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<h4 id='method.add_position_sprite' class="method"><span id='add_position_sprite.v' class='invisible'><code>fn <a href='#method.add_position_sprite' class='fnname'>add_position_sprite</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<h4 id='method.sub_position_sprite' class="method"><span id='sub_position_sprite.v' class='invisible'><code>fn <a href='#method.sub_position_sprite' class='fnname'>sub_position_sprite</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<h4 id='method.add_position_sprite_draw' class="method"><span id='add_position_sprite_draw.v' class='invisible'><code>fn <a href='#method.add_position_sprite_draw' class='fnname'>add_position_sprite_draw</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The mutator method <code>add_position_sprite_draw</code> changes the position of
+the cell board cursor.</p>
+</div><h4 id='method.sub_position_sprite_draw' class="method"><span id='sub_position_sprite_draw.v' class='invisible'><code>fn <a href='#method.sub_position_sprite_draw' class='fnname'>sub_position_sprite_draw</a>(&amp;mut self, position: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The mutator method <code>sub_position_sprite_draw</code> changes the position of
+the cell board cursor.</p>
+</div><h4 id='method.get_current_cell_number' class="method"><span id='get_current_cell_number.v' class='invisible'><code>fn <a href='#method.get_current_cell_number' class='fnname'>get_current_cell_number</a>(&amp;self, index: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="enum" href="../../neko/graphic/enum.Emotion.html" title="enum neko::graphic::Emotion">Emotion</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="../../neko/graphic/struct.Texel.html" title="struct neko::graphic::Texel">Texel</a>&gt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span></h4>
+<h4 id='method.set_current_emotion' class="method"><span id='set_current_emotion.v' class='invisible'><code>fn <a href='#method.set_current_emotion' class='fnname'>set_current_emotion</a>(&amp;mut self, index: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<h4 id='method.get_current_sprite' class="method"><span id='get_current_sprite.v' class='invisible'><code>fn <a href='#method.get_current_sprite' class='fnname'>get_current_sprite</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>, <a class="struct" href="../../neko/graphic/struct.Sprite.html" title="struct neko::graphic::Sprite">Sprite</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_sprite</code> returns a reference on sprite.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../neko/prelude/struct.Graphic.html" title="struct neko::prelude::Graphic">Graphic</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html" title="struct core::fmt::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../../neko/prelude/struct.Graphic.html" title="struct neko::prelude::Graphic">Graphic</a></code></span><span class='out-of-band'></span></h3>
+<div class='docblock'><p>A trait for giving a type a useful default value.</p>
+</div><div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../neko/prelude/struct.Graphic.html" title="struct neko::prelude::Graphic">Graphic</a></code></span></h4>
+<div class='docblock'><p>The constructor <code>default</code> returns a empty Graphic.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../neko/prelude/struct.Graphic.html" title="struct neko::prelude::Graphic">Graphic</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../neko/prelude/struct.Graphic.html" title="struct neko::prelude::Graphic">Graphic</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "neko";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

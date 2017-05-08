@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Compositer` struct in crate `neko`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Compositer">
+
+    <title>neko::dynamic::Compositer - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <a href='../../neko/index.html'><img src='https://arukana.github.io/Neko/images/neko.png' alt='logo' width='100'></a>
+        <p class='location'>Struct Compositer</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>neko</a>::<wbr><a href='index.html'>dynamic</a></p><script>window.sidebarCurrent = {name: 'Compositer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>neko</a>::<wbr><a href='index.html'>dynamic</a>::<wbr><a class="struct" href=''>Compositer</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/neko/dynamic/mod.rs.html#50-53' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Compositer { /* fields omitted */ }</pre><div class='docblock'><p>The struct <code>Compositer</code> is a heap of a double tuple
+of a dynamic libraries and a priority order.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../neko/dynamic/struct.Compositer.html" title="struct neko::dynamic::Compositer">Compositer</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/neko/dynamic/mod.rs.html#55-434' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;Self&gt;</code></span></h4>
+<div class='docblock'><p>The constructor <code>new</code> returns a Compositer prepared with
+the library root.</p>
+</div><h4 id='method.get_git' class="method"><span id='get_git.v' class='invisible'><code>fn <a href='#method.get_git' class='fnname'>get_git</a>(&amp;self) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_git</code> returns the git sub-directory.</p>
+</div><h4 id='method.get_lib' class="method"><span id='get_lib.v' class='invisible'><code>fn <a href='#method.get_lib' class='fnname'>get_lib</a>(&amp;self) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_lib</code> returns the lib sub-directory.</p>
+</div><h4 id='method.git_with_lib' class="method"><span id='git_with_lib.v' class='invisible'><code>fn <a href='#method.git_with_lib' class='fnname'>git_with_lib</a>(&amp;mut self) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>git_with_lib</code> returns a couple
+of <code>git</code> and <code>lib</code> sub-repositories.</p>
+</div><h4 id='method.get_manifest' class="method"><span id='get_manifest.v' class='invisible'><code>fn <a href='#method.get_manifest' class='fnname'>get_manifest</a>(&amp;self, repository: &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="type" href="http://alexcrichton.com/toml-rs/toml/type.Table.html" title="type toml::Table">Table</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor method <code>get_manifest</code> returns a dictionary.
+@repository: <code>$HOME/.neko/git/arukana@libnya</code>.</p>
+</div><h4 id='method.mount' class="method"><span id='mount.v' class='invisible'><code>fn <a href='#method.mount' class='fnname'>mount</a>&lt;S:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsStr.html" title="struct std::ffi::os_str::OsStr">OsStr</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;libraryname: &amp;S, <br>&nbsp;&nbsp;&nbsp;&nbsp;priority: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i64.html">i64</a>&gt;<br>) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>mount</code> adds a new library to the heap&#39;s compositer.
+@ libraryname: <code>arukana@libnya</code>.
+@ priority: <code>Some(-1)</code> or <code>None</code> for zero by default.</p>
+</div><h4 id='method.unmount' class="method"><span id='unmount.v' class='invisible'><code>fn <a href='#method.unmount' class='fnname'>unmount</a>&lt;S:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsStr.html" title="struct std::ffi::os_str::OsStr">OsStr</a>&gt;&gt;(&amp;mut self, libraryname: S) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>unmount</code> removes library from the queue.
+@ libraryname: <code>arukana@libnya</code>.</p>
+</div><h4 id='method.build' class="method"><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>&lt;S:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsStr.html" title="struct std::ffi::os_str::OsStr">OsStr</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;source: &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;sub: S<br>) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>build</code> makes and adds a dynamic library
+to SPEC_MANIFEST&#39;s destination.
+@ source: <code>$HOME/.neko/git/Arukana@libnya</code>.
+@ sub: <code>arukana@libnya</code>.</p>
+</div><h4 id='method.dependency' class="method"><span id='dependency.v' class='invisible'><code>fn <a href='#method.dependency' class='fnname'>dependency</a>(&amp;mut self, source: &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>dependency</code> lists the dependencies from
+repository dynamic library and install.
+@ source: <code>$HOME/.neko/git/Arukana@libnya</code>.</p>
+</div><h4 id='method.install' class="method"><span id='install.v' class='invisible'><code>fn <a href='#method.install' class='fnname'>install</a>(&amp;mut self, repo: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>The methodd <code>install</code> clones and makes a dynamic library from repository
+and recursive call the dependencies.
+@ repo: <code>https://github.com/Arukana/libnya.git</code>.</p>
+</div><h4 id='method.update' class="method"><span id='update.v' class='invisible'><code>fn <a href='#method.update' class='fnname'>update</a>(&amp;mut self, libraryname: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>update</code> hard-resets the master branch to last commit.
+@ libraryname: <code>arukana@libnya</code>.</p>
+</div><h4 id='method.uninstall' class="method"><span id='uninstall.v' class='invisible'><code>fn <a href='#method.uninstall' class='fnname'>uninstall</a>&lt;S:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsStr.html" title="struct std::ffi::os_str::OsStr">OsStr</a>&gt;&gt;(&amp;mut self, libraryname: &amp;S) -&gt; <a class="type" href="../../neko/dynamic/type.Result.html" title="type neko::dynamic::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>uninstall</code> removes library from the filesystem with
+the source.
+@libraryname: <code>arukana@libnya</code>.</p>
+</div><h4 id='method.get_state' class="method"><span id='get_state.v' class='invisible'><code>fn <a href='#method.get_state' class='fnname'>get_state</a>(&amp;self) -&gt; &amp;<a class="struct" href="../../neko/dynamic/library/state/struct.LibraryState.html" title="struct neko::dynamic::library::state::LibraryState">LibraryState</a></code></span></h4>
+<h4 id='method.set_tooltip_message' class="method"><span id='set_tooltip_message.v' class='invisible'><code>fn <a href='#method.set_tooltip_message' class='fnname'>set_tooltip_message</a>(&amp;mut self, text: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>)</code></span></h4>
+<h4 id='method.set_tooltip_cardinal' class="method"><span id='set_tooltip_cardinal.v' class='invisible'><code>fn <a href='#method.set_tooltip_cardinal' class='fnname'>set_tooltip_cardinal</a>(&amp;mut self, sheet: <a class="enum" href="../../neko/prelude/enum.Relative.html" title="enum neko::prelude::Relative">Relative</a>)</code></span></h4>
+<h4 id='method.set_persona_sheet' class="method"><span id='set_persona_sheet.v' class='invisible'><code>fn <a href='#method.set_persona_sheet' class='fnname'>set_persona_sheet</a>(&amp;mut self, sheet: <a class="enum" href="../../neko/prelude/enum.Sheet.html" title="enum neko::prelude::Sheet">Sheet</a>)</code></span></h4>
+<h4 id='method.set_persona_position' class="method"><span id='set_persona_position.v' class='invisible'><code>fn <a href='#method.set_persona_position' class='fnname'>set_persona_position</a>(&amp;mut self, position: <a class="struct" href="../../neko/prelude/struct.Position.html" title="struct neko::prelude::Position">Position</a>)</code></span></h4>
+<h4 id='method.resized' class="method"><span id='resized.v' class='invisible'><code>fn <a href='#method.resized' class='fnname'>resized</a>(&amp;mut self, size: &amp;<a class="struct" href="../../neko/prelude/struct.Winszed.html" title="struct neko::prelude::Winszed">Winszed</a>)</code></span></h4>
+<div class='docblock'><p>The general method <code>call</code> according to the state will run
+the evenement functions by library group.</p>
+</div><h4 id='method.call' class="method"><span id='call.v' class='invisible'><code>fn <a href='#method.call' class='fnname'>call</a>(&amp;mut self, event: &amp;<a class="struct" href="../../neko/prelude/struct.ShellState.html" title="struct neko::prelude::ShellState">ShellState</a>)</code></span></h4>
+<div class='docblock'><p>The general method <code>call</code> according to the state will run
+the evenement functions by library group.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../neko/dynamic/struct.Compositer.html" title="struct neko::dynamic::Compositer">Compositer</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/neko/dynamic/mod.rs.html#49' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIterator</a> for &amp;'a <a class="struct" href="../../neko/dynamic/struct.Compositer.html" title="struct neko::dynamic::Compositer">Compositer</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/neko/dynamic/mod.rs.html#436-443' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Item' class="type"><span id='Item.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.Item' class="type">Item</a> = &amp;'a <a class="struct" href="../../neko/dynamic/library/struct.Library.html" title="struct neko::dynamic::library::Library">Library</a></code></span></h4>
+<div class='docblock'><p>The type of the elements being iterated over.</p>
+</div><h4 id='associatedtype.IntoIter' class="type"><span id='IntoIter.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.IntoIter' class="type">IntoIter</a> = <a class="struct" href="https://doc.rust-lang.org/nightly/core/slice/struct.Iter.html" title="struct core::slice::Iter">Iter</a>&lt;'a, <a class="struct" href="../../neko/dynamic/library/struct.Library.html" title="struct neko::dynamic::library::Library">Library</a>&gt;</code></span></h4>
+<div class='docblock'><p>Which kind of iterator are we turning this into?</p>
+</div><h4 id='method.into_iter' class="method"><span id='into_iter.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter' class='fnname'>into_iter</a>(self) -&gt; Self::<a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIter</a></code></span></h4>
+<div class='docblock'><p>Creates an iterator from a value. <a href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../../neko/dynamic/struct.Compositer.html" title="struct neko::dynamic::Compositer">Compositer</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/neko/dynamic/mod.rs.html#446-454' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>A trait for giving a type a useful default value.</p>
+</div><div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../neko/dynamic/struct.Compositer.html" title="struct neko::dynamic::Compositer">Compositer</a></code></span></h4>
+<div class='docblock'><p>The constructor <code>default</code> returns a empty Compositer.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "neko";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

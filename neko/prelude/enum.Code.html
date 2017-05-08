@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Code` enum in crate `neko`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Code">
+
+    <title>neko::prelude::Code - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc enum">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <a href='../../neko/index.html'><img src='https://arukana.github.io/Neko/images/neko.png' alt='logo' width='100'></a>
+        <p class='location'>Enum Code</p><div class="block items"><ul><li><a href="#variants">Variants</a></li><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>neko</a>::<wbr><a href='index.html'>prelude</a></p><script>window.sidebarCurrent = {name: 'Code', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>neko</a>::<wbr><a href='index.html'>prelude</a>::<wbr><a class="enum" href=''>Code</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
+<pre class='rust enum'><div class="docblock attributes">#[repr(u32)]
+</div>pub enum Code {
+    Left,
+    Right,
+    Wheel,
+    WheelUp,
+    WheelDown,
+    LeftDrag,
+    WheelDrag,
+    RightDrag,
+    ShiftLeft,
+    ShiftWheel,
+    ShiftRight,
+    ShiftLeftDrag,
+    ShiftWheelDrag,
+    ShiftRightDrag,
+    CtrlLeft,
+    CtrlWheel,
+    CtrlRight,
+    CtrlWheelUp,
+    CtrlWheelDown,
+    CtrlLeftDrag,
+    CtrlWheelDrag,
+    CtrlRightDrag,
+    ShiftCtrlLeft,
+    ShiftCtrlWheel,
+    ShiftCtrlRight,
+    ShiftCtrlLeftDrag,
+    ShiftCtrlWheelDrag,
+    ShiftCtrlRightDrag,
+    CmdLeft,
+    CmdWheel,
+    CmdRight,
+    CmdWheelUp,
+    CmdWheelDown,
+    CmdLeftDrag,
+    CmdWheelDrag,
+    CmdRightDrag,
+    CmdShiftLeft,
+    CmdShiftWheel,
+    CmdShiftRight,
+    CmdShiftLeftDrag,
+    CmdShiftWheelDrag,
+    CmdShiftRightDrag,
+    CmdCtrlLeft,
+    CmdCtrlWheel,
+    CmdCtrlRight,
+    CmdCtrlWheelUp,
+    CmdCtrlWheelDown,
+    CmdCtrlLeftDrag,
+    CmdCtrlWheelDrag,
+    CmdCtrlRightDrag,
+    CmdShiftCtrlLeft,
+    CmdShiftCtrlWheel,
+    CmdShiftCtrlRight,
+    CmdShiftCtrlLeftDrag,
+    CmdShiftCtrlWheelDrag,
+    CmdShiftCtrlRightDrag,
+}</pre><h2 id='variants' class='variants'>Variants</h2>
+<span id='variant.Left' class='variant'><span id='Left.v' class='invisible'><code>Left</code></span></span><div class='docblock'><p>The left mouse button is pressed.</p>
+</div><span id='variant.Right' class='variant'><span id='Right.v' class='invisible'><code>Right</code></span></span><div class='docblock'><p>The right mouse button is pressed.</p>
+</div><span id='variant.Wheel' class='variant'><span id='Wheel.v' class='invisible'><code>Wheel</code></span></span><div class='docblock'><p>The mouse wheel button is pressed.</p>
+</div><span id='variant.WheelUp' class='variant'><span id='WheelUp.v' class='invisible'><code>WheelUp</code></span></span><div class='docblock'><p>The mouse wheel is going up.</p>
+</div><span id='variant.WheelDown' class='variant'><span id='WheelDown.v' class='invisible'><code>WheelDown</code></span></span><div class='docblock'><p>The mouse wheel is going down.</p>
+</div><span id='variant.LeftDrag' class='variant'><span id='LeftDrag.v' class='invisible'><code>LeftDrag</code></span></span><div class='docblock'><p>The left mouse button is held while moving pointer.</p>
+</div><span id='variant.WheelDrag' class='variant'><span id='WheelDrag.v' class='invisible'><code>WheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button is held while moving pointer.</p>
+</div><span id='variant.RightDrag' class='variant'><span id='RightDrag.v' class='invisible'><code>RightDrag</code></span></span><div class='docblock'><p>The right mouse button is held while moving pointer.</p>
+</div><span id='variant.ShiftLeft' class='variant'><span id='ShiftLeft.v' class='invisible'><code>ShiftLeft</code></span></span><div class='docblock'><p>The left mouse button is pressed while helding Shift.</p>
+</div><span id='variant.ShiftWheel' class='variant'><span id='ShiftWheel.v' class='invisible'><code>ShiftWheel</code></span></span><div class='docblock'><p>The wheel mouse button is pressed while helding Shift.</p>
+</div><span id='variant.ShiftRight' class='variant'><span id='ShiftRight.v' class='invisible'><code>ShiftRight</code></span></span><div class='docblock'><p>The right mouse button is pressed while helding Shift.</p>
+</div><span id='variant.ShiftLeftDrag' class='variant'><span id='ShiftLeftDrag.v' class='invisible'><code>ShiftLeftDrag</code></span></span><div class='docblock'><p>The left mouse button and Shift are held while moving pointer.</p>
+</div><span id='variant.ShiftWheelDrag' class='variant'><span id='ShiftWheelDrag.v' class='invisible'><code>ShiftWheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button and Shift are held while moving pointer.</p>
+</div><span id='variant.ShiftRightDrag' class='variant'><span id='ShiftRightDrag.v' class='invisible'><code>ShiftRightDrag</code></span></span><div class='docblock'><p>The right mouse button and Shift are held while moving pointer.</p>
+</div><span id='variant.CtrlLeft' class='variant'><span id='CtrlLeft.v' class='invisible'><code>CtrlLeft</code></span></span><div class='docblock'><p>The left mouse button is pressed while helding Ctrl</p>
+</div><span id='variant.CtrlWheel' class='variant'><span id='CtrlWheel.v' class='invisible'><code>CtrlWheel</code></span></span><div class='docblock'><p>The wheel mouse button is pressed while helding Ctrl</p>
+</div><span id='variant.CtrlRight' class='variant'><span id='CtrlRight.v' class='invisible'><code>CtrlRight</code></span></span><div class='docblock'><p>The right mouse button is pressed while helding Ctrl</p>
+</div><span id='variant.CtrlWheelUp' class='variant'><span id='CtrlWheelUp.v' class='invisible'><code>CtrlWheelUp</code></span></span><div class='docblock'><p>The mouse wheel is going up while helding Ctrl</p>
+</div><span id='variant.CtrlWheelDown' class='variant'><span id='CtrlWheelDown.v' class='invisible'><code>CtrlWheelDown</code></span></span><div class='docblock'><p>The mouse wheel is going down while helding Ctrl</p>
+</div><span id='variant.CtrlLeftDrag' class='variant'><span id='CtrlLeftDrag.v' class='invisible'><code>CtrlLeftDrag</code></span></span><div class='docblock'><p>The left mouse button and Ctrl are held while moving pointer</p>
+</div><span id='variant.CtrlWheelDrag' class='variant'><span id='CtrlWheelDrag.v' class='invisible'><code>CtrlWheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button and Ctrl are held while moving pointer</p>
+</div><span id='variant.CtrlRightDrag' class='variant'><span id='CtrlRightDrag.v' class='invisible'><code>CtrlRightDrag</code></span></span><div class='docblock'><p>The right mouse button and Ctrl are held while moving pointer</p>
+</div><span id='variant.ShiftCtrlLeft' class='variant'><span id='ShiftCtrlLeft.v' class='invisible'><code>ShiftCtrlLeft</code></span></span><div class='docblock'><p>The left mouse button is pressed while Ctrl and Shift are held</p>
+</div><span id='variant.ShiftCtrlWheel' class='variant'><span id='ShiftCtrlWheel.v' class='invisible'><code>ShiftCtrlWheel</code></span></span><div class='docblock'><p>The wheel mouse button is pressed while Ctrl and Shift are held</p>
+</div><span id='variant.ShiftCtrlRight' class='variant'><span id='ShiftCtrlRight.v' class='invisible'><code>ShiftCtrlRight</code></span></span><div class='docblock'><p>The right mouse button is pressed while Ctrl and Shift are held</p>
+</div><span id='variant.ShiftCtrlLeftDrag' class='variant'><span id='ShiftCtrlLeftDrag.v' class='invisible'><code>ShiftCtrlLeftDrag</code></span></span><div class='docblock'><p>The left mouse button, Ctrl and Shift are held while moving pointer</p>
+</div><span id='variant.ShiftCtrlWheelDrag' class='variant'><span id='ShiftCtrlWheelDrag.v' class='invisible'><code>ShiftCtrlWheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button, Ctrl and Shift are held while moving pointer</p>
+</div><span id='variant.ShiftCtrlRightDrag' class='variant'><span id='ShiftCtrlRightDrag.v' class='invisible'><code>ShiftCtrlRightDrag</code></span></span><div class='docblock'><p>The right mouse button, Ctrl and Shift are held while moving pointer</p>
+</div><span id='variant.CmdLeft' class='variant'><span id='CmdLeft.v' class='invisible'><code>CmdLeft</code></span></span><div class='docblock'><p>The left mouse button is pressed while helding Command</p>
+</div><span id='variant.CmdWheel' class='variant'><span id='CmdWheel.v' class='invisible'><code>CmdWheel</code></span></span><div class='docblock'><p>The wheel mouse button is pressed while helding Command</p>
+</div><span id='variant.CmdRight' class='variant'><span id='CmdRight.v' class='invisible'><code>CmdRight</code></span></span><div class='docblock'><p>The right mouse button is pressed while helding Command</p>
+</div><span id='variant.CmdWheelUp' class='variant'><span id='CmdWheelUp.v' class='invisible'><code>CmdWheelUp</code></span></span><div class='docblock'><p>The mouse wheel is going up while helding Command</p>
+</div><span id='variant.CmdWheelDown' class='variant'><span id='CmdWheelDown.v' class='invisible'><code>CmdWheelDown</code></span></span><div class='docblock'><p>The mouse wheel is going down while helding Command</p>
+</div><span id='variant.CmdLeftDrag' class='variant'><span id='CmdLeftDrag.v' class='invisible'><code>CmdLeftDrag</code></span></span><div class='docblock'><p>The left mouse button and Command are held while moving pointer</p>
+</div><span id='variant.CmdWheelDrag' class='variant'><span id='CmdWheelDrag.v' class='invisible'><code>CmdWheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button and Command are held while moving pointer</p>
+</div><span id='variant.CmdRightDrag' class='variant'><span id='CmdRightDrag.v' class='invisible'><code>CmdRightDrag</code></span></span><div class='docblock'><p>The right mouse button and Command are held while moving pointer</p>
+</div><span id='variant.CmdShiftLeft' class='variant'><span id='CmdShiftLeft.v' class='invisible'><code>CmdShiftLeft</code></span></span><div class='docblock'><p>The left mouse button is pressed while helding Command and Shift</p>
+</div><span id='variant.CmdShiftWheel' class='variant'><span id='CmdShiftWheel.v' class='invisible'><code>CmdShiftWheel</code></span></span><div class='docblock'><p>The wheel mouse button is pressed while helding Command and Shift</p>
+</div><span id='variant.CmdShiftRight' class='variant'><span id='CmdShiftRight.v' class='invisible'><code>CmdShiftRight</code></span></span><div class='docblock'><p>The right mouse button is pressed while helding Command and Shift</p>
+</div><span id='variant.CmdShiftLeftDrag' class='variant'><span id='CmdShiftLeftDrag.v' class='invisible'><code>CmdShiftLeftDrag</code></span></span><div class='docblock'><p>The left mouse button, Shift and Command are held while moving pointer</p>
+</div><span id='variant.CmdShiftWheelDrag' class='variant'><span id='CmdShiftWheelDrag.v' class='invisible'><code>CmdShiftWheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button, Shift and Command are held while moving pointer</p>
+</div><span id='variant.CmdShiftRightDrag' class='variant'><span id='CmdShiftRightDrag.v' class='invisible'><code>CmdShiftRightDrag</code></span></span><div class='docblock'><p>The right mouse button, Shift and Command are held while moving pointer</p>
+</div><span id='variant.CmdCtrlLeft' class='variant'><span id='CmdCtrlLeft.v' class='invisible'><code>CmdCtrlLeft</code></span></span><div class='docblock'><p>The left mouse button is pressed while helding Command and Ctrl</p>
+</div><span id='variant.CmdCtrlWheel' class='variant'><span id='CmdCtrlWheel.v' class='invisible'><code>CmdCtrlWheel</code></span></span><div class='docblock'><p>The wheel mouse button is pressed while helding Command and Ctrl</p>
+</div><span id='variant.CmdCtrlRight' class='variant'><span id='CmdCtrlRight.v' class='invisible'><code>CmdCtrlRight</code></span></span><div class='docblock'><p>The right mouse button is pressed while helding Command and Ctrl</p>
+</div><span id='variant.CmdCtrlWheelUp' class='variant'><span id='CmdCtrlWheelUp.v' class='invisible'><code>CmdCtrlWheelUp</code></span></span><div class='docblock'><p>The mouse wheel is going up while helding Command and Ctrl</p>
+</div><span id='variant.CmdCtrlWheelDown' class='variant'><span id='CmdCtrlWheelDown.v' class='invisible'><code>CmdCtrlWheelDown</code></span></span><div class='docblock'><p>The mouse wheel is going down while helding Command and Ctrl</p>
+</div><span id='variant.CmdCtrlLeftDrag' class='variant'><span id='CmdCtrlLeftDrag.v' class='invisible'><code>CmdCtrlLeftDrag</code></span></span><div class='docblock'><p>The left mouse button, Ctrl and Command are held while moving pointer</p>
+</div><span id='variant.CmdCtrlWheelDrag' class='variant'><span id='CmdCtrlWheelDrag.v' class='invisible'><code>CmdCtrlWheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button, Ctrl and Command are held while moving pointer</p>
+</div><span id='variant.CmdCtrlRightDrag' class='variant'><span id='CmdCtrlRightDrag.v' class='invisible'><code>CmdCtrlRightDrag</code></span></span><div class='docblock'><p>The right mouse button, Ctrl and Command are held while moving pointer</p>
+</div><span id='variant.CmdShiftCtrlLeft' class='variant'><span id='CmdShiftCtrlLeft.v' class='invisible'><code>CmdShiftCtrlLeft</code></span></span><div class='docblock'><p>The left mouse button is pressed while helding Command, Shift and Ctrl</p>
+</div><span id='variant.CmdShiftCtrlWheel' class='variant'><span id='CmdShiftCtrlWheel.v' class='invisible'><code>CmdShiftCtrlWheel</code></span></span><div class='docblock'><p>The wheel mouse button is pressed while helding Command, Shift and Ctrl</p>
+</div><span id='variant.CmdShiftCtrlRight' class='variant'><span id='CmdShiftCtrlRight.v' class='invisible'><code>CmdShiftCtrlRight</code></span></span><div class='docblock'><p>The right mouse button is pressed while helding Command, Shift and Ctrl</p>
+</div><span id='variant.CmdShiftCtrlLeftDrag' class='variant'><span id='CmdShiftCtrlLeftDrag.v' class='invisible'><code>CmdShiftCtrlLeftDrag</code></span></span><div class='docblock'><p>The left mouse button, Ctrl, Shift and Command are held while moving pointer</p>
+</div><span id='variant.CmdShiftCtrlWheelDrag' class='variant'><span id='CmdShiftCtrlWheelDrag.v' class='invisible'><code>CmdShiftCtrlWheelDrag</code></span></span><div class='docblock'><p>The wheel mouse button, Ctrl, Shift and Command are held while moving pointer</p>
+</div><span id='variant.CmdShiftCtrlRightDrag' class='variant'><span id='CmdShiftCtrlRightDrag.v' class='invisible'><code>CmdShiftCtrlRightDrag</code></span></span><div class='docblock'><p>The right mouse button, Ctrl, Shift and Command are held while moving pointer</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(action: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a>, CodeError&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html" title="struct core::fmt::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;<a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a>&gt; for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H&gt;(&amp;self, __arg_0: &amp;mut __H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;__H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt; for <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.from' class="method"><span id='from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(action: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>) -&gt; <a class="enum" href="../../neko/prelude/enum.Code.html" title="enum neko::prelude::Code">Code</a></code></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "neko";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

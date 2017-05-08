@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Display` struct in crate `neko`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Display">
+
+    <title>neko::pty::Display - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <a href='../../neko/index.html'><img src='https://arukana.github.io/Neko/images/neko.png' alt='logo' width='100'></a>
+        <p class='location'>Struct Display</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>neko</a>::<wbr><a href='index.html'>pty</a></p><script>window.sidebarCurrent = {name: 'Display', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>neko</a>::<wbr><a href='index.html'>pty</a>::<wbr><a class="struct" href=''>Display</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
+<pre class='rust struct'>pub struct Display { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(fd: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a>, DisplayError&gt;</code></span></h4>
+<div class='docblock'><p>The constructor method <code>default</code> returns the <code>Display</code>&#39;s interface
+from shell.</p>
+</div><h4 id='method.from_winszed' class="method"><span id='from_winszed.v' class='invisible'><code>fn <a href='#method.from_winszed' class='fnname'>from_winszed</a>(size: <a class="struct" href="../../neko/prelude/struct.Winszed.html" title="struct neko::prelude::Winszed">Winszed</a>) -&gt; <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span></h4>
+<div class='docblock'><p>The constructor method <code>default</code> returns the <code>Display</code>&#39;s interface
+from shell.</p>
+</div><h4 id='method.ss' class="method"><span id='ss.v' class='invisible'><code>fn <a href='#method.ss' class='fnname'>ss</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+<div class='docblock'><p>The accessor <code>ss</code> returns the value of &#39;ss_mod&#39;.</p>
+</div><h4 id='method.mouse' class="method"><span id='mouse.v' class='invisible'><code>fn <a href='#method.mouse' class='fnname'>mouse</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span></h4>
+<div class='docblock'><p>The accessor <code>mouse</code> returns the value of &#39;mouse_handle&#39;.</p>
+</div><h4 id='method.get_window_size' class="method"><span id='get_window_size.v' class='invisible'><code>fn <a href='#method.get_window_size' class='fnname'>get_window_size</a>(&amp;self) -&gt; &amp;<a class="struct" href="../../neko/prelude/struct.Winszed.html" title="struct neko::prelude::Winszed">Winszed</a></code></span></h4>
+<div class='docblock'><p>The accessor <code>get_window_size</code> returns the window size interface.</p>
+</div><h4 id='method.set_window_size' class="method"><span id='set_window_size.v' class='invisible'><code>fn <a href='#method.set_window_size' class='fnname'>set_window_size</a>(&amp;mut self, size: &amp;<a class="struct" href="../../neko/prelude/struct.Winszed.html" title="struct neko::prelude::Winszed">Winszed</a>)</code></span></h4>
+<div class='docblock'><p>The mutator <code>set_window_size</code> replaces the window size.</p>
+</div><h4 id='method.get_cursor_coords' class="method"><span id='get_cursor_coords.v' class='invisible'><code>fn <a href='#method.get_cursor_coords' class='fnname'>get_cursor_coords</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span></h4>
+<div class='docblock'><p>The accessor <code>get_cursor_coords</code> returns the value of &#39;oob&#39;, that is the coordinates of the cursor.</p>
+</div><h4 id='method.newlines' class="method"><span id='newlines.v' class='invisible'><code>fn <a href='#method.newlines' class='fnname'>newlines</a>(&amp;self) -&gt; &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span></h4>
+<div class='docblock'><p>The accessor <code>newlines</code> returns the value of &#39;newline&#39;, that contains all newlines that are now
+displayed on the screen.</p>
+</div><h4 id='method.into_bytes' class="method"><span id='into_bytes.v' class='invisible'><code>fn <a href='#method.into_bytes' class='fnname'>into_bytes</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></span></h4>
+<div class='docblock'><p>Converts a Vector of Character into a byte vector.</p>
+</div><h4 id='method.clear' class="method"><span id='clear.v' class='invisible'><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>clear</code> purges the screen vector.</p>
+</div><h4 id='method.resize' class="method"><span id='resize.v' class='invisible'><code>fn <a href='#method.resize' class='fnname'>resize</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, DisplayError&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>resize</code> updates the size of the output screen.</p>
+</div><h4 id='method.resize_with' class="method"><span id='resize_with.v' class='invisible'><code>fn <a href='#method.resize_with' class='fnname'>resize_with</a>(&amp;mut self, size: &amp;<a class="struct" href="../../neko/prelude/struct.Winszed.html" title="struct neko::prelude::Winszed">Winszed</a>)</code></span></h4>
+<h4 id='method.tricky_resize' class="method"><span id='tricky_resize.v' class='invisible'><code>fn <a href='#method.tricky_resize' class='fnname'>tricky_resize</a>(&amp;mut self, begin: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, end: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>tricky_resize</code> updates the size of the output screen.</p>
+</div><h4 id='method.goto' class="method"><span id='goto.v' class='invisible'><code>fn <a href='#method.goto' class='fnname'>goto</a>(&amp;mut self, index: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>goto</code> moves the cursor position</p>
+</div><h4 id='method.goto_home' class="method"><span id='goto_home.v' class='invisible'><code>fn <a href='#method.goto_home' class='fnname'>goto_home</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>goto_home</code> moves the cursor to the top left of the output screen.</p>
+</div><h4 id='method.goto_up' class="method"><span id='goto_up.v' class='invisible'><code>fn <a href='#method.goto_up' class='fnname'>goto_up</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>goto_up</code> moves the cursor up.</p>
+</div><h4 id='method.goto_down' class="method"><span id='goto_down.v' class='invisible'><code>fn <a href='#method.goto_down' class='fnname'>goto_down</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>goto_down</code> moves the cursor down.</p>
+</div><h4 id='method.goto_right' class="method"><span id='goto_right.v' class='invisible'><code>fn <a href='#method.goto_right' class='fnname'>goto_right</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>goto_right</code> moves the cursor to its right.</p>
+</div><h4 id='method.goto_left' class="method"><span id='goto_left.v' class='invisible'><code>fn <a href='#method.goto_left' class='fnname'>goto_left</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<h4 id='method.goto_begin_row' class="method"><span id='goto_begin_row.v' class='invisible'><code>fn <a href='#method.goto_begin_row' class='fnname'>goto_begin_row</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>goto_begin_row</code> moves the cursor to the beginning of the row</p>
+</div><h4 id='method.goto_end_row' class="method"><span id='goto_end_row.v' class='invisible'><code>fn <a href='#method.goto_end_row' class='fnname'>goto_end_row</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>goto_end_row</code> moves the cursor to the end of the row</p>
+</div><h4 id='method.goto_coord' class="method"><span id='goto_coord.v' class='invisible'><code>fn <a href='#method.goto_coord' class='fnname'>goto_coord</a>(&amp;mut self, x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>goto_coord</code> moves the cursor to the given coordinates</p>
+</div><h4 id='method.scroll_down' class="method"><span id='scroll_down.v' class='invisible'><code>fn <a href='#method.scroll_down' class='fnname'>scroll_down</a>(&amp;mut self, base: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>scroll_down</code> append an empty line on bottom of the screen
+(the cursor doesn&#39;t move)</p>
+</div><h4 id='method.scroll_up' class="method"><span id='scroll_up.v' class='invisible'><code>fn <a href='#method.scroll_up' class='fnname'>scroll_up</a>(&amp;mut self, base: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>scroll_up</code> insert an empty line on top of the screen
+(the cursor doesn&#39;t move)</p>
+</div><h4 id='method.save_position' class="method"><span id='save_position.v' class='invisible'><code>fn <a href='#method.save_position' class='fnname'>save_position</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>save_position</code> save a position in the variable &#39;save_position&#39; to get
+restored with self.restore_position() described right after.
+If save_position() is called many times, only the newest safe will be kept.</p>
+</div><h4 id='method.restore_position' class="method"><span id='restore_position.v' class='invisible'><code>fn <a href='#method.restore_position' class='fnname'>restore_position</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>restore_position</code> move the cursor to coordinates safe
+with self.save_position() described right before.
+If no coordinates were safe, cursor moves to the top left of the output screen</p>
+</div><h4 id='method.insert_empty_line' class="method"><span id='insert_empty_line.v' class='invisible'><code>fn <a href='#method.insert_empty_line' class='fnname'>insert_empty_line</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>insert_empty_line</code> insert an empty line on the right of the cursor
+(the cursor doesn&#39;t move)</p>
+</div><h4 id='method.erase_right_line' class="method"><span id='erase_right_line.v' class='invisible'><code>fn <a href='#method.erase_right_line' class='fnname'>erase_right_line</a>(&amp;mut self, pos: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>erase_right_line</code> erase the current line from the cursor
+to the next &#39;\n&#39; encountered
+(char under the cursor included)</p>
+</div><h4 id='method.erase_left_line' class="method"><span id='erase_left_line.v' class='invisible'><code>fn <a href='#method.erase_left_line' class='fnname'>erase_left_line</a>(&amp;mut self, pos: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>erase_left_line</code> erase the current line from the previous &#39;\n&#39;
+to the cursor
+(char under the cursor included)</p>
+</div><h4 id='method.erase_line' class="method"><span id='erase_line.v' class='invisible'><code>fn <a href='#method.erase_line' class='fnname'>erase_line</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>erase_line</code> erase the entire current line</p>
+</div><h4 id='method.erase_up' class="method"><span id='erase_up.v' class='invisible'><code>fn <a href='#method.erase_up' class='fnname'>erase_up</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>erase_up</code> erase all lines from the current line up to
+the top of the screen, and erase the current line from the left border
+column to the cursor.
+(char under the cursor included)</p>
+</div><h4 id='method.erase_down' class="method"><span id='erase_down.v' class='invisible'><code>fn <a href='#method.erase_down' class='fnname'>erase_down</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>erase_down</code> erase all lines from the current line down to
+the bottom of the screen and erase the current line from the cursor to
+the right border column
+(char under the cursor included)</p>
+</div><h4 id='method.print_enter' class="method"><span id='print_enter.v' class='invisible'><code>fn <a href='#method.print_enter' class='fnname'>print_enter</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>print_enter</code> reproduce the behavior of a &#39;\n&#39;</p>
+</div><h4 id='method.print_char' class="method"><span id='print_char.v' class='invisible'><code>fn <a href='#method.print_char' class='fnname'>print_char</a>(&amp;mut self, first: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.char.html">char</a>, next: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>print_char</code> print an unicode character (1 to 4 chars range)</p>
+</div><h4 id='method.catch_numbers' class="method"><span id='catch_numbers.v' class='invisible'><code>fn <a href='#method.catch_numbers' class='fnname'>catch_numbers</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;acc: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span></h4>
+<h4 id='method.next_tab' class="method"><span id='next_tab.v' class='invisible'><code>fn <a href='#method.next_tab' class='fnname'>next_tab</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></h4>
+<div class='docblock'><p>The method <code>next_tab</code> return the size of the current printed tabulation</p>
+</div><h4 id='method.save_terminal' class="method"><span id='save_terminal.v' class='invisible'><code>fn <a href='#method.save_terminal' class='fnname'>save_terminal</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>save_terminal</code> saves the terminal Display configuration.</p>
+</div><h4 id='method.restore_terminal' class="method"><span id='restore_terminal.v' class='invisible'><code>fn <a href='#method.restore_terminal' class='fnname'>restore_terminal</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>The method <code>restore_terminal</code> restore the terminal Display configuration
+kept in the &#39;save_terminal&#39; variable.</p>
+</div><h4 id='method.erase_chars' class="method"><span id='erase_chars.v' class='invisible'><code>fn <a href='#method.erase_chars' class='fnname'>erase_chars</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>erase_chars</code> erases couple of chars in the current line from the cursor.</p>
+</div><h4 id='method.insert_chars' class="method"><span id='insert_chars.v' class='invisible'><code>fn <a href='#method.insert_chars' class='fnname'>insert_chars</a>(&amp;mut self, mv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></h4>
+<div class='docblock'><p>The method <code>erase_chars</code> erases couple of chars in the current line from the cursor.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html" title="struct core::fmt::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a> for <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.write' class="method"><span id='write.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#tymethod.write' class='fnname'>write</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The method <code>write</code> from trait <code>io::Write</code> inserts a new list of terms
+from output.</p>
+</div><h4 id='method.flush' class="method"><span id='flush.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#tymethod.flush' class='fnname'>flush</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Flush this output stream, ensuring that all intermediately buffered contents reach their destination. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html#tymethod.flush">Read more</a></p>
+</div><h4 id='method.write_all' class="method"><span id='write_all.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_all' class='fnname'>write_all</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Attempts to write an entire buffer into this write. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_all">Read more</a></p>
+</div><h4 id='method.write_fmt' class="method"><span id='write_fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_fmt' class='fnname'>write_fmt</a>(&amp;mut self, fmt: <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Arguments.html" title="struct core::fmt::Arguments">Arguments</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Writes a formatted string into this writer, returning any error encountered. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_fmt">Read more</a></p>
+</div><h4 id='method.by_ref' class="method"><span id='by_ref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.by_ref' class='fnname'>by_ref</a>(&amp;mut self) -&gt; &amp;mut Self</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Creates a &quot;by reference&quot; adaptor for this instance of <code>Write</code>. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.by_ref">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display">Display</a> for <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt-1' class="method"><span id='fmt.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html" title="struct core::fmt::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIterator</a> for &amp;'a <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Item' class="type"><span id='Item.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.Item' class="type">Item</a> = &amp;'a <a class="struct" href="../../neko/prelude/struct.Character.html" title="struct neko::prelude::Character">Character</a></code></span></h4>
+<div class='docblock'><p>The type of the elements being iterated over.</p>
+</div><h4 id='associatedtype.IntoIter' class="type"><span id='IntoIter.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.IntoIter' class="type">IntoIter</a> = <a class="struct" href="https://doc.rust-lang.org/nightly/core/slice/struct.Iter.html" title="struct core::slice::Iter">Iter</a>&lt;'a, <a class="struct" href="../../neko/prelude/struct.Character.html" title="struct neko::prelude::Character">Character</a>&gt;</code></span></h4>
+<div class='docblock'><p>Which kind of iterator are we turning this into?</p>
+</div><h4 id='method.into_iter' class="method"><span id='into_iter.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter' class='fnname'>into_iter</a>(self) -&gt; &lt;&amp;'a <a class="struct" href="../../neko/pty/struct.Display.html" title="struct neko::pty::Display">Display</a> as <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIterator</a>&gt;::<a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIter</a></code></span></h4>
+<div class='docblock'><p>Creates an iterator from a value. <a href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "neko";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

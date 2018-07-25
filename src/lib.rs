@@ -11,7 +11,6 @@
 #![feature(range_contains)]
 #![feature(slice_patterns)]
 #![feature(untagged_unions)]
-#![feature(advanced_slice_patterns)]
 #![feature(result_unwrap_or_default)]
 
 #![crate_type= "lib"]

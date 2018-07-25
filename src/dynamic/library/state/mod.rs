@@ -3,7 +3,6 @@ pub mod tooltip;
 pub mod persona;
 
 use std::fmt;
-use std::str;
 
 use ::graphic;
 use ::libc;

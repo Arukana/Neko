@@ -135,12 +135,12 @@ impl Iterator for Display {
         if self.padding < ((self.count - 1) / self.size.get_col()) + 1 {
             self.padding = 0;
         }
-        if (coord_neko.1..(coord_neko.1 + graphic::SPEC_MAX_Y)).contains((self.count - 1) / self.size.get_col()) &&
-           (coord_neko.0..(coord_neko.0 + graphic::SPEC_MAX_X)).contains((self.count - 1) % self.size.get_col()) {
+        if (coord_neko.1..(coord_neko.1 + graphic::SPEC_MAX_Y)).contains(&((self.count - 1) / self.size.get_col())) &&
+           (coord_neko.0..(coord_neko.0 + graphic::SPEC_MAX_X)).contains(&((self.count - 1) % self.size.get_col())) {
             let (_, texel) = self.draw.next().unwrap();
             Some(pty::Character::from(texel.get_glyph()))
-        } else if (coord_bulle.1..(coord_bulle.1 + self.nl.1)).contains((self.count - 1) / self.size.get_col()) &&
-                  (coord_bulle.0..(coord_bulle.0 + self.nl.0)).contains((self.count - 1) % self.size.get_col()) {
+        } else if (coord_bulle.1..(coord_bulle.1 + self.nl.1)).contains(&((self.count - 1) / self.size.get_col())) &&
+                  (coord_bulle.0..(coord_bulle.0 + self.nl.0)).contains(&((self.count - 1) % self.size.get_col())) {
             if self.cursor < 1024 {
                 if self.padding == 0 && self.tooltip[self.cursor].is_enter().not() {
                     self.cursor += 1;
